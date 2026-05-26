@@ -14,14 +14,16 @@ export const fetchAllCompanies = async () => {
 export const fetchCompanyById = async (companyId) => {
   const { data, error } = await supabase
     .from("companies")
-    .select(`
+    .select(
+      `
       *,
       company_memberships(
         *,
         profiles(*)
       ),
       job_postings(*)
-    `)
+    `,
+    )
     .eq("id", companyId)
     .single();
   if (error) throw error;
@@ -72,4 +74,36 @@ export const fetchCompanyByProfileId = async (profileId) => {
   if (!membership) return null;
 
   return await fetchCompanyById(membership.company_id);
+};
+
+// Fetch job postings for a company
+export const fetchJobsByCompanyId = async (companyId) => {
+  const { data, error } = await supabase
+    .from("job_postings")
+    .select(
+      `
+      *,
+      applications(count)
+    `,
+    )
+    .eq("company_id", companyId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+};
+
+// Fetch company members (memberships with profile details)
+export const fetchCompanyMembers = async (companyId) => {
+  const { data, error } = await supabase
+    .from("company_memberships")
+    .select(
+      `
+      *,
+      profiles(id, full_name, role, phone)
+    `,
+    )
+    .eq("company_id", companyId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
 };
