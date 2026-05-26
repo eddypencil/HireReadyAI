@@ -20,7 +20,19 @@
 
 class JobPosting {
     constructor(companyId = "8c60f346-38e9-47ea-a29a-052625690240", profileId, title, seniorityLevel, description) {
-         this.companyId = companyId,
-         this.profileId = profileId
+        this.companyId = companyId,
+            this.profileId = profileId,
+            this.title = title,
+            this.seniorityLevel = seniorityLevel,
+            this.description = description
+    }
+    toSupaBaseForm() {
+        return {
+            company_id: this.companyId,
+            created_by_profile_id: this.profileId,
+            title: this.title,
+            seniority_level: this.seniorityLevel,
+            description: this.description
         }
+    }
 }

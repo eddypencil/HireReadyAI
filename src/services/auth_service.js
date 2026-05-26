@@ -14,7 +14,7 @@ export const signUp = async (email, password) => {
 export const makeProfile = async (userProfile) => {
   const userId = (await supabase.auth.getUser()).data.user?.id;
   if (!userId) throw new Error("No user found");
-  
+
   const { data, error } = await supabase.from('profiles').insert([{
     id: userId,
     full_name: userProfile.fullName,
@@ -22,7 +22,7 @@ export const makeProfile = async (userProfile) => {
     phone: userProfile.phone,
     is_active: userProfile.isActive
   }]);
-  
+
   if (error) {
     throw error;
   }
@@ -35,9 +35,7 @@ export const getProfile = async (userId) => {
     .select('*')
     .eq('id', userId)
     .maybeSingle();
-  if (error) {
-    throw error;
-  }
+  if (error) throw error;
   return data;
 };
 
@@ -52,10 +50,24 @@ export const signIn = async (email, password) => {
   return data.user;
 };
 
-export const signOut = async () => {
+export const logOut = async () => {
   const { error } = await supabase.auth.signOut();
+  if (error) throw error;
+};
+
+export const resetPassword = async (email, redirectTo) => {
+  const options = redirectTo ? { redirectTo } : undefined;
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, options);
   if (error) {
     throw error;
   }
+  return data;
 };
 
+export const updatePassword = async (newPassword) => {
+  const { data, error } = await supabase.auth.updateUser({ password: newPassword });
+  if (error) {
+    throw error;
+  }
+  return data;
+};
