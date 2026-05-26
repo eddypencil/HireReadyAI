@@ -1,6 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
-import { getProfile, makeProfile, signIn, signUp, signOut } from "../services/auth_service";
+import {
+  getProfile,
+  makeProfile,
+  signIn,
+  signUp,
+  logOut,
+  resetPassword,
+  updatePassword,
+} from "../services/auth_service";
 
 const UserContext = createContext();
 
@@ -13,6 +21,7 @@ export const UserProvider = ({ children }) => {
   const fetchAndSetProfile = async (userId) => {
     try {
       const userProfile = await getProfile(userId);
+      console.log(userProfile);
       setProfile(userProfile);
     } catch (err) {
       console.error("Failed to load user profile:", err.message);
@@ -21,39 +30,29 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // 1. Check for initial session on mount
-    const initializeAuth = async () => {
-      try {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session?.user) {
-          setUser(session.user);
-          await fetchAndSetProfile(session.user.id);
-        }
-      } catch (err) {
-        console.error("Auth initialization error:", err.message);
-      } finally {
+    console.log("Subscribing to onAuthStateChange...");
+    setLoading(true);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setLoading(false);
+        // Defer the profile fetch to the next event loop tick.
+        // Calling other Supabase queries synchronously inside onAuthStateChange
+        // causes a deadlock because the client holds an internal lock during the callback.
+        setTimeout(() => {
+          fetchAndSetProfile(session.user.id);
+        }, 0);
+      } else {
+        setUser(null);
+        setProfile(null);
         setLoading(false);
       }
-    };
-
-    initializeAuth();
-
-    // 2. Listen to auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setLoading(true);
-        if (session?.user) {
-          setUser(session.user);
-          await fetchAndSetProfile(session.user.id);
-        } else {
-          setUser(null);
-          setProfile(null);
-        }
-        setLoading(false);
-      }
-    );
+    });
 
     return () => {
+      console.log("Unsubscribing from onAuthStateChange");
       subscription.unsubscribe();
     };
   }, []);
@@ -68,6 +67,8 @@ export const UserProvider = ({ children }) => {
     } catch (err) {
       setLoading(false);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,17 +81,41 @@ export const UserProvider = ({ children }) => {
     } catch (err) {
       setLoading(false);
       throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
   const signOutUser = async () => {
     setLoading(true);
     try {
-      await signOut();
-      setUser(null);
-      setProfile(null);
+      await logOut();
     } catch (err) {
       console.error("Sign out error:", err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const resetUserPassword = async (email, redirectTo) => {
+    setLoading(true);
+    try {
+      await resetPassword(email);
+    } catch (err) {
+      setLoading(false);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateUserPassword = async (newPassword) => {
+    setLoading(true);
+    try {
+      await updatePassword(newPassword);
+    } catch (err) {
+      setLoading(false);
       throw err;
     } finally {
       setLoading(false);
@@ -106,6 +131,8 @@ export const UserProvider = ({ children }) => {
         signUpUser,
         signInUser,
         signOutUser,
+        resetUserPassword,
+        updateUserPassword,
       }}
     >
       {children}
