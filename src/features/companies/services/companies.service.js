@@ -59,3 +59,17 @@ export const deleteCompany = async (companyId) => {
     .eq("id", companyId);
   if (error) throw error;
 };
+
+// Fetch the company associated with a profile's membership
+export const fetchCompanyByProfileId = async (profileId) => {
+  const { data: membership, error: membershipError } = await supabase
+    .from("company_memberships")
+    .select("company_id")
+    .eq("profile_id", profileId)
+    .maybeSingle();
+
+  if (membershipError) throw membershipError;
+  if (!membership) return null;
+
+  return await fetchCompanyById(membership.company_id);
+};
