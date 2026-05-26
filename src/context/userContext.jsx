@@ -17,12 +17,21 @@ export const UserProvider = ({ children }) => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Helper to load profile for a given user id
+  const toUserModel = (data) => {
+    if (!data) return null;
+    return {
+      id: data.id,
+      fullName: data.full_name,
+      role: data.role,
+      phone: data.phone,
+      isActive: data.is_active,
+    };
+  };
+
   const fetchAndSetProfile = async (userId) => {
     try {
       const userProfile = await getProfile(userId);
-      console.log(userProfile);
-      setProfile(userProfile);
+      setProfile(toUserModel(userProfile));
     } catch (err) {
       console.error("Failed to load user profile:", err.message);
       setProfile(null);
@@ -30,7 +39,6 @@ export const UserProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    console.log("Subscribing to onAuthStateChange...");
     setLoading(true);
     const {
       data: { subscription },
@@ -38,9 +46,6 @@ export const UserProvider = ({ children }) => {
       if (session?.user) {
         setUser(session.user);
         setLoading(false);
-        // Defer the profile fetch to the next event loop tick.
-        // Calling other Supabase queries synchronously inside onAuthStateChange
-        // causes a deadlock because the client holds an internal lock during the callback.
         setTimeout(() => {
           fetchAndSetProfile(session.user.id);
         }, 0);
@@ -52,7 +57,6 @@ export const UserProvider = ({ children }) => {
     });
 
     return () => {
-      console.log("Unsubscribing from onAuthStateChange");
       subscription.unsubscribe();
     };
   }, []);
@@ -61,8 +65,8 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const registeredUser = await signUp(email, password);
-      // Wait for auth session to register, then create the profile
       await makeProfile(userProfile);
+      await fetchAndSetProfile(registeredUser.id);
       return registeredUser;
     } catch (err) {
       setLoading(false);
@@ -101,7 +105,7 @@ export const UserProvider = ({ children }) => {
   const resetUserPassword = async (email, redirectTo) => {
     setLoading(true);
     try {
-      await resetPassword(email);
+      await resetPassword(email, redirectTo);
     } catch (err) {
       setLoading(false);
       throw err;

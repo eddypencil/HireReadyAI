@@ -13,3 +13,11 @@ export const SENIORITY_LEVEL = Object.freeze({
   lead: 'lead'
 })
 
+export const APPLICATION_STAGE = Object.freeze({
+  applied: 'applied',
+  screening: 'screening',
+  shortlisted: 'shortlisted',
+  interview: 'interview',
+  hired: 'hired',
+  rejected: 'rejected',
+})

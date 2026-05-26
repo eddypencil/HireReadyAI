@@ -1,11 +1,11 @@
-import JobCard from "../../components/jobs/JobCard";
-import JobFilters from "../../components/jobs/JobFilters";
-import JobSearch from "../../components/jobs/JobSearch";
 import { SENIORITY_LEVEL } from "../../utils/enums";
 import { useState } from "react";
 
 
 import jobs from "../../data/jobs.mock";
+import JobSearch from "@/components/jobs/JobSearch";
+import JobFilters from "@/components/jobs/JobFilters";
+import JobCard from "@/components/jobs/JobCard";
 
 export default function JobsPage() {
   const [search, setSearch] = useState("");

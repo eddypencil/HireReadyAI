@@ -1,11 +1,12 @@
-// /components/applicant/StatsCards.jsx
-const stats = [
-  { label: "Applications", value: 12 },
-  { label: "Interviews", value: 3 },
-  { label: "Offers", value: 1 },
-];
+import { APPLICATION_STAGE } from "../../utils/enums";
 
-export default function StatsCards() {
+export default function StatsCards({ applications }) {
+  const stats = [
+    { label: "Applications", value: applications?.length || 0 },
+    { label: "Interviews", value: applications?.filter((a) => a.current_stage === APPLICATION_STAGE.interview).length || 0 },
+    { label: "Offers", value: applications?.filter((a) => a.current_stage === APPLICATION_STAGE.hired).length || 0 },
+  ];
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {stats.map((s) => (

@@ -1,6 +1,6 @@
 // components/jobs/JobCard.jsx
 
-import { Card, CardContent } from "../ui/card";
+import { Card, CardContent } from "../ui/Card";
 
 export default function JobCard({ job }) {
   return (
