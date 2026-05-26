@@ -36,7 +36,6 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<RootRedirect />} />
-
       <Route path="/auth/sign-in" element={<SignInPage />} />
       <Route path="/auth/sign-up" element={<SignUpPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
