@@ -24,7 +24,6 @@ export default function CompanyProfile({ members, onInvite, frameworkFile, setFr
         <div className="p-8 bg-gray-50/50 min-h-screen font-sans">
             <div className="max-w-4xl mx-auto space-y-8">
 
-                {/* Company Info */}
                 <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm">
                     <h2 className="text-xl font-bold text-dark-amethyst-950 mb-1">Company Profile</h2>
                     <p className="text-xs text-gray-400 mb-6">Manage your workspace details and branding.</p>
