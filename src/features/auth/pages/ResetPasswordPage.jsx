@@ -1,95 +1,214 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/user.context";
+import { supabase } from "@/shared/services/supabase";
+import AuthLayout from "../components/AuthLayout";
+import FormField from "@/shared/ui/FormField";
 
 export default function ResetPasswordPage() {
-  const { updateUserPassword } = useUser();
+  const { updateUserPassword, signOutUser, loading } = useUser();
   const navigate = useNavigate();
-  const [newPassword, setNewPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [notification, setNotification] = useState(null);
 
-  const showNotification = (type, message) => {
-    setNotification({ type, message });
-    setTimeout(() => setNotification(null), 5000);
-  };
+  const [pageState, setPageState] = useState("waiting");
+
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [validationError, setValidationError] = useState(null);
+  const [apiError, setApiError] = useState(null);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      // If we're still waiting after 4 s with no event the link is bad/expired
+      setPageState((current) => {
+        if (current === "waiting") return "invalid";
+        return current;
+      });
+    }, 4000);
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        clearTimeout(timeout);
+        setPageState("ready");
+      }
+    });
+
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  // Auto-redirect to sign-in after success
+  useEffect(() => {
+    if (pageState !== "success") return;
+    const timer = setTimeout(() => {
+      navigate("/auth/sign-in", { replace: true });
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [pageState, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!newPassword || newPassword.length < 6) {
-      showNotification("error", "Password must be at least 6 characters.");
+    setValidationError(null);
+    setApiError(null);
+
+    if (newPassword.length < 8) {
+      setValidationError("Password must be at least 8 characters.");
       return;
     }
-    setLoading(true);
+    if (newPassword !== confirmPassword) {
+      setValidationError("Passwords don't match. Please try again.");
+      return;
+    }
+
     try {
       await updateUserPassword(newPassword);
-      showNotification("success", "Password updated successfully!");
-      setTimeout(() => {
-        navigate("/auth/sign-in");
-        window.history.replaceState(null, null, " ");
-      }, 1500);
+      await signOutUser();
+      setPageState("success");
     } catch (err) {
-      showNotification("error", err.message || "Failed to update password.");
-    } finally {
-      setLoading(false);
+      setApiError(err.message || "Failed to update password. Please try again.");
     }
   };
 
-  return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <div className="w-full max-w-sm p-6">
-        <h1 className="text-2xl font-bold text-slate-950 mb-6 text-center">
-          Reset Password
-        </h1>
+  if (pageState === "waiting") {
+    return (
+      <AuthLayout
+        headline="Verifying your link…"
+        subheading="Please wait while we confirm your reset link"
+      >
+        <div className="flex flex-col items-center gap-6 py-6">
+          <div className="w-12 h-12 rounded-full border-2 border-dark-amethyst-200 border-t-dark-amethyst-600 animate-spin" />
+          <p className="text-dark-amethyst-400 text-sm text-center">
+            This only takes a moment.
+          </p>
+        </div>
+      </AuthLayout>
+    );
+  }
 
-        {notification && (
-          <div
-            className={`mb-4 p-3 rounded text-sm border ${
-              notification.type === "success"
-                ? "bg-green-50 border-green-200 text-green-800"
-                : notification.type === "error"
-                  ? "bg-red-50 border-red-200 text-red-800"
-                  : "bg-blue-50 border-blue-200 text-blue-800"
-            }`}
+  if (pageState === "invalid") {
+    return (
+      <AuthLayout
+        headline="Link expired"
+        subheading="This password reset link is invalid or has expired"
+      >
+        <div className="flex flex-col items-center text-center gap-6 py-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-red-50 border border-red-200">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                stroke="#ef4444"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <p className="text-dark-amethyst-700 text-sm leading-7">
+            Reset links expire after a short time and can only be used once.
+            Request a new one below.
+          </p>
+          <Link
+            to="/auth/forgot-password"
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
           >
-            {notification.message}
+            Request a new link
+          </Link>
+          <Link
+            to="/auth/sign-in"
+            className="text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+          >
+            Back to sign in
+          </Link>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  if (pageState === "success") {
+    return (
+      <AuthLayout
+        headline="Password updated!"
+        subheading="You can now sign in with your new password"
+      >
+        <div className="flex flex-col items-center text-center gap-6 py-4">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-dark-amethyst-100 border border-dark-amethyst-200">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M20 6L9 17l-5-5"
+                stroke="#8400ff"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <p className="text-dark-amethyst-700 text-sm leading-7">
+            Your password has been changed successfully. Redirecting you to
+            sign in…
+          </p>
+          <Link
+            to="/auth/sign-in"
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+          >
+            Go to sign in
+          </Link>
+        </div>
+      </AuthLayout>
+    );
+  }
+
+  return (
+    <AuthLayout
+      headline="Set a new password"
+      subheading="Choose a strong password for your account"
+    >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+        <FormField
+          label="New Password"
+          type="password"
+          placeholder="Min 8 characters"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          required
+        />
+
+        <FormField
+          label="Confirm Password"
+          type="password"
+          placeholder="Repeat your new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+
+        {(validationError || apiError) && (
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+            <span>⚠</span>
+            {validationError || apiError}
           </div>
         )}
 
-        <p className="text-xs text-slate-500 mb-4 text-center">
-          Enter a new secure password.
-        </p>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-dark-amethyst-600 hover:bg-dark-amethyst-700 disabled:opacity-60"
+          style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+        >
+          {loading ? "Updating…" : "Update Password"}
+        </button>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-xs font-semibold text-slate-600 mb-1">
-              New Password
-            </label>
-            <input
-              type="password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              placeholder="Min 6 characters"
-              required
-              className="w-full border border-slate-300 rounded px-3 py-2 text-sm text-slate-900 bg-white focus:border-blue-500 focus:outline-none"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 rounded disabled:opacity-50 cursor-pointer"
-          >
-            {loading ? "Updating..." : "Update Password"}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate("/auth/sign-in")}
-            className="w-full border border-slate-200 hover:bg-slate-50 text-slate-700 text-sm font-medium py-2 rounded cursor-pointer"
-          >
-            Cancel
-          </button>
-        </form>
-      </div>
-    </div>
+        <Link
+          to="/auth/sign-in"
+          className="text-center text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+        >
+          Back to sign in
+        </Link>
+      </form>
+    </AuthLayout>
   );
 }
