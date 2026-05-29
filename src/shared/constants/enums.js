@@ -27,3 +27,9 @@ export const JOB_TYPE = Object.freeze({
   PART_TIME: "part_time",
   FREELANCE: "freelance",
 });
+
+export const INTERVIEW_STATUS = Object.freeze({
+  pending: "pending",
+  completed: "completed",
+  expired: "expired",
+});
