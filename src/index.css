@@ -101,3 +101,12 @@
   --color-mauve-900: #200033;
   --color-mauve-950: #170024;
 }
+
+@utility no-spinner {
+  -moz-appearance: textfield;
+  &::-webkit-inner-spin-button,
+  &::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

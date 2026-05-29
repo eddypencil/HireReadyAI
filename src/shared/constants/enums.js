@@ -29,7 +29,8 @@ export const JOB_TYPE = Object.freeze({
 });
 
 export const INTERVIEW_STATUS = Object.freeze({
-  pending: "pending",
+  draft: "draft",
+  scheduled: "scheduled",
   completed: "completed",
-  expired: "expired",
+  cancelled: "cancelled",
 });
