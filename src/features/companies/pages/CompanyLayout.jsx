@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
 import Navbar from "@/shared/ui/Navbar";
 import JobPostings from "./JobPostings";
 import CompanyProfile from "./CompanyProfile";
 import AddJobModal from "./AddJobModal";
 import NoCompanyView from "./NoCompanyView";
-import { Briefcase, Building2 } from "lucide-react";
 import {
   fetchCompanyByProfileId,
   fetchJobsByCompanyId,
@@ -14,7 +13,6 @@ import {
 } from "../services/companies.service";
 import { createJob } from "@/features/jobs/services/jobs.service";
 import { addMembership } from "../services/memberships.service";
-import { logOut } from "@/features/auth/services/auth.service";
 
 function CompanyLayout() {
   const { loading, profile } = useUser();
@@ -29,7 +27,6 @@ function CompanyLayout() {
   const [dataLoading, setDataLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch company and related data
   useEffect(() => {
     const fetchCompanyData = async () => {
       if (!profile?.id) return;
@@ -38,10 +35,8 @@ function CompanyLayout() {
         setDataLoading(true);
         setError(null);
 
-        // Fetch company by profile ID
         const companyData = await fetchCompanyByProfileId(profile.id);
         if (!companyData) {
-          // No company - user needs to join/create one
           setCompany(null);
           setDataLoading(false);
           return;
@@ -49,7 +44,6 @@ function CompanyLayout() {
 
         setCompany(companyData);
 
-        // Fetch jobs and members for this company
         const [jobsData, membersData] = await Promise.all([
           fetchJobsByCompanyId(companyData.id),
           fetchCompanyMembers(companyData.id),
@@ -124,12 +118,10 @@ function CompanyLayout() {
     );
   }
 
-  // If user doesn't have a company, show join/create company view
   if (!company && !dataLoading) {
     return (
       <NoCompanyView
         onCompanyJoined={() => {
-          // Refetch company data after joining
           setDataLoading(true);
           setTimeout(() => {
             window.location.reload();
@@ -140,63 +132,33 @@ function CompanyLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-50/50 font-sans">
-      <div className="w-64 bg-dark-amethyst-950 text-white flex flex-col p-4 shrink-0">
-        <div className="space-y-6">
-          <div className="px-3 py-2">
-            <span className="text-xl font-bold tracking-tight bg-linear-to-r from-mauve-magic-300 to-dark-amethyst-200 bg-clip-text text-transparent">
-              HireReadyAI
-            </span>
-          </div>
+    <div className="flex-1 flex flex-col overflow-hidden w-full h-full">
+      <Navbar
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        onAddJobClick={() => setIsModalOpen(true)}
+      />
 
-          <nav className="space-y-1">
-            <Link
-              to="/companies/profile"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
-            >
-              <Building2 className="w-4 h-4 text-mauve-magic-300" />
-              Company
-            </Link>
-            <Link
-              to="/companies/jobs"
-              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
-            >
-              <Briefcase className="w-4 h-4 text-mauve-magic-300" />
-              Job Postings
-            </Link>
-            <button onClick={logOut}>Logout</button>
-          </nav>
-        </div>
-      </div>
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onAddJobClick={() => setIsModalOpen(true)}
-        />
-
-        <div className="flex-1 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<Navigate to="profile" replace />} />
-            <Route
-              path="profile"
-              element={
-                <CompanyProfile
-                  company={company}
-                  members={members}
-                  onInvite={handleInviteMember}
-                  frameworkFile={frameworkFile}
-                  setFrameworkFile={setFrameworkFile}
-                />
-              }
-            />
-            <Route
-              path="jobs"
-              element={<JobPostings jobs={jobs} searchQuery={searchQuery} />}
-            />
-          </Routes>
-        </div>
+      <div className="flex-1 overflow-y-auto">
+        <Routes>
+          <Route path="/" element={<Navigate to="profile" replace />} />
+          <Route
+            path="profile"
+            element={
+              <CompanyProfile
+                company={company}
+                members={members}
+                onInvite={handleInviteMember}
+                frameworkFile={frameworkFile}
+                setFrameworkFile={setFrameworkFile}
+              />
+            }
+          />
+          <Route
+            path="jobs"
+            element={<JobPostings jobs={jobs} searchQuery={searchQuery} />}
+          />
+        </Routes>
       </div>
 
       <AddJobModal

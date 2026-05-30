@@ -8,7 +8,8 @@ import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
 import { USER_ROLE } from "@/shared/constants/enums";
 import ApplicantPage from "@/features/applicant/pages/ApplicantPage";
 import JobsPage from "@/features/jobs/pages/JobsPage";
-import CompanyLayout from "@/features/companies/pages/CompanyLayout";
+import CompanyLayout from "./features/companies/pages/CompanyLayout";
+import MainLayout from "@/shared/ui/MainLayout";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -27,7 +28,7 @@ function RootRedirect() {
   }
 
   if (profile?.role === USER_ROLE.applicant) {
-    return <Navigate to="/applicant" replace />;
+    return <Navigate to="/jobs" replace />;
   }
 
   return <Navigate to="/companies" replace />;
@@ -43,33 +44,18 @@ function App() {
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
       <Route
-        path="/applicant"
-        element={
-          <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
-            <ApplicantPage />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/jobs"
         element={
           <ProtectedRoute>
-            <JobsPage />
+            <MainLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route path="/applicant" element={<ApplicantPage />} />
 
-      <Route
-        path="/companies/*"
-        element={
-          <ProtectedRoute
-            allowedRoles={[USER_ROLE.recruiter, USER_ROLE.hrManager]}
-          >
-            <CompanyLayout />
-          </ProtectedRoute>
-        }
-      />
+        <Route path="/jobs" element={<JobsPage />} />
+
+        <Route path="/companies/*" element={<CompanyLayout />} />
+      </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
