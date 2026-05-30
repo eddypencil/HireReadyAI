@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useInterviewQuestions from "../hooks/useInterviewQuestions";
+import { updateInterview } from "../services/interview_database_service";
+import { INTERVIEW_STATUS } from "@/shared/constants/enums";
 
 export default function InterviewPage() {
   const { applicationId } = useParams();
   const navigate = useNavigate();
-  const { questions, loading, error } = useInterviewQuestions(applicationId);
+  const { interview ,questions, loading, error } = useInterviewQuestions(applicationId);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
@@ -238,7 +240,7 @@ export default function InterviewPage() {
                       </button>
 
                       <button
-                        onClick={() => {
+                        onClick={async() => {
                           if (currentQuestionIndex < questions.length - 1) {
                             setCurrentQuestionIndex((prev) => prev + 1);
                             setVideoUrl(null);
@@ -250,6 +252,7 @@ export default function InterviewPage() {
                               localStorage.setItem(`interview_completed_${applicationId}`, "true");
                             }
                             setIsFinished(true);
+                            await updateInterview(interview.id,{status:INTERVIEW_STATUS.completed})
                             setTimeout(() => {
                               navigate("/applicant");
                             }, 2500);
