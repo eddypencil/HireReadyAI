@@ -199,3 +199,5 @@ export const deleteScoresByQuestionId = async (questionId) => {
     .eq("interview_question_id", questionId);
   if (error) throw error;
 };
+
+

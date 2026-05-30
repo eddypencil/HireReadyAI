@@ -1,17 +1,17 @@
-// /pages/applicant/ApplicantPage.jsx
+import { useEffect } from "react";
+import { useUser } from "@/features/auth/context/user.context";
+import { useApplications } from "@/features/applications/context/application.context";
 import ApplicantHeader from "../components/ApplicantHeader";
 import StatsCards from "../components/StatsCards";
 import ApplicationsList from "../components/ApplicationsList";
 import RecommendedJobs from "../components/RecommendedJobs";
 import ProfileStrength from "../components/ProfileStrength";
 import FeedbackTips from "../components/FeedbackTips";
-import { useEffect } from "react";
-import { useUser } from "@/features/auth/context/user.context";
-import { useApplications } from "@/features/applications/context/application.context";
+import InterviewsList from "../components/InterviewList";
 
 export default function ApplicantPage() {
   const { profile, user } = useUser();
-  const { loading, applications, error, getAllApplications } = useApplications();
+  const { loading, applications, error, getAllApplications, updateApplicationStage } = useApplications();
 
   useEffect(() => {
     if (user?.id) {
@@ -19,22 +19,35 @@ export default function ApplicantPage() {
     }
   }, [user?.id]);
 
-  if (loading){
-    return <div>loading applications</div>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-slate-900">
+        <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-2 text-slate-500 text-sm">Loading applications...</p>
+      </div>
+    );
   }
 
-  if(error){
-    return(<div>{error}</div>)
-  }
+  if (error) return <div className="p-6 text-red-600">Error: {error}</div>;
+
   return (
     <div className="min-h-screen bg-[#F9FAFB] text-gray-900 p-6 space-y-6 font-sans">
-      <ApplicantHeader {...profile}/>
-
-      <StatsCards applications={applications}/>
+      <ApplicantHeader {...profile} />
+      <StatsCards applications={applications} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
         <div className="lg:col-span-2 space-y-6">
+
           <ApplicationsList applications={applications} />
+
+          <InterviewsList
+            applications={applications}
+            onStageUpdated={(appId, newStage) => {
+              updateApplicationStage(appId, newStage);
+            }}
+          />
+
           <FeedbackTips />
         </div>
 
@@ -42,6 +55,7 @@ export default function ApplicantPage() {
           <ProfileStrength />
           <RecommendedJobs />
         </div>
+
       </div>
     </div>
   );
