@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { APPLICATION_STAGE } from "@/shared/constants/enums";
 
 const stageConfig = {
@@ -17,6 +18,7 @@ function formatDate(dateStr) {
 }
 
 export default function InterviewList({ applications }) {
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("all_interviews");
 
     const interviewProcesses = applications?.filter((app) =>
@@ -55,7 +57,6 @@ export default function InterviewList({ applications }) {
                 <p className="text-sm text-gray-500 mt-0.5">Track your interview stages and process results</p>
             </div>
 
-            {/* الـ Tabs الملونة */}
             <div className="flex flex-wrap gap-2 border-b border-gray-100 pb-4">
                 <button
                     onClick={() => setActiveTab("all_interviews")}
@@ -83,7 +84,6 @@ export default function InterviewList({ applications }) {
                 </button>
             </div>
 
-
             <div className="space-y-4">
                 {filteredInterviews.length === 0 ? (
                     <p className="text-sm text-gray-400 py-6 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
@@ -91,6 +91,7 @@ export default function InterviewList({ applications }) {
                     </p>
                 ) : (
                     filteredInterviews.map((app) => {
+                        console.log(app)
                         const job = app.job_postings;
                         const company = job?.companies;
                         const currentStage = app.current_stage;
@@ -125,6 +126,14 @@ export default function InterviewList({ applications }) {
                                 </div>
 
                                 <div className="flex items-center gap-3 shrink-0">
+                                    {currentStage === APPLICATION_STAGE.interview && (
+                                        <button
+                                            onClick={() => navigate(`/interview/${app.id}`,)}
+                                            className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs hover:bg-indigo-700 transition-all"
+                                        >
+                                            Start AI Interview
+                                        </button>
+                                    )}
                                     {app.cv_file_url && (
                                         <a
                                             href={app.cv_file_url}

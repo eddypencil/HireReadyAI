@@ -54,7 +54,7 @@ function App() {
       />
 
       <Route
-        path="/interview"
+        path="/interview/:applicationId"
         element={
           <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
             <InterviewPage></InterviewPage>
