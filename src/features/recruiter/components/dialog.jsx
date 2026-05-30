@@ -13,15 +13,19 @@ import { Field, FieldGroup } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useState } from "react"
-import { createInterview } from "@/features/interview/services/interview_database_service"
+import { bulkCreateQuestions, createInterview } from "@/features/interview/services/interview_database_service"
 import InterviewModel from "@/features/interview/models/interview.model"
 import { INTERVIEW_STATUS } from "@/shared/constants/enums"
+import { TextareaField } from "./textArea"
+import InterviewQuestion from "@/features/interview/models/interview-question.model"
 
 export function AddInterviewDialog() {
     const [applicationID, setApplicationID] = useState("");
     const [jobID, setJobID] = useState("");
     const [reRecordMins, setReRecordMins] = useState(0);
     const [error, setError] = useState("");
+    const [questionsText, setQuestionsText] = useState("");
+    const [questionsList, setQuestionList] = useState([]);
     const [loading, setLoading] = useState(false);
 
     async function submitInterview(e) {
@@ -33,14 +37,21 @@ export function AddInterviewDialog() {
       setLoading(true);
       setError("");
       try {
+        const array = questionsText.split(/\r?\n/).filter(q => q.trim() !== "").map(q => q.trim())
+        setQuestionList(array)
+
         const interview = new InterviewModel(
-        applicationID,
+          applicationID,
           jobID,
           INTERVIEW_STATUS.scheduled,
           new Date().toISOString(),
           reRecordMins
         );
-        await createInterview(interview.toSupabaseForm());
+        let data = await createInterview(interview.toSupabaseForm());
+        await bulkCreateQuestions(array.map((q, i) => {
+          const question = new InterviewQuestion(data.id, q, false, null, i + 1);
+          return question.toSupabaseForm();
+        }))
       } catch (err) {
         console.log(err)
         setError(err.message);
@@ -64,7 +75,7 @@ export function AddInterviewDialog() {
           </DialogHeader>
           <FieldGroup>
             <Field>
-              <Label htmlFor="applicant-id">applicant id</Label>
+              <Label htmlFor="application-id">application id</Label>
               <Input id="applicant-id" name="applicant-id" onChange={(e)=>{setApplicationID(e.target.value)}}/>
             </Field>
             <Field>
@@ -84,6 +95,9 @@ export function AddInterviewDialog() {
               }}/>
               {error&&<p className="italic text-red-400 text-sm">{error}</p>}
             </Field>
+             <Field>
+               <TextareaField value={questionsText} onChange={(e)=>{setQuestionsText(e.target.value)}}/>
+             </Field>
           </FieldGroup>
           <DialogFooter>
             <DialogClose asChild>

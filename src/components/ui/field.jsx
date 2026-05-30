@@ -22,4 +22,34 @@ function FieldGroup({ className, ...props }) {
   );
 }
 
-export { Field, FieldGroup }
+function FieldLabel({ className, ...props }) {
+  return (
+    <label
+      data-slot="field-label"
+      className={cn("text-sm font-medium", className)}
+      {...props}
+    />
+  );
+}
+
+function FieldDescription({ className, ...props }) {
+  return (
+    <p
+      data-slot="field-description"
+      className={cn("text-xs text-muted-foreground", className)}
+      {...props}
+    />
+  );
+}
+
+function FieldMessage({ className, ...props }) {
+  return (
+    <p
+      data-slot="field-message"
+      className={cn("text-xs text-destructive", className)}
+      {...props}
+    />
+  );
+}
+
+export { Field, FieldGroup, FieldLabel, FieldDescription, FieldMessage }
