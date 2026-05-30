@@ -16,7 +16,7 @@ export const SENIORITY_LEVEL = Object.freeze({
 export const APPLICATION_STAGE = Object.freeze({
   applied: "applied",
   screening: "screening",
-  shortlisted: "shortlisted",
+  interviewed: "interviewed",
   interview: "interview",
   hired: "hired",
   rejected: "rejected",
