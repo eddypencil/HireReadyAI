@@ -15,7 +15,7 @@ export default function useInterviewQuestions(applicationID) {
       setInterview(interviewData);
       if (interviewData?.id) {
         const qs = await fetchQuestionsByInterviewId(interviewData.id);
-        setQuestions(qs.map(q => q.question_text));
+        setQuestions(qs.map(q => ({ id: q.id, text: q.question_text })));
       }
     } catch (err) {
       setError(err.message);

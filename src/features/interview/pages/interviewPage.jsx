@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useInterviewQuestions from "../hooks/useInterviewQuestions";
 import { updateInterview } from "../services/interview_database_service";
+import { uploadRecording, updateTranscript } from "../services/video_storage_service";
+import { supabase } from "@/shared/services/supabase";
 import { INTERVIEW_STATUS } from "@/shared/constants/enums";
 
 export default function InterviewPage() {
@@ -22,6 +24,7 @@ export default function InterviewPage() {
   const streamRef = useRef(null);
   const chunksRef = useRef([]);
   const timerRef = useRef(null);
+  const blobRef = useRef(null);
 
   const requestPermissions = async () => {
     try {
@@ -60,6 +63,7 @@ export default function InterviewPage() {
 
     recorder.onstop = () => {
       const blob = new Blob(chunksRef.current, { type: "video/webm" });
+      blobRef.current = blob;
       const url = URL.createObjectURL(blob);
       setVideoUrl(url);
     };
@@ -201,7 +205,7 @@ export default function InterviewPage() {
                   </span>
                 </div>
                 <h3 className="text-lg font-semibold text-gray-800 leading-relaxed tracking-tight pt-2">
-                  {questions[currentQuestionIndex]}
+                  {questions[currentQuestionIndex]?.text}
                 </h3>
               </div>
 
@@ -241,6 +245,33 @@ export default function InterviewPage() {
 
                       <button
                         onClick={async() => {
+                          const question = questions[currentQuestionIndex];
+
+                          if (blobRef.current && interview?.id) {
+                            try {
+                              const { fileName } = await uploadRecording(
+                                blobRef.current,
+                                interview.id,
+                                question.id,
+                              );
+
+                              const { data } = await supabase.functions.invoke("transcribe", {
+                                body: { audioPath: fileName },
+                              });
+
+                              if (data?.text) {
+                                await updateTranscript(
+                                  question.id,
+                                  data.text,
+                                  data.whisper_confidence ?? null,
+                                );
+                              }
+                            } catch (err) {
+                              console.error("Upload/transcription failed:", err);
+                            }
+                            blobRef.current = null;
+                          }
+
                           if (currentQuestionIndex < questions.length - 1) {
                             setCurrentQuestionIndex((prev) => prev + 1);
                             setVideoUrl(null);
