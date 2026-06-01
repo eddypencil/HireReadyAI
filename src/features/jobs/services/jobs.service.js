@@ -9,13 +9,47 @@ export const fetchAllJobs = async () => {
       companies (
         id,
         name,
-        logo_url
+        logo_url,
+        location
       )
     `)
     .order("created_at", { ascending: false });
   if (error) throw error;
   return data;
 };
+
+export const fetchJobById = async (jobId) => {
+  const { data, error } = await supabase
+    .from("job_postings")
+    .select(`
+      *,
+      companies (
+        id,
+        name,
+        logo_url,
+        location,
+        industry,
+        size,
+        created_at
+      )
+    `)
+    .eq("id", jobId)
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+
+export const fetchSimilarJobs = async (jobId, seniorityLevel, jobType) => {
+  const { data, error } = await supabase
+    .from("job_postings")
+    .select(`*, companies(id, name, logo_url, location)`)
+    .neq("id", jobId)
+    .or(`seniority_level.eq.${seniorityLevel},job_type.eq.${jobType}`)
+    .limit(4)
+  if (error) throw error
+  return data
+}
 
 // Create a job posting
 export const createJob = async (jobData) => {

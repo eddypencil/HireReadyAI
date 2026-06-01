@@ -54,7 +54,7 @@ export const logOut = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;
 };
-
+ 
 export const resetPassword = async (email, redirectTo) => {
   const options = redirectTo ? { redirectTo } : undefined;
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, options);

@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { Routes, Route, Link, Navigate } from "react-router-dom";
+import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
+import { Wand2 } from "lucide-react";
 import { useUser } from "@/features/auth/context/user.context";
 import Navbar from "@/shared/ui/Navbar";
 import JobPostings from "./JobPostings";
 import CompanyProfile from "./CompanyProfile";
-import AddJobModal from "./AddJobModal";
+import JDGeneratorPage from "./JDGeneratorPage";
 import NoCompanyView from "./NoCompanyView";
 import { Briefcase, Building2 } from "lucide-react";
 import {
@@ -12,13 +13,12 @@ import {
   fetchJobsByCompanyId,
   fetchCompanyMembers,
 } from "../services/companies.service";
-import { createJob } from "@/features/jobs/services/jobs.service";
 import { addMembership } from "../services/memberships.service";
 import { logOut } from "@/features/auth/services/auth.service";
 
 function CompanyLayout() {
   const { loading, profile } = useUser();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [members, setMembers] = useState([]);
   const [company, setCompany] = useState(null);
@@ -67,28 +67,6 @@ function CompanyLayout() {
 
     fetchCompanyData();
   }, [profile?.id]);
-
-  const handleAddJob = async (newJob) => {
-    try {
-      if (!company?.id) return;
-
-      const jobData = {
-        company_id: company.id,
-        created_by_profile_id: profile?.id,
-        title: newJob.title,
-        description: newJob.description || "",
-        seniority_level: newJob.seniorityLevel || null,
-        job_type: newJob.jobType || null,
-      };
-
-      const createdJob = await createJob(jobData);
-      setJobs([createdJob, ...jobs]);
-      setIsModalOpen(false);
-    } catch (err) {
-      console.error("Error adding job:", err);
-      setError(err.message);
-    }
-  };
 
   const handleInviteMember = async () => {
     try {
@@ -164,6 +142,13 @@ function CompanyLayout() {
               <Briefcase className="w-4 h-4 text-mauve-magic-300" />
               Job Postings
             </Link>
+            <Link
+              to="/companies/jd-generator"
+              className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium hover:bg-white/10 transition-colors"
+            >
+              <Wand2 className="w-4 h-4 text-mauve-magic-300" />
+              JD Generator
+            </Link>
             <button onClick={logOut}>Logout</button>
           </nav>
         </div>
@@ -173,7 +158,7 @@ function CompanyLayout() {
         <Navbar
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
-          onAddJobClick={() => setIsModalOpen(true)}
+          onAddJobClick={() => navigate("/companies/jd-generator")}
         />
 
         <div className="flex-1 overflow-y-auto">
@@ -195,15 +180,14 @@ function CompanyLayout() {
               path="jobs"
               element={<JobPostings jobs={jobs} searchQuery={searchQuery} />}
             />
+            <Route
+              path="jd-generator"
+              element={<JDGeneratorPage company={company} profile={profile} />}
+            />
+            
           </Routes>
         </div>
       </div>
-
-      <AddJobModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAddJob={handleAddJob}
-      />
     </div>
   );
 }

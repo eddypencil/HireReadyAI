@@ -9,6 +9,8 @@ import { USER_ROLE } from "@/shared/constants/enums";
 import ApplicantPage from "@/features/applicant/pages/ApplicantPage";
 import JobsPage from "@/features/jobs/pages/JobsPage";
 import CompanyLayout from "@/features/companies/pages/CompanyLayout";
+import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
+import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -56,6 +58,23 @@ function App() {
         element={
           <ProtectedRoute>
             <JobsPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/jobs/:id"
+        element={
+          <ProtectedRoute>
+            <JobDetailsPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/jobs/:id/apply"
+        element={
+          <ProtectedRoute>
+            <ApplyJobPage />
           </ProtectedRoute>
         }
       />
