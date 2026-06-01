@@ -1,8 +1,11 @@
 //src/features/applications/components/apply/QuestionCard.jsx
-export default function QuestionCard({ question, value, onChange }) {
+export default function QuestionCard({ question, value, onChange, error }) {
   return (
-    <div className="border rounded-lg p-4 space-y-2 bg-white">
-      <p className="font-medium">{question.question}</p>
+    <div className="border rounded-lg p-4 bg-white space-y-2">
+      <p className="font-medium">
+        {question.question}
+        <span className="text-red-500 ml-1">*</span>
+      </p>
 
       {question.type === "yes_no" && (
         <div className="flex gap-4">
@@ -12,7 +15,7 @@ export default function QuestionCard({ question, value, onChange }) {
               checked={value === "yes"}
               onChange={() => onChange("yes")}
             />
-            <span className="ml-2">Yes</span>
+            Yes
           </label>
 
           <label>
@@ -21,14 +24,16 @@ export default function QuestionCard({ question, value, onChange }) {
               checked={value === "no"}
               onChange={() => onChange("no")}
             />
-            <span className="ml-2">No</span>
+            No
           </label>
         </div>
       )}
 
       {question.type === "text" && (
         <input
-          className="w-full border p-2 rounded"
+          className={`w-full p-2 rounded border ${
+            error ? "border-red-500" : "border-gray-300"
+          }`}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
         />
@@ -36,11 +41,14 @@ export default function QuestionCard({ question, value, onChange }) {
 
       {question.type === "textarea" && (
         <textarea
-          className="w-full border p-2 rounded"
+          className={`w-full p-2 rounded border ${
+            error ? "border-red-500" : "border-gray-300"
+          }`}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
         />
       )}
+      {error && <p className="text-red-500 text-sm">{error}</p>}
     </div>
   );
 }

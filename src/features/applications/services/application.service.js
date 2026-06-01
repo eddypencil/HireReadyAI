@@ -1,9 +1,11 @@
+// src\features\applications\services\application.service.js
 import { supabase } from "@/shared/services/supabase";
-//fetch all applications by applicant id 
+//fetch all applications by applicant id
 export const fetchApplicationsByApplicantId = async (applicantId) => {
   const { data, error } = await supabase
     .from("applications")
-    .select(`
+    .select(
+      `
       *,
       job_postings (
         id,
@@ -19,19 +21,20 @@ export const fetchApplicationsByApplicantId = async (applicantId) => {
           logo_url
         )
       )
-    `)
+    `,
+    )
     .eq("candidate_profile_id", applicantId)
     .order("applied_at", { ascending: false });
   if (error) throw error;
   return data;
 };
 
-
 //fetch only one application
 export const fetchApplicationById = async (applicationId) => {
   const { data, error } = await supabase
     .from("applications")
-    .select(`
+    .select(
+      `
       *,
       job_postings (
         id,
@@ -47,13 +50,13 @@ export const fetchApplicationById = async (applicationId) => {
           logo_url
         )
       )
-    `)
+    `,
+    )
     .eq("id", applicationId)
     .single();
   if (error) throw error;
   return data;
 };
-
 
 //apply
 export const createApplication = async (applicationData) => {
@@ -65,8 +68,6 @@ export const createApplication = async (applicationData) => {
   if (error) throw error;
   return data;
 };
-
-
 
 //update stage for recuiter not accissable by applicant
 export const updateApplicationStage = async (applicationId, stage) => {
@@ -87,4 +88,15 @@ export const deleteApplication = async (applicationId) => {
     .delete()
     .eq("id", applicationId);
   if (error) throw error;
+};
+
+export const fetchQuestionsByJobId = async (jobId) => {
+  const cleanJobId = jobId?.trim();
+
+  const { data, error } = await supabase
+    .from("questions")
+    .select("*")
+    .eq("job_id", cleanJobId);
+
+  return data;
 };

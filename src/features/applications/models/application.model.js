@@ -1,3 +1,4 @@
+//src\features\applications\models\application.model.js
 class Application {
   constructor(candidateProfileId, jobId, cvFileUrl, currentStage) {
     this.candidateProfileId = candidateProfileId;

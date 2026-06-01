@@ -12,6 +12,8 @@ import CompanyLayout from "./features/companies/pages/CompanyLayout";
 import MainLayout from "@/shared/ui/MainLayout";
 import Recruiterscreen from "./features/recruiter/pages/recruiter_screen";
 import InterviewPage from "./features/interview/pages/interviewPage";
+import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
+import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -86,9 +88,21 @@ function App() {
         <Route path="/jobs" element={<JobsPage />} />
 
         <Route
+          path="/jobs/:id"
+          element={<JobDetailsPage />}
+        />
+
+        <Route
+          path="/jobs/:id/apply"
+          element={<ApplyJobPage />}
+        />
+
+        <Route
           path="/companies/*"
           element={
-            <ProtectedRoute allowedRoles={[USER_ROLE.recruiter, USER_ROLE.hrManager]}>
+            <ProtectedRoute
+              allowedRoles={[USER_ROLE.recruiter, USER_ROLE.hrManager]}
+            >
               <CompanyLayout />
             </ProtectedRoute>
           }
