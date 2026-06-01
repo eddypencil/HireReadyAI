@@ -50,6 +50,10 @@ function App() {
       <Route path="/auth/sign-up" element={<SignUpPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route element={<ProtectedRoute>
+        <MainLayout/>
+        </ProtectedRoute>
+        }>
 
       <Route
         path="/applicant"
@@ -68,6 +72,7 @@ function App() {
           </ProtectedRoute>
         }
       />
+      </Route>
 
       <Route
         path="/recruiter"

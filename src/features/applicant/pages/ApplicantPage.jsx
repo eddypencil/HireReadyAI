@@ -61,14 +61,14 @@ export default function ApplicantPage() {
           <ProfileStrength />
           <RecommendedJobs />
         </div>
-        <button
+        {/* <button
           className="fixed bottom-2 right-2 bg-dark-amethyst-600 text-royal-violet-100 px-5 py-2 rounded-2xl cursor-pointer"
           onClick={() => {
             signOutUser();
           }}
         >
           LogOut
-        </button>
+        </button> */}
       </div>
     </div>
   );
