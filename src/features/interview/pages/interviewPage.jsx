@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useInterviewQuestions from "../hooks/useInterviewQuestions";
 import { updateInterview } from "../services/interview_database_service";
-import { uploadRecording, updateTranscript } from "../services/video_storage_service";
+import { uploadRecording, retryPendingTranscriptions } from "../services/video_storage_service";
 import { supabase } from "@/shared/services/supabase";
 import { INTERVIEW_STATUS } from "@/shared/constants/enums";
 
@@ -255,19 +255,13 @@ export default function InterviewPage() {
                                 question.id,
                               );
 
-                              const { data } = await supabase.functions.invoke("transcribe", {
-                                body: { audioPath: fileName },
+                              supabase.functions.invoke("whisper-api", {
+                                body: { audioPath: fileName, questionId: question.id },
+                              }).catch((err) => {
+                                console.error("Background transcription failed:", err);
                               });
-
-                              if (data?.text) {
-                                await updateTranscript(
-                                  question.id,
-                                  data.text,
-                                  data.whisper_confidence ?? null,
-                                );
-                              }
                             } catch (err) {
-                              console.error("Upload/transcription failed:", err);
+                              console.error("Upload failed:", err);
                             }
                             blobRef.current = null;
                           }
@@ -282,6 +276,11 @@ export default function InterviewPage() {
                             if (applicationId) {
                               localStorage.setItem(`interview_completed_${applicationId}`, "true");
                             }
+
+                            retryPendingTranscriptions(interview.id).catch((err) => {
+                              console.error("Retry transcriptions failed:", err);
+                            });
+
                             setIsFinished(true);
                             await updateInterview(interview.id,{status:INTERVIEW_STATUS.completed})
                             setTimeout(() => {

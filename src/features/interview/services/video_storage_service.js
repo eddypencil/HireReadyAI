@@ -23,6 +23,8 @@ export const uploadRecording = async (blob, interviewId, questionId) => {
     .from("interview_questions")
     .update({
       recording_url: publicUrl,
+      storage_path: fileName,
+      transcription_status: "pending",
     })
     .eq("id", questionId);
 
@@ -43,6 +45,26 @@ export const updateTranscript = async (questionId, transcript, confidence = null
     .eq("id", questionId);
 
   if (error) throw error;
+};
+
+export const retryPendingTranscriptions = async (interviewId) => {
+  const { data: questions, error } = await supabase
+    .from("interview_questions")
+    .select("id, storage_path")
+    .eq("interview_id", interviewId)
+    .neq("transcription_status", "completed");
+
+  if (error) throw error;
+  if (!questions?.length) return [];
+
+  const results = await Promise.allSettled(
+    questions.map((q) =>
+      supabase.functions.invoke("whisper-api", {
+        body: { audioPath: q.storage_path, questionId: q.id },
+      })
+    )
+  );
+  return results;
 };
 
 export const deleteRecording = async (filePath) => {
