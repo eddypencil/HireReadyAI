@@ -13,6 +13,7 @@ export default function SignUpPage() {
 
   const [role, setRole] = useState(USER_ROLE.applicant);
   const [fullName, setFullName] = useState("");
+  const [headline, setHeadLine] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -45,6 +46,7 @@ export default function SignUpPage() {
         fullName,
         role,
         phone,
+        headline,
         isActive: true,
       });
     } catch (err) {
@@ -66,6 +68,15 @@ export default function SignUpPage() {
           placeholder="Your full name"
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
+          required
+        />
+
+        <FormField
+          label="Current title"
+          type="text"
+          placeholder="ex.HR Manager, Frontend Developer..."
+          value={headline}
+          onChange={(e) => setHeadLine(e.target.value)}
           required
         />
 

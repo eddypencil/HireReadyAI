@@ -7,6 +7,14 @@ import CompanyProfile from "./CompanyProfile";
 import AddJobModal from "./AddJobModal";
 import NoCompanyView from "./NoCompanyView";
 import {
+  Briefcase,
+  Building2,
+  LayoutDashboard,
+  ClipboardCheck,
+} from "lucide-react";
+import RecruiterDashboardPage from "../../recruiter/pages/RecruiterDashboardPage";
+import ShortlistsPage from "../../shortlist/pages/ShortlistsPage";
+import {
   fetchCompanyByProfileId,
   fetchJobsByCompanyId,
   fetchCompanyMembers,
@@ -141,7 +149,8 @@ function CompanyLayout() {
 
       <div className="flex-1 overflow-y-auto">
         <Routes>
-          <Route path="/" element={<Navigate to="profile" replace />} />
+          <Route path="/" element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<RecruiterDashboardPage />} />
           <Route
             path="profile"
             element={
@@ -157,6 +166,11 @@ function CompanyLayout() {
           <Route
             path="jobs"
             element={<JobPostings jobs={jobs} searchQuery={searchQuery} />}
+          />
+          <Route path="shortlists" element={<ShortlistsPage jobs={jobs} />} />
+          <Route
+            path="shortlists/:jobId"
+            element={<ShortlistsPage jobs={jobs} />}
           />
         </Routes>
       </div>

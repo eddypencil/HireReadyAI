@@ -1,3 +1,4 @@
+import { USER_ROLE } from "@/shared/constants/enums";
 import { supabase } from "@/shared/services/supabase";
 
 // Add a membership

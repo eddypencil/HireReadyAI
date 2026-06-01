@@ -16,14 +16,22 @@ export const SENIORITY_LEVEL = Object.freeze({
 export const APPLICATION_STAGE = Object.freeze({
   applied: "applied",
   screening: "screening",
-  shortlisted: "shortlisted",
+  interviewed: "interviewed",
   interview: "interview",
   hired: "hired",
   rejected: "rejected",
+  shorListed: "short_listed"
 });
 
 export const JOB_TYPE = Object.freeze({
   FULL_TIME: "full_time",
   PART_TIME: "part_time",
   FREELANCE: "freelance",
+});
+
+export const INTERVIEW_STATUS = Object.freeze({
+  draft: "draft",
+  scheduled: "scheduled",
+  completed: "completed",
+  cancelled: "cancelled",
 });

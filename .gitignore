@@ -48,3 +48,5 @@ yarn.lock.*.backup
 # Temporary files
 tmp/
 temp/
+
+schema.md

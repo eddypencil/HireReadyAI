@@ -10,6 +10,8 @@ import ApplicantPage from "@/features/applicant/pages/ApplicantPage";
 import JobsPage from "@/features/jobs/pages/JobsPage";
 import CompanyLayout from "./features/companies/pages/CompanyLayout";
 import MainLayout from "@/shared/ui/MainLayout";
+import Recruiterscreen from "./features/recruiter/pages/recruiter_screen";
+import InterviewPage from "./features/interview/pages/interviewPage";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -48,21 +50,39 @@ function App() {
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
       <Route
+        path="/applicant"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+            <ApplicantPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/interview/:applicationId"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+            <InterviewPage></InterviewPage>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/recruiter"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>
+            <Recruiterscreen />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         element={
           <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         }
       >
-        <Route
-          path="/applicant"
-          element={
-            <ProtectedRoute allowedRoles={USER_ROLE.applicant}>
-              <ApplicantPage />
-            </ProtectedRoute>
-          }
-        />
-
         <Route path="/jobs" element={<JobsPage />} />
 
         <Route

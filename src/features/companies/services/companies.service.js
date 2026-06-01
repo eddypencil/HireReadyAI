@@ -1,3 +1,4 @@
+import { USER_ROLE } from "@/shared/constants/enums";
 import { supabase } from "@/shared/services/supabase";
 
 // Fetch all companies
@@ -16,16 +17,18 @@ export const fetchCompanyById = async (companyId) => {
     .from("companies")
     .select(
       `
+    *,
+    company_memberships(
       *,
-      company_memberships(
-        *,
-        profiles(*)
-      ),
-      job_postings(*)
-    `,
+      profiles(*)
+    ),
+    job_postings(*)
+  `
     )
     .eq("id", companyId)
+    .eq("company_memberships.profiles.role", USER_ROLE.recruiter)
     .single();
+  console.log(data);
   if (error) throw error;
   return data;
 };

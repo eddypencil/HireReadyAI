@@ -5,7 +5,9 @@ export default function JobPostings({ jobs, searchQuery }) {
   const [activeTab, setActiveTab] = useState("Active");
 
   const getJobStatus = (job) => {
-    return job.closed_at ? "Closed" : "Active";
+    let today = Date.now();
+    console.log(today, Date.parse(job.closed_at));
+    return Date.parse(job.closed_at) < today ? "Closed" : "Active";
   };
 
   const filteredJobs = jobs.filter((job) => {
