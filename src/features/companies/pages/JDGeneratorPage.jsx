@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { SENIORITY_LEVEL } from "@/shared/constants/enums";
+import { useJobs } from "@/features/jobs/hooks/useJobs";
 
 const DUMMY_JD = {
   about:
@@ -31,8 +32,11 @@ export default function JDGeneratorPage() {
     [],
   );
 
+  const [createJob] = useJobs()
+
   const handleAddJob = () => {
     const job = {};
+    createJob(job)
   };
 
   const inputClass =

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchAllJobs } from "../services/jobs.service";
+import { addJob, fetchAllJobs } from "../services/jobs.service";
 
 export const useJobs = () => {
   const [jobs, setJobs] = useState([]);
@@ -19,6 +19,14 @@ export const useJobs = () => {
     }
   };
 
+  const createJob = async (job) => {
+    try {
+      await addJob(job);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   useEffect(() => {
     loadJobs();
   }, []);
@@ -27,6 +35,7 @@ export const useJobs = () => {
     jobs,
     loading,
     error,
+    createJob,
     reload: loadJobs,
   };
 };
