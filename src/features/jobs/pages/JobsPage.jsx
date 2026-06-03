@@ -86,7 +86,7 @@ export default function JobsPage() {
 
         <div className="relative z-10 max-w-6xl mx-auto">
           <p className="text-dark-amethyst-300 text-sm font-medium tracking-widest mb-3">
-            HireReadyAI — Job Board
+            HireReadyAI - Job Board
           </p>
           <h1
             className="text-white font-black leading-tight mb-3"
