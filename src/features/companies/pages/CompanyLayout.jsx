@@ -12,9 +12,11 @@ import {
   Building2,
   LayoutDashboard,
   ClipboardCheck,
+  GitBranch,
 } from "lucide-react";
 import RecruiterDashboardPage from "../../recruiter/pages/RecruiterDashboardPage";
 import ShortlistsPage from "../../shortlist/pages/ShortlistsPage";
+import PipelineBuilderPage from "../../pipeline/pages/PipelineBuilderPage";
 import {
   fetchCompanyByProfileId,
   fetchJobsByCompanyId,
@@ -150,6 +152,7 @@ function CompanyLayout() {
             path="shortlists/:jobId"
             element={<ShortlistsPage jobs={jobs} />}
           />
+          <Route path="pipelines/:jobId" element={<PipelineBuilderPage />} />
           <Route
             path="jd-generator"
             element={<JDGeneratorPage company={company} profile={profile} />}

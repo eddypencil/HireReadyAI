@@ -32,17 +32,17 @@ export default function JDGeneratorPage() {
     [],
   );
 
-  const [createJob] = useJobs()
+  const { createJob } = useJobs();
 
   const handleAddJob = () => {
     const job = {};
-    createJob(job)
+    createJob(job);
   };
 
   const inputClass =
-    "w-full h-11 rounded-xl px-4 text-sm text-dark-amethyst-900 bg-dark-amethyst-50 border border-dark-amethyst-100 outline-none transition-all duration-200 placeholder:text-dark-amethyst-300";
+    "w-full h-11 rounded-xl px-4 text-sm text-dark-amethyst-900 bg-white border border-dark-amethyst-100 outline-none transition-all duration-200 placeholder:text-dark-amethyst-300";
   const selectClass =
-    "w-full h-11 rounded-xl px-4 text-sm text-dark-amethyst-900 bg-dark-amethyst-50 border border-dark-amethyst-100 outline-none transition-all duration-200";
+    "w-full h-11 rounded-xl px-4 text-sm text-dark-amethyst-900 bg-white border border-dark-amethyst-100 outline-none transition-all duration-200";
   const labelClass =
     "text-xs font-semibold text-dark-amethyst-600 uppercase tracking-wide";
 
@@ -196,7 +196,7 @@ export default function JDGeneratorPage() {
                 value={keyNotes}
                 onChange={(e) => setKeyNotes(e.target.value)}
                 placeholder="e.g. We need someone comfortable with distributed systems, Go or Node, and mentoring two junior engineers."
-                className="w-full rounded-xl px-4 py-3 text-sm text-dark-amethyst-900 bg-dark-amethyst-50 border border-dark-amethyst-100 outline-none transition-all duration-200 placeholder:text-dark-amethyst-300 resize-none"
+                className="w-full rounded-xl px-4 py-3 text-sm text-dark-amethyst-900 bg-white border border-dark-amethyst-100 outline-none transition-all duration-200 placeholder:text-dark-amethyst-300 resize-none"
                 onFocus={handleFocus}
                 onBlur={handleBlur}
               />

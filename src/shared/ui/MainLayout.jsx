@@ -12,6 +12,7 @@ import {
   LayoutDashboard,
   CheckCircle,
   Wand2,
+  GitBranch,
 } from "lucide-react";
 
 export default function MainLayout() {

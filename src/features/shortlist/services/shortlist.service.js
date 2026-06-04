@@ -1,67 +1,61 @@
 import { supabase } from "@/shared/services/supabase";
 
 /**
- * Fetches the shortlist entries for a given job.
- * Falls back to dummy data if no real entries are found, exactly matching the expected Supabase schema.
- * 
- * Expected query format:
- * supabase.from('shortlist_entries').select(`
- *   id,
- *   rank,
- *   applications (
- *     id,
- *     cv_score,
- *     test_score,
- *     interview_score,
- *     composite_score,
- *     profiles (id, full_name, headline),
- *     cv_dimension_scores (dimension_name, score),
- *     shortlist_votes (vote)
- *   )
- * `).eq('job_id', jobId).order('rank')
+ * Fetches the full shortlist for a job, including tags, AI rationale,
+ * votes with voter profiles, and stage scores.
  */
 export const fetchShortlistForJob = async (jobId) => {
   if (!jobId) return [];
 
   try {
     const { data, error } = await supabase
-      .from('shortlist_entries')
+      .from("shortlist_entries")
       .select(`
         id,
         rank,
+        tags,
         applications (
           id,
-          cv_score,
-          test_score,
-          interview_score,
           composite_score,
+          ai_rationale,
+          ai_confidence,
+          is_rejected,
+          rejection_reason,
+          applied_at,
           profiles (
             id,
             full_name,
-            headline
-          ),
-          cv_dimension_scores (
-            dimension_name,
-            score
+            headline,
+            role
           ),
           shortlist_votes (
-            vote
+            id,
+            vote,
+            voter_id,
+            profiles (
+              full_name,
+              headline,
+              role
+            )
+          ),
+          application_stages (
+            id,
+            score,
+            recruitment_stages ( name, stage_type )
           )
         )
       `)
-      .eq('job_id', jobId)
-      .order('rank');
+      .eq("job_id", jobId)
+      .order("rank");
 
     if (error) {
       console.error("Supabase Error fetching shortlist:", error);
-      // Fallthrough to dummy data for presentation if the table isn't created or fails
     }
 
     if (data && data.length > 0) {
       return data;
     }
 
-    // Return structured dummy data aligned with the expected Supabase response
     return generateDummyShortlist();
   } catch (err) {
     console.error("Error in fetchShortlistForJob:", err);
@@ -69,138 +63,248 @@ export const fetchShortlistForJob = async (jobId) => {
   }
 };
 
-const generateDummyShortlist = () => {
-  return [
-    {
-      id: "entry-1",
-      rank: 1,
-      applications: {
-        id: "app-1",
-        cv_score: 94,
-        test_score: 88,
-        interview_score: 93,
-        composite_score: 92,
-        profiles: {
-          id: "prof-1",
-          full_name: "Mariam Nabil",
-          headline: "Product Designer"
-        },
-        cv_dimension_scores: [
-          { dimension_name: "Technical depth", score: 92 },
-          { dimension_name: "Leadership", score: 88 },
-          { dimension_name: "Communication", score: 91 },
-          { dimension_name: "Domain fit", score: 82 }
-        ],
-        shortlist_votes: [
-          { vote: "up" }, { vote: "up" }, { vote: "up" }, { vote: "up" },
-          { vote: "neutral" },
-        ]
-      }
-    },
-    {
-      id: "entry-2",
-      rank: 2,
-      applications: {
-        id: "app-2",
-        cv_score: 92,
-        test_score: 86,
-        interview_score: 88,
-        composite_score: 89,
-        profiles: {
-          id: "prof-2",
-          full_name: "Ahmed Samy",
-          headline: "Senior Backend Eng."
-        },
-        cv_dimension_scores: [
-          { dimension_name: "Technical depth", score: 92 },
-          { dimension_name: "Leadership", score: 80 },
-          { dimension_name: "Communication", score: 76 },
-          { dimension_name: "Domain fit", score: 88 }
-        ],
-        shortlist_votes: [
-          { vote: "up" }, { vote: "up" }, { vote: "up" },
-          { vote: "neutral" }, { vote: "neutral" },
-        ]
-      }
-    },
-    {
-      id: "entry-3",
-      rank: 3,
-      applications: {
-        id: "app-3",
-        cv_score: 84,
-        test_score: 90,
-        interview_score: 84,
-        composite_score: 86,
-        profiles: {
-          id: "prof-3",
-          full_name: "Karim Adel",
-          headline: "Growth Marketing"
-        },
-        cv_dimension_scores: [
-          { dimension_name: "Technical depth", score: 92 },
-          { dimension_name: "Leadership", score: 80 },
-          { dimension_name: "Communication", score: 76 },
-          { dimension_name: "Domain fit", score: 82 }
-        ],
-        shortlist_votes: [
-          { vote: "up" }, { vote: "up" }, { vote: "up" },
-          { vote: "neutral" },
-          { vote: "down" },
-        ]
-      }
-    },
-    {
-      id: "entry-4",
-      rank: 4,
-      applications: {
-        id: "app-4",
-        cv_score: 86,
-        test_score: 81,
-        interview_score: 85,
-        composite_score: 84,
-        profiles: {
-          id: "prof-4",
-          full_name: "Salma Tarek",
-          headline: "Customer Success"
-        },
-        cv_dimension_scores: [
-          { dimension_name: "Technical depth", score: 85 },
-          { dimension_name: "Leadership", score: 78 },
-          { dimension_name: "Communication", score: 88 },
-          { dimension_name: "Domain fit", score: 80 }
-        ],
-        shortlist_votes: [
-          { vote: "up" }, { vote: "up" },
-          { vote: "neutral" }, { vote: "neutral" },
-        ]
-      }
-    },
-    {
-      id: "entry-5",
-      rank: 5,
-      applications: {
-        id: "app-5",
-        cv_score: 80,
-        test_score: 85,
-        interview_score: 80,
-        composite_score: 82,
-        profiles: {
-          id: "prof-5",
-          full_name: "Lina Farouk",
-          headline: "Operations Manager"
-        },
-        cv_dimension_scores: [
-          { dimension_name: "Technical depth", score: 82 },
-          { dimension_name: "Leadership", score: 85 },
-          { dimension_name: "Communication", score: 82 },
-          { dimension_name: "Domain fit", score: 75 }
-        ],
-        shortlist_votes: [
-          { vote: "up" }, { vote: "up" },
-          { vote: "down" },
-        ]
-      }
-    }
-  ];
+/**
+ * Cast or update a vote for an application.
+ * Attempts to upsert — falls back to insert if no unique constraint.
+ */
+export const castVote = async (applicationId, voterId, vote) => {
+  // Try to find existing vote first
+  const { data: existing } = await supabase
+    .from("shortlist_votes")
+    .select("id")
+    .eq("application_id", applicationId)
+    .eq("voter_id", voterId)
+    .maybeSingle();
+
+  if (existing) {
+    const { error } = await supabase
+      .from("shortlist_votes")
+      .update({ vote })
+      .eq("id", existing.id);
+    if (error) throw error;
+  } else {
+    const { error } = await supabase
+      .from("shortlist_votes")
+      .insert({ application_id: applicationId, voter_id: voterId, vote });
+    if (error) throw error;
+  }
 };
+
+/**
+ * Mark an application as rejected with an optional reason.
+ * The reason can be pre-filled from ai_rationale on the client.
+ */
+export const rejectApplication = async (applicationId, reason) => {
+  const { error } = await supabase
+    .from("applications")
+    .update({ is_rejected: true, rejection_reason: reason })
+    .eq("id", applicationId);
+  if (error) throw error;
+};
+
+/**
+ * Advance an application to the Offer stage.
+ */
+export const advanceToOffer = async (applicationId, offerStageId) => {
+  const { error } = await supabase
+    .from("applications")
+    .update({ current_stage_id: offerStageId })
+    .eq("id", applicationId);
+  if (error) throw error;
+};
+
+/**
+ * Fetch team notes for a specific application (excludes HR-only notes for applicant view).
+ */
+export const fetchNotesForApplication = async (applicationId) => {
+  const { data, error } = await supabase
+    .from("application_notes")
+    .select(`
+      id,
+      body,
+      created_at,
+      visible_to_team,
+      author_id,
+      profiles:author_id ( full_name, headline, role )
+    `)
+    .eq("application_id", applicationId)
+    .order("created_at", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+};
+
+/**
+ * Post a new team note for an application.
+ */
+export const postNote = async (applicationId, authorId, body, visibleToTeam = true) => {
+  const { data, error } = await supabase
+    .from("application_notes")
+    .insert({
+      application_id: applicationId,
+      author_id: authorId,
+      body,
+      visible_to_team: visibleToTeam,
+    })
+    .select(`
+      id,
+      body,
+      created_at,
+      visible_to_team,
+      author_id,
+      profiles:author_id ( full_name, headline, role )
+    `)
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+// ---------------------------------------------------------------------------
+// Dummy data — mirrors the exact shape of the Supabase query response
+// ---------------------------------------------------------------------------
+const generateDummyShortlist = () => [
+  {
+    id: "entry-1",
+    rank: 1,
+    tags: ["Strong Fit", "Leaning hire"],
+    applications: {
+      id: "app-1",
+      composite_score: 86,
+      ai_rationale:
+        "Candidate demonstrates strong frontend engineering skills, ships polished UI work, and meets most job requirements. System-design depth is the main gap to probe.",
+      ai_confidence: 0.86,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-1", full_name: "Priya Natarajan", headline: "Senior Frontend Engineer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v1", vote: "up",      voter_id: "voter-1", profiles: { full_name: "Sarah Klein",   headline: "Hiring Manager",     role: "recruiter" } },
+        { id: "v2", vote: "up",      voter_id: "voter-2", profiles: { full_name: "Marcus Idowu",  headline: "Engineering Lead",   role: "recruiter" } },
+        { id: "v3", vote: "neutral", voter_id: "voter-3", profiles: { full_name: "Hana Saito",    headline: "Design Director",    role: "recruiter" } },
+        { id: "v4", vote: "up",      voter_id: "voter-5", profiles: { full_name: "Priya Nair",    headline: "Engineering Manager",role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-1", score: 88, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+  {
+    id: "entry-2",
+    rank: 2,
+    tags: ["Leaning hire"],
+    applications: {
+      id: "app-2",
+      composite_score: 73,
+      ai_rationale:
+        "Candidate demonstrates strong frontend engineering skills, ships polished UI work, and meets most job requirements. System-design depth is the main gap to probe.",
+      ai_confidence: 0.73,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-2", full_name: "Marcus Reyes", headline: "Full Stack Developer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v5", vote: "up",      voter_id: "voter-1", profiles: { full_name: "Sarah Klein",  headline: "Hiring Manager",   role: "recruiter" } },
+        { id: "v6", vote: "up",      voter_id: "voter-2", profiles: { full_name: "Marcus Idowu", headline: "Engineering Lead", role: "recruiter" } },
+        { id: "v7", vote: "up",      voter_id: "voter-3", profiles: { full_name: "Hana Saito",   headline: "Design Director",  role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-2", score: 73, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+  {
+    id: "entry-3",
+    rank: 3,
+    tags: [],
+    applications: {
+      id: "app-3",
+      composite_score: 74,
+      ai_rationale:
+        "Candidate demonstrates strong frontend engineering skills, ships polished UI work, and meets most job requirements. System-design depth is the main gap to probe.",
+      ai_confidence: 0.74,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-3", full_name: "Sofia Almeida", headline: "UI/UX Engineer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v8",  vote: "up",      voter_id: "voter-1", profiles: { full_name: "Sarah Klein",  headline: "Hiring Manager",   role: "recruiter" } },
+        { id: "v9",  vote: "up",      voter_id: "voter-2", profiles: { full_name: "Marcus Idowu", headline: "Engineering Lead", role: "recruiter" } },
+        { id: "v10", vote: "neutral", voter_id: "voter-3", profiles: { full_name: "Hana Saito",   headline: "Design Director",  role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-3", score: 74, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+  {
+    id: "entry-4",
+    rank: 4,
+    tags: ["Strong Fit", "Leaning hire"],
+    applications: {
+      id: "app-4",
+      composite_score: 87,
+      ai_rationale:
+        "Exceptional technical breadth with strong system design thinking. Communication style is direct and well-structured. Likely to perform above median.",
+      ai_confidence: 0.87,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-4", full_name: "Daniel Park", headline: "Staff Engineer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v11", vote: "up",     voter_id: "voter-1", profiles: { full_name: "Sarah Klein",  headline: "Hiring Manager",   role: "recruiter" } },
+        { id: "v12", vote: "up",     voter_id: "voter-2", profiles: { full_name: "Marcus Idowu", headline: "Engineering Lead", role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-4", score: 87, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+  {
+    id: "entry-5",
+    rank: 5,
+    tags: [],
+    applications: {
+      id: "app-5",
+      composite_score: 75,
+      ai_rationale:
+        "Solid mid-level candidate. CV shows consistent delivery but limited ownership at scale. Worth a conversation to assess growth trajectory.",
+      ai_confidence: 0.75,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-5", full_name: "Liam O'Connor", headline: "Frontend Developer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v13", vote: "up",      voter_id: "voter-1", profiles: { full_name: "Sarah Klein",  headline: "Hiring Manager",   role: "recruiter" } },
+        { id: "v14", vote: "up",      voter_id: "voter-2", profiles: { full_name: "Marcus Idowu", headline: "Engineering Lead", role: "recruiter" } },
+        { id: "v15", vote: "neutral", voter_id: "voter-3", profiles: { full_name: "Hana Saito",   headline: "Design Director",  role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-5", score: 75, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+  {
+    id: "entry-6",
+    rank: 6,
+    tags: ["Strong Fit"],
+    applications: {
+      id: "app-6",
+      composite_score: 82,
+      ai_rationale:
+        "Strong fit for the role with deep domain knowledge. Minor concerns about culture add given previous company size. Strong technical signals overall.",
+      ai_confidence: 0.82,
+      is_rejected: false,
+      rejection_reason: null,
+      applied_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+      profiles: { id: "prof-6", full_name: "Hana Saito", headline: "Design Engineer", role: "recruiter" },
+      shortlist_votes: [
+        { id: "v16", vote: "up",   voter_id: "voter-1", profiles: { full_name: "Sarah Klein",  headline: "Hiring Manager",   role: "recruiter" } },
+        { id: "v17", vote: "down", voter_id: "voter-2", profiles: { full_name: "Marcus Idowu", headline: "Engineering Lead", role: "recruiter" } },
+      ],
+      application_stages: [
+        { id: "as-6", score: 82, recruitment_stages: { name: "CV Review", stage_type: "cv_review" } },
+      ],
+    },
+  },
+];

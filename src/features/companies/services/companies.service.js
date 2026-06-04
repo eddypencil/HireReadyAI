@@ -86,7 +86,8 @@ export const fetchJobsByCompanyId = async (companyId) => {
     .select(
       `
       *,
-      applications(count)
+      applications(count),
+      shortlist_entries(count)
     `,
     )
     .eq("company_id", companyId)
@@ -107,6 +108,18 @@ export const fetchCompanyMembers = async (companyId) => {
     )
     .eq("company_id", companyId)
     .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data;
+};
+
+// Update an existing job posting
+export const updateJobPosting = async (jobId, updates) => {
+  const { data, error } = await supabase
+    .from("job_postings")
+    .update(updates)
+    .eq("id", jobId)
+    .select()
+    .single();
   if (error) throw error;
   return data;
 };

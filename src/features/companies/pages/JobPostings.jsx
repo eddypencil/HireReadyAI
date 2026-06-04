@@ -1,149 +1,159 @@
-import { useState } from "react";
-import { ChevronRight, SlidersHorizontal } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { updateJobPosting } from "../services/companies.service";
+import { getPipeline } from "../../pipeline/services/pipeline.service";
+
+import JobSidebar from "../components/job-postings/JobSidebar";
+import JobDetailHeader from "../components/job-postings/JobDetailHeader";
+import JobInfoGrid from "../components/job-postings/JobInfoGrid";
+import JobContentCards from "../components/job-postings/JobContentCards";
+import JobPipelinePreview from "../components/job-postings/JobPipelinePreview";
 
 export default function JobPostings({ jobs, searchQuery }) {
-  const [activeTab, setActiveTab] = useState("Active");
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("Open");
+  const [localJobs, setLocalJobs] = useState(jobs);
+  const [selectedJobId, setSelectedJobId] = useState(jobs[0]?.id || null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState(null);
+  const [saving, setSaving] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const getJobStatus = (job) => {
-    let today = Date.now();
-    console.log(today, Date.parse(job.closed_at));
-    return Date.parse(job.closed_at) < today ? "Closed" : "Active";
+  const [pipelineStages, setPipelineStages] = useState([]);
+  const [loadingStages, setLoadingStages] = useState(false);
+
+  // Sync local jobs with props
+  useEffect(() => {
+    setLocalJobs(jobs);
+    if (!selectedJobId && jobs.length > 0) {
+      setSelectedJobId(jobs[0].id);
+    }
+  }, [jobs, selectedJobId]);
+
+  const selectedJob = localJobs.find((j) => j.id === selectedJobId) || localJobs[0];
+
+  // Fetch pipeline for selected job
+  useEffect(() => {
+    if (!selectedJobId) return;
+    const fetchStages = async () => {
+      setLoadingStages(true);
+      try {
+        const pipeline = await getPipeline(selectedJobId);
+        setPipelineStages(pipeline?.recruitment_stages || []);
+      } catch (err) {
+        console.error("Failed to load pipeline stages", err);
+        setPipelineStages([]);
+      } finally {
+        setLoadingStages(false);
+      }
+    };
+    fetchStages();
+  }, [selectedJobId]);
+
+  // Handle Edit Initialization
+  const handleEditClick = () => {
+    setEditForm({ ...selectedJob });
+    setIsEditing(true);
   };
 
-  const filteredJobs = jobs.filter((job) => {
-    const status = getJobStatus(job);
-    const matchesTab = activeTab === "All" || status === activeTab;
-    const matchesSearch = job.title
-      .toLowerCase()
-      .includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
-  });
-
-  const countJobs = (status) => {
-    if (status === "All") return jobs.length;
-    return jobs.filter((j) => getJobStatus(j) === status).length;
+  const handleCancelEdit = () => {
+    setEditForm(null);
+    setIsEditing(false);
   };
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "Recently";
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
+  const handleSave = async () => {
+    if (!editForm) return;
+    setSaving(true);
+    try {
+      // Prepare updates
+      const updates = {
+        title: editForm.title,
+        description: editForm.description,
+        job_type: editForm.job_type,
+        work_location: editForm.work_location,
+        salary_min: editForm.salary_min,
+        salary_max: editForm.salary_max,
+        seniority_level: editForm.seniority_level,
+        responsibilities: editForm.responsibilities,
+        requirements: editForm.requirements,
+        skills: editForm.skills,
+      };
+
+      const updatedJob = await updateJobPosting(selectedJobId, updates);
+      
+      // Update local state
+      setLocalJobs((prev) =>
+        prev.map((job) => (job.id === selectedJobId ? { ...job, ...updatedJob } : job))
+      );
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Failed to update job", err);
+      alert("Failed to update job details.");
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
-    <div className="p-4 sm:p-8 bg-gray-50/50 min-h-screen font-sans">
-      <div className="max-w-6xl mx-auto">
+    <div className="flex flex-col md:flex-row h-full font-sans bg-gray-50/50">
+      {/* Left Sidebar - Job List */}
+      <JobSidebar 
+        jobs={localJobs}
+        activeTab={activeTab}
+        searchQuery={searchQuery}
+        selectedJobId={selectedJobId}
+        setSelectedJobId={setSelectedJobId}
+        setIsEditing={setIsEditing}
+        navigate={navigate}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
+      />
 
-        {/* Upper Header Responsive */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-dark-amethyst-950">
-              Job Postings
-            </h1>
-            <p className="text-xs sm:text-sm text-gray-500 mt-1">
-              All active and closed positions across the company.
-            </p>
-          </div>
-          <button className="flex items-center justify-center gap-2 border border-gray-200 bg-white px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 cursor-pointer w-full sm:w-auto transition-all shadow-2xs">
-            <SlidersHorizontal className="w-4 h-4" /> Filters
-          </button>
-        </div>
-
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-1.5 max-w-full scrollbar-none">
-          {["All", "Active", "Closed"].map((tab) => {
-            const isActive = activeTab === tab;
-            return (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-full text-xs font-medium transition-colors cursor-pointer shrink-0 ${isActive
-                    ? "bg-indigo-velvet-50 text-indigo-velvet-600 border border-indigo-velvet-100"
-                    : "text-gray-500 hover:bg-gray-100"
-                  }`}
-              >
-                {tab} - {countJobs(tab)}
-              </button>
-            );
-          })}
-        </div>
-
-        {filteredJobs.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-100 p-8 text-center text-gray-500 shadow-xs">
-            No jobs found
+      {/* Main Detail View */}
+      <div className="flex-1 bg-white h-full md:overflow-y-auto">
+        {!selectedJob ? (
+          <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+            Select a job to view details
           </div>
         ) : (
-          <div className="bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden w-full">
-            <div className="overflow-x-auto w-full">
-              <table className="w-full text-left border-collapse min-w-[700px]">
-                <thead>
-                  <tr className="border-b border-gray-100 bg-gray-50/50">
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600">
-                      Job Title
-                    </th>
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600">
-                      Posted
-                    </th>
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600">
-                      Seniority
-                    </th>
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600">
-                      Job Type
-                    </th>
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600">
-                      Status
-                    </th>
-                    <th className="px-6 py-3.5 text-xs font-semibold text-gray-600 w-10"></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredJobs.map((job) => (
-                    <tr
-                      key={job.id}
-                      className="border-b border-gray-50 hover:bg-gray-50/50 transition-colors"
-                    >
-                      <td className="px-6 py-4 max-w-xs">
-                        <div className="min-w-0">
-                          <p className="font-medium text-sm text-dark-amethyst-950 truncate">
-                            {job.title}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-0.5 truncate">
-                            {job.description || "No description provided."}
-                          </p>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 whitespace-nowrap">
-                        {formatDate(job.created_at)}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 capitalize whitespace-nowrap">
-                        {job.seniority_level || "—"}
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600 capitalize whitespace-nowrap">
-                        {job.job_type || "—"}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${getJobStatus(job) === "Active"
-                              ? "bg-green-50 text-green-700 border border-green-100"
-                              : "bg-gray-100 text-gray-600"
-                            }`}
-                        >
-                          {getJobStatus(job)}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <button className="text-gray-400 hover:text-gray-600 cursor-pointer transition-colors p-1 rounded-lg">
-                          <ChevronRight className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          <div className="max-w-4xl mx-auto p-6 lg:p-10 pb-24">
+            
+            <JobDetailHeader 
+              selectedJob={selectedJob}
+              isEditing={isEditing}
+              editForm={editForm}
+              setEditForm={setEditForm}
+              handleEditClick={handleEditClick}
+              handleCancelEdit={handleCancelEdit}
+              handleSave={handleSave}
+              saving={saving}
+              onOpenSidebar={() => setIsSidebarOpen(true)}
+            />
+
+            <JobInfoGrid 
+              selectedJob={selectedJob}
+              isEditing={isEditing}
+              editForm={editForm}
+              setEditForm={setEditForm}
+            />
+
+            <div className="space-y-6">
+              <JobContentCards 
+                selectedJob={selectedJob}
+                isEditing={isEditing}
+                editForm={editForm}
+                setEditForm={setEditForm}
+              />
+
+              <JobPipelinePreview 
+                pipelineStages={pipelineStages}
+                loadingStages={loadingStages}
+                selectedJobId={selectedJobId}
+                selectedJobTitle={selectedJob.title}
+                navigate={navigate}
+              />
             </div>
+
           </div>
         )}
       </div>
