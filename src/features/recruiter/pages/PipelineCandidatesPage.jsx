@@ -5,6 +5,7 @@ import {
   getJobStages,
   moveToStage,
   autoAdvanceToShortlist,
+  updateStageMinScore,
 } from "../services/candidatesPipline.service";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -17,18 +18,20 @@ function resolveCurrentStage(stages = []) {
     .sort(
       (a, b) =>
         (b.recruitment_stages?.order_index || 0) -
-        (a.recruitment_stages?.order_index || 0)
+        (a.recruitment_stages?.order_index || 0),
     );
   return passed[0] || null;
 }
 
 function getInitials(name = "") {
-  return (name || "")
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase() || "?";
+  return (
+    (name || "")
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "?"
+  );
 }
 
 function timeAgo(date) {
@@ -48,11 +51,29 @@ const scoreColor = (s) => {
   return "bg-red-100 text-red-600";
 };
 
-function getFit(score) {
-  if (score >= 85) return { label: "Strong Fit", cls: "bg-violet-100 text-violet-700 border-violet-200" };
-  if (score >= 70) return { label: "Good Fit",   cls: "bg-indigo-100 text-indigo-700 border-indigo-200" };
-  if (score >= 55) return { label: "Needs Review",cls: "bg-amber-100 text-amber-700 border-amber-200" };
-  return           { label: "Low Fit",    cls: "bg-red-100 text-red-600 border-red-200" };
+function getFit(score, isRejected) {
+  if (isRejected) {
+    return {
+      label: "Rejected",
+      cls: "bg-red-100 text-red-700 border-red-300",
+    };
+  }
+  if (score >= 85)
+    return {
+      label: "Strong Fit",
+      cls: "bg-violet-100 text-violet-700 border-violet-200",
+    };
+  if (score >= 70)
+    return {
+      label: "Good Fit",
+      cls: "bg-indigo-100 text-indigo-700 border-indigo-200",
+    };
+  if (score >= 55)
+    return {
+      label: "Needs Review",
+      cls: "bg-amber-100 text-amber-700 border-amber-200",
+    };
+  return { label: "Low Fit", cls: "bg-red-100 text-red-600 border-red-200" };
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -69,23 +90,39 @@ const CandidateCard = ({ candidate, onDragStart, isDragging }) => {
       <div className="flex items-start gap-3 mb-3">
         <div
           className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm shrink-0"
-          style={{ background: "linear-gradient(135deg, #8400ff 0%, #4f0099 100%)" }}
+          style={{
+            background: "linear-gradient(135deg, #8400ff 0%, #4f0099 100%)",
+          }}
         >
           {getInitials(candidate.name)}
         </div>
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-dark-amethyst-950 truncate">{candidate.name}</p>
-          <p className="text-xs text-dark-amethyst-400 mt-0.5">{timeAgo(candidate.applied_at)}</p>
+          <p className="text-sm font-bold text-dark-amethyst-950 truncate">
+            {candidate.name}
+
+            {candidate.is_rejected && (
+              <span className="text-[10px] px-2 py-0.5 rounded bg-red-100 text-red-600 border border-red-200">
+                Rejected
+              </span>
+            )}
+          </p>
+          <p className="text-xs text-dark-amethyst-400 mt-0.5">
+            {timeAgo(candidate.applied_at)}
+          </p>
         </div>
       </div>
 
       {/* Fit + score */}
       <div className="flex items-center justify-between mb-3">
-        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${fit.cls}`}>
+        <span
+          className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${fit.cls}`}
+        >
           {fit.label}
         </span>
         {candidate.score > 0 && (
-          <span className={`px-2 py-0.5 rounded-lg text-xs font-bold ${scoreColor(candidate.score)}`}>
+          <span
+            className={`px-2 py-0.5 rounded-lg text-xs font-bold ${scoreColor(candidate.score)}`}
+          >
             {candidate.score}
           </span>
         )}
@@ -96,14 +133,20 @@ const CandidateCard = ({ candidate, onDragStart, isDragging }) => {
         <div>
           <div className="flex items-center justify-between mb-1">
             <span className="text-xs text-dark-amethyst-500">Stage score</span>
-            <span className="text-xs font-semibold text-dark-amethyst-700">{candidate.score}/100</span>
+            <span className="text-xs font-semibold text-dark-amethyst-700">
+              {candidate.score}/100
+            </span>
           </div>
           <div className="w-full h-1.5 rounded-full bg-dark-amethyst-100 overflow-hidden">
             <div
               className={`h-full rounded-full transition-all duration-700 ${
-                candidate.score >= 85 ? "bg-emerald-500" :
-                candidate.score >= 70 ? "bg-violet-600" :
-                candidate.score >= 55 ? "bg-amber-500" : "bg-red-500"
+                candidate.score >= 85
+                  ? "bg-emerald-500"
+                  : candidate.score >= 70
+                    ? "bg-violet-600"
+                    : candidate.score >= 55
+                      ? "bg-amber-500"
+                      : "bg-red-500"
               }`}
               style={{ width: `${candidate.score}%` }}
             />
@@ -122,10 +165,17 @@ const PipelineColumn = ({
   onDragOver,
   onDrop,
   draggingCandidate,
+  stageSettings,
+  setStageSettings,
+  handleStageAutoAdvance,
 }) => {
   const isOver = dragOverStage === stage.id;
   const isLocked = stage.is_locked;
-
+  const [openMenu, setOpenMenu] = useState(false);
+  const [localMinScore, setLocalMinScore] = useState(stage.min_score ?? 70);
+  useEffect(() => {
+    setLocalMinScore(stage.min_score ?? 70);
+  }, [stage.min_score]);
   return (
     <div
       className={`flex flex-col min-w-[270px] w-[270px] shrink-0 rounded-2xl transition-all duration-200 ${
@@ -144,14 +194,66 @@ const PipelineColumn = ({
         <div className="flex items-center gap-2">
           <span
             className="w-2.5 h-2.5 rounded-full shrink-0"
-            style={{ background: `hsl(${270 - stage.order_index * 20}, 80%, ${55 - stage.order_index * 5}%)` }}
+            style={{
+              background: `hsl(${270 - stage.order_index * 20}, 80%, ${55 - stage.order_index * 5}%)`,
+            }}
           />
-          <span className="text-sm font-bold text-dark-amethyst-950">{stage.name}</span>
+          <span className="text-sm font-bold text-dark-amethyst-950">
+            {stage.name}
+          </span>
           <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-dark-amethyst-100 text-dark-amethyst-600 ml-1">
             {candidates.length}
           </span>
           {isLocked && (
-            <Lock className="w-3 h-3 text-dark-amethyst-300 ml-0.5" title="Locked stage — cannot be dropped into" />
+            <Lock
+              className="w-3 h-3 text-dark-amethyst-300 ml-0.5"
+              title="Locked stage — cannot be dropped into"
+            />
+          )}
+
+          {!isLocked && (
+            <div className="relative ml-2">
+              <button
+                onClick={() => setOpenMenu((s) => !s)}
+                className="text-dark-amethyst-500 hover:text-dark-amethyst-700"
+              >
+                ⋯
+              </button>
+
+              {openMenu && (
+                <div className="absolute right-0 mt-2 w-44 bg-white border border-dark-amethyst-100 rounded-xl shadow-lg p-2 z-50">
+                  {/* Min Score */}
+                  <div className="p-2">
+                    <p className="text-xs mb-1 text-dark-amethyst-500">
+                      Min Score
+                    </p>
+
+                    <input
+                      type="number"
+                      value={localMinScore}
+                      onChange={(e) => setLocalMinScore(Number(e.target.value))}
+                    />
+
+                    <button
+                      onClick={async () => {
+                        await updateStageMinScore(stage.id, localMinScore);
+                      }}
+                      className="text-xs mt-2 bg-dark-amethyst-600 text-white px-2 py-1 rounded"
+                    >
+                      Save
+                    </button>
+                  </div>
+
+                  {/* Auto Advance */}
+                  <button
+                    className="w-full text-left text-xs p-2 hover:bg-dark-amethyst-50 rounded"
+                    onClick={() => handleStageAutoAdvance(stage.id)}
+                  >
+                    Auto Advance
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -169,8 +271,8 @@ const PipelineColumn = ({
               isLocked
                 ? "border-gray-200 bg-gray-50"
                 : isOver
-                ? "border-dark-amethyst-400 bg-dark-amethyst-50"
-                : "border-dark-amethyst-100"
+                  ? "border-dark-amethyst-400 bg-dark-amethyst-50"
+                  : "border-dark-amethyst-100"
             }`}
           >
             <p className="text-xs text-dark-amethyst-300">
@@ -206,6 +308,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
   const [loading, setLoading] = useState(false);
   const [loadingDrop, setLoadingDrop] = useState(false);
   const searchRef = useRef(null);
+  const [stageSettings, setStageSettings] = useState({});
 
   // Initialize selected job
   useEffect(() => {
@@ -228,12 +331,58 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     setLoading(true);
     getPipelineCandidates(company.id)
       .then(({ data, error }) => {
-        if (error) { console.error(error); return; }
+        if (error) {
+          console.error(error);
+          return;
+        }
 
         const mapped = (data || []).map((app) => {
-          const currentStage = resolveCurrentStage(app.application_stages || []);
-          const evaluation = currentStage?.application_stage_evaluations?.[0];
-          const score = Math.round(evaluation?.ai_score || currentStage?.score || app.composite_score || 0);
+          // 1. Get the current in-progress stage from application_stages
+          const allStages = app.application_stages || [];
+          const currentStage = resolveCurrentStage(allStages);
+
+          // 2. Find the evaluation attached to this current stage
+          let evaluation = null;
+          let score = 0;
+
+          if (
+            currentStage &&
+            currentStage.application_stage_evaluations?.length
+          ) {
+            evaluation = currentStage.application_stage_evaluations[0];
+            if (
+              evaluation &&
+              evaluation.ai_score !== null &&
+              evaluation.ai_score !== undefined
+            ) {
+              score = Math.round(Number(evaluation.ai_score));
+            }
+          }
+
+          // 3. Fallback to cv_score if evaluation not found (e.g., for early stages)
+          if (score === 0 && app.cv_score) {
+            score = Math.round(Number(app.cv_score));
+          }
+
+          // 4. Determine current stage ID – always from the application_stages data
+          let currentStageId = currentStage?.recruitment_stages?.id || null;
+
+          // 5. If still null, try to use the first stage from the job's recruitment stages
+          //    But we cannot rely on `stages` state here because it may not be loaded yet.
+          //    Instead, we derive from application_stages order.
+          if (!currentStageId && allStages.length > 0) {
+            // find the stage with the highest order_index that has status 'in_progress' or 'passed'
+            const sorted = [...allStages].sort(
+              (a, b) =>
+                (b.recruitment_stages?.order_index || 0) -
+                (a.recruitment_stages?.order_index || 0),
+            );
+            currentStageId = sorted[0]?.recruitment_stages?.id || null;
+          }
+
+          // 6. Additionally, set rejected flag from evaluation recommendation if present
+          const isRejected =
+            app.is_rejected || evaluation?.recommendation === "reject";
 
           return {
             id: app.id,
@@ -241,26 +390,34 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
             name: app.profiles?.full_name || "Unknown Candidate",
             applied_at: app.applied_at,
             score,
-            is_rejected: app.is_rejected,
-            // The stage_id the candidate is currently in
-            currentStageId: currentStage?.recruitment_stages?.id || null,
+            is_rejected: isRejected,
+            currentStageId,
           };
         });
+
         setCandidates(mapped);
       })
       .finally(() => setLoading(false));
   }, [company?.id]);
 
-  // Filter
   const filtered = candidates.filter((c) => {
-    if (c.is_rejected) return false; // rejected candidates hidden by default
     if (selectedJobId && c.jobId !== selectedJobId) return false;
-    if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterFit !== "All" && getFit(c.score).label !== filterFit) return false;
+    if (search && !c.name.toLowerCase().includes(search.toLowerCase()))
+      return false;
+
+    if (filterFit === "Rejected") return c.is_rejected;
+    if (filterFit !== "All" && getFit(c.score).label !== filterFit)
+      return false;
+
     return true;
   });
 
-  const byStage = (stageId) => filtered.filter((c) => c.currentStageId === stageId);
+  const byStage = (stageId) =>
+    filtered.filter((c) => {
+      if (c.currentStageId === stageId) return true;
+      if (c.currentStageId === null && stageId === stages[0]?.id) return true;
+      return false;
+    });
   const totalInFlight = filtered.length;
 
   // Drag & drop
@@ -269,25 +426,54 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
   const handleDrop = async (targetStageId) => {
     if (!draggingCandidate || loadingDrop) return;
 
+    const candidateId = draggingCandidate.id;
+
+    // get fresh candidate from state
+    const candidate = candidates.find((c) => c.id === candidateId);
+    if (!candidate) return;
+
     const targetStage = stages.find((s) => s.id === targetStageId);
-    if (targetStage?.is_locked) return; // blocked
+    if (!targetStage || targetStage.is_locked) return;
+
+    // resolve current stage safely
+    const currentStage = stages.find((s) => s.id === candidate.currentStageId);
+    if (!currentStage) return;
+
+    // enforce correct order
+    const sorted = [...stages].sort((a, b) => a.order_index - b.order_index);
+
+    const currentIndex = sorted.findIndex((s) => s.id === currentStage.id);
+    const targetIndex = sorted.findIndex((s) => s.id === targetStage.id);
+
+    // allow ONLY forward +1
+    if (targetIndex !== currentIndex + 1) return;
+
+    // score validation
+    const minScore =
+      stageSettings[targetStageId]?.min_score ?? targetStage.min_score ?? 0;
+
+    if ((candidate.score || 0) < minScore) return;
 
     setLoadingDrop(true);
-    const prev = [...candidates];
 
-    // Optimistic update
+    const prevState = [...candidates];
+
+    // optimistic update
     setCandidates((prev) =>
       prev.map((c) =>
-        c.id === draggingCandidate.id ? { ...c, currentStageId: targetStageId } : c
-      )
+        c.id === candidateId ? { ...c, currentStageId: targetStageId } : c,
+      ),
     );
 
     try {
-      const { error } = await moveToStage(draggingCandidate.id, targetStageId);
+      const { error } = await moveToStage(candidateId, targetStageId);
+
       if (error) throw error;
     } catch (err) {
       console.error("DROP FAILED:", err);
-      setCandidates(prev); // rollback
+
+      // rollback
+      setCandidates(prevState);
     } finally {
       setDraggingCandidate(null);
       setDragOverStage(null);
@@ -295,13 +481,39 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     }
   };
 
+  const handleStageAutoAdvance = async (stageId) => {
+    if (!selectedJobId) return;
+
+    try {
+      const minScore =
+        stageSettings[stageId]?.min_score ??
+        stages.find((s) => s.id === stageId)?.min_score ??
+        70;
+
+      const { advancedCount } = await autoAdvanceToShortlist(
+        selectedJobId,
+        minScore,
+      );
+
+      if (advancedCount > 0) {
+        alert(`Advanced ${advancedCount} candidate(s) successfully`);
+      } else {
+        alert("No candidates matched the criteria");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Auto advance failed");
+    }
+  };
   const handleAutoAdvance = async () => {
     if (!selectedJobId) return;
     setIsAdvancing(true);
     try {
       const { advancedCount } = await autoAdvanceToShortlist(selectedJobId, 70);
       if (advancedCount > 0) {
-        alert(`Successfully advanced ${advancedCount} candidate(s) to Shortlist!`);
+        alert(
+          `Successfully advanced ${advancedCount} candidate(s) to Shortlist!`,
+        );
         loadCandidates(selectedJobId);
       } else {
         alert("No candidates met the requirements to be auto-advanced.");
@@ -313,7 +525,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
       setIsAdvancing(false);
     }
   };
-
+  console.log(stages);
   return (
     <div
       className="flex flex-col h-[calc(100vh-64px)] bg-dark-amethyst-50 overflow-hidden"
@@ -332,7 +544,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         <div className="flex items-center justify-between gap-4">
           {/* Title / Job selector */}
           <div>
-            <h1 className="text-xl font-bold text-dark-amethyst-950">Candidate Pipeline</h1>
+            <h1 className="text-xl font-bold text-dark-amethyst-950">
+              Candidate Pipeline
+            </h1>
             <div className="flex items-center gap-2 mt-1">
               <select
                 value={selectedJobId || ""}
@@ -341,11 +555,17 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               >
                 {jobs.length === 0 && <option value="">No jobs</option>}
                 {jobs.map((j) => (
-                  <option key={j.id} value={j.id}>{j.title}</option>
+                  <option key={j.id} value={j.id}>
+                    {j.title}
+                  </option>
                 ))}
               </select>
               <span className="text-xs text-dark-amethyst-500">
-                · <span className="font-semibold text-dark-amethyst-600">{totalInFlight}</span> candidates in flight
+                ·{" "}
+                <span className="font-semibold text-dark-amethyst-600">
+                  {totalInFlight}
+                </span>{" "}
+                candidates in flight
               </span>
             </div>
           </div>
@@ -365,13 +585,6 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           {/* Header Buttons */}
           <div className="flex gap-2">
             <button
-              onClick={handleAutoAdvance}
-              disabled={isAdvancing || !selectedJobId}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition border-dark-amethyst-200 text-dark-amethyst-600 bg-white hover:bg-dark-amethyst-50 disabled:opacity-50"
-            >
-              {isAdvancing ? "Advancing..." : "Auto-Advance to Shortlist"}
-            </button>
-            <button
               onClick={() => setShowFilters((s) => !s)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition ${
                 showFilters
@@ -388,8 +601,18 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         {/* Filter bar */}
         {showFilters && (
           <div className="mt-4 pt-4 border-t border-dark-amethyst-100 flex items-center gap-3 flex-wrap">
-            <span className="text-xs font-semibold text-dark-amethyst-500 uppercase tracking-wide">Fit:</span>
-            {["All", "Strong Fit", "Good Fit", "Needs Review", "Low Fit"].map((f) => (
+            <span className="text-xs font-semibold text-dark-amethyst-500 uppercase tracking-wide">
+              Fit:
+            </span>
+
+            {[
+              "All",
+              "Strong Fit",
+              "Good Fit",
+              "Needs Review",
+              "Low Fit",
+              "Rejected",
+            ].map((f) => (
               <button
                 key={f}
                 onClick={() => setFilterFit(f)}
@@ -419,8 +642,12 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           <div className="w-16 h-16 rounded-full bg-dark-amethyst-50 border border-dark-amethyst-100 flex items-center justify-center mb-4">
             <Search className="w-7 h-7 text-dark-amethyst-300" />
           </div>
-          <h2 className="text-dark-amethyst-950 text-lg font-bold mb-1">No candidates yet</h2>
-          <p className="text-dark-amethyst-500 text-sm">Candidates appear here once applications start coming in.</p>
+          <h2 className="text-dark-amethyst-950 text-lg font-bold mb-1">
+            No candidates yet
+          </h2>
+          <p className="text-dark-amethyst-500 text-sm">
+            Candidates appear here once applications start coming in.
+          </p>
         </div>
       )}
 
@@ -436,10 +663,16 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               >
                 <span
                   className="w-2 h-2 rounded-full shrink-0"
-                  style={{ background: `hsl(${270 - s.order_index * 20}, 80%, ${55 - s.order_index * 5}%)` }}
+                  style={{
+                    background: `hsl(${270 - s.order_index * 20}, 80%, ${55 - s.order_index * 5}%)`,
+                  }}
                 />
-                <span className="text-xs font-semibold text-dark-amethyst-800">{s.name}</span>
-                {s.is_locked && <Lock className="w-2.5 h-2.5 text-dark-amethyst-300" />}
+                <span className="text-xs font-semibold text-dark-amethyst-800">
+                  {s.name}
+                </span>
+                {s.is_locked && (
+                  <Lock className="w-2.5 h-2.5 text-dark-amethyst-300" />
+                )}
                 <span className="px-1.5 py-0.5 rounded-full text-xs font-bold bg-dark-amethyst-50 text-dark-amethyst-600">
                   {byStage(s.id).length}
                 </span>
@@ -460,6 +693,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                   dragOverStage={dragOverStage}
                   onDragOver={setDragOverStage}
                   onDrop={handleDrop}
+                  stageSettings={stageSettings}
+                  setStageSettings={setStageSettings}
+                  handleStageAutoAdvance={handleStageAutoAdvance}
                 />
               ))}
             </div>

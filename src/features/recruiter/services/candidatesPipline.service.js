@@ -6,22 +6,23 @@ import { supabase } from "@/shared/services/supabase";
  */
 export async function getPipelineCandidates(companyId) {
   const query = supabase.from("applications").select(`
-    id,
-    applied_at,
-    composite_score,
-    is_rejected,
-    profiles ( full_name ),
-    job_postings!inner ( id, title, company_id ),
-    application_stages (
       id,
-      status,
-      score,
-      started_at,
-      completed_at,
-      recruitment_stages ( id, name, stage_type, order_index, is_locked ),
-      application_stage_evaluations ( ai_score, confidence )
-    )
-  `);
+      applied_at,
+      composite_score,
+      is_rejected,
+      cv_score,
+      profiles ( full_name ),
+      job_postings!inner ( id, title, company_id ),
+      application_stages (
+        id,
+        status,
+        score,
+        started_at,
+        completed_at,
+        recruitment_stages ( id, name, stage_type, order_index, is_locked ),
+        application_stage_evaluations ( ai_score, confidence, recommendation )
+      )
+    `);
 
   if (companyId) {
     query.eq("job_postings.company_id", companyId);
@@ -36,7 +37,7 @@ export async function getPipelineCandidates(companyId) {
 export async function getJobStages(jobId) {
   const { data, error } = await supabase
     .from("recruitment_stages")
-    .select("id, name, stage_type, order_index, is_locked")
+    .select("id, name, stage_type, order_index, is_locked, min_score")
     .eq("job_id", jobId)
     .order("order_index", { ascending: true });
 
@@ -59,7 +60,9 @@ export async function getStageByTypeAndJob(stageType, jobId) {
   if (!data || data.length === 0)
     return {
       data: null,
-      error: new Error(`No stage found for type "${stageType}" in job "${jobId}"`),
+      error: new Error(
+        `No stage found for type "${stageType}" in job "${jobId}"`,
+      ),
     };
 
   return { data: data[0], error: null };
@@ -84,17 +87,15 @@ export async function moveToStage(applicationId, targetStageId) {
   if (closeErr) return { error: closeErr };
 
   // Step 2: Upsert the target stage row as in_progress
-  const { error: openErr } = await supabase
-    .from("application_stages")
-    .upsert(
-      {
-        application_id: applicationId,
-        stage_id: targetStageId,
-        status: "in_progress",
-        started_at: new Date().toISOString(),
-      },
-      { onConflict: "application_id,stage_id" }
-    );
+  const { error: openErr } = await supabase.from("application_stages").upsert(
+    {
+      application_id: applicationId,
+      stage_id: targetStageId,
+      status: "in_progress",
+      started_at: new Date().toISOString(),
+    },
+    { onConflict: "application_id,stage_id" },
+  );
 
   if (openErr) return { error: openErr };
   return { error: null };
@@ -109,17 +110,15 @@ export const closeCurrentStage = async (applicationId) =>
     .eq("status", "in_progress");
 
 export const openStage = async (applicationId, stageId) =>
-  supabase
-    .from("application_stages")
-    .upsert(
-      {
-        application_id: applicationId,
-        stage_id: stageId,
-        status: "in_progress",
-        started_at: new Date().toISOString(),
-      },
-      { onConflict: "application_id,stage_id" }
-    );
+  supabase.from("application_stages").upsert(
+    {
+      application_id: applicationId,
+      stage_id: stageId,
+      status: "in_progress",
+      started_at: new Date().toISOString(),
+    },
+    { onConflict: "application_id,stage_id" },
+  );
 
 /**
  * Seed the 3 locked anchor stages for a newly created job.
@@ -160,16 +159,13 @@ export async function seedAnchorStages(jobId) {
     },
   ];
 
-  const { error } = await supabase
-    .from("recruitment_stages")
-    .insert(anchors);
+  const { error } = await supabase.from("recruitment_stages").insert(anchors);
 
   if (error) {
     console.error("Failed to seed anchor stages:", error);
     throw error;
   }
 }
-
 
 /**
  * Automatically advances candidates who have completed the stage immediately
@@ -183,20 +179,24 @@ export async function autoAdvanceToShortlist(jobId, threshold = 70) {
     .eq("job_id", jobId)
     .order("order_index", { ascending: true });
 
-  if (stagesError || !stages || stages.length === 0) return { advancedCount: 0 };
+  if (stagesError || !stages || stages.length === 0)
+    return { advancedCount: 0 };
 
-  const shortlistStage = stages.find(s => s.stage_type === "shortlist");
+  const shortlistStage = stages.find((s) => s.stage_type === "shortlist");
   if (!shortlistStage) return { advancedCount: 0 };
 
   // 2. Find the stage immediately before Shortlist
-  const precedingStages = stages.filter(s => s.order_index < shortlistStage.order_index);
+  const precedingStages = stages.filter(
+    (s) => s.order_index < shortlistStage.order_index,
+  );
   if (precedingStages.length === 0) return { advancedCount: 0 };
   const precedingStage = precedingStages[precedingStages.length - 1]; // Last one before shortlist
 
   // 3. Find candidates in that preceding stage
   const { data: appStages, error: appsError } = await supabase
     .from("application_stages")
-    .select(`
+    .select(
+      `
       application_id,
       applications!inner (
         id,
@@ -204,7 +204,8 @@ export async function autoAdvanceToShortlist(jobId, threshold = 70) {
         composite_score,
         is_rejected
       )
-    `)
+    `,
+    )
     .eq("stage_id", precedingStage.id)
     .eq("status", "in_progress")
     .eq("applications.job_id", jobId)
@@ -214,7 +215,7 @@ export async function autoAdvanceToShortlist(jobId, threshold = 70) {
 
   // Filter those meeting threshold
   const candidatesToAdvance = appStages.filter(
-    as => (as.applications.composite_score || 0) >= threshold
+    (as) => (as.applications.composite_score || 0) >= threshold,
   );
 
   if (candidatesToAdvance.length === 0) return { advancedCount: 0 };
@@ -233,10 +234,11 @@ export async function autoAdvanceToShortlist(jobId, threshold = 70) {
       .from("shortlist_entries")
       .insert({
         job_id: jobId,
-        application_id: appId
+        application_id: appId,
       });
 
-    if (insertError && insertError.code !== "23505") { // 23505 is unique violation
+    if (insertError && insertError.code !== "23505") {
+      // 23505 is unique violation
       console.error("Failed to add to shortlist_entries:", insertError);
     } else {
       advancedCount++;
@@ -246,3 +248,11 @@ export async function autoAdvanceToShortlist(jobId, threshold = 70) {
   return { advancedCount };
 }
 
+export async function updateStageMinScore(stageId, min_score) {
+  const { data, error } = await supabase
+    .from("recruitment_stages")
+    .update({ min_score })
+    .eq("id", stageId);
+
+  return { data, error };
+}
