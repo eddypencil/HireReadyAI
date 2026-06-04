@@ -14,6 +14,7 @@ import Recruiterscreen from "./features/recruiter/pages/recruiter_screen";
 import InterviewPage from "./features/interview/pages/interviewPage";
 import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
 import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
+import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -50,28 +51,30 @@ function App() {
       <Route path="/auth/sign-up" element={<SignUpPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-      <Route element={<ProtectedRoute>
-        <MainLayout/>
-        </ProtectedRoute>
-        }>
-
       <Route
-        path="/applicant"
         element={
-          <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
-            <ApplicantPage />
+          <ProtectedRoute>
+            <MainLayout />
           </ProtectedRoute>
         }
-      />
+      >
+        <Route
+          path="/applicant"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <ApplicantPage />
+            </ProtectedRoute>
+          }
+        />
 
-      <Route
-        path="/interview/:applicationId"
-        element={
-          <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
-            <InterviewPage></InterviewPage>
-          </ProtectedRoute>
-        }
-      />
+        <Route
+          path="/interview/:applicationId"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <InterviewPage></InterviewPage>
+            </ProtectedRoute>
+          }
+        />
       </Route>
 
       <Route
@@ -84,6 +87,10 @@ function App() {
       />
 
       <Route
+        path="/recruiter/candidatespipline"
+        element={<PipelineCandidatesPage />}
+      />
+      <Route
         element={
           <ProtectedRoute>
             <MainLayout />
@@ -92,15 +99,9 @@ function App() {
       >
         <Route path="/jobs" element={<JobsPage />} />
 
-        <Route
-          path="/jobs/:id"
-          element={<JobDetailsPage />}
-        />
+        <Route path="/jobs/:id" element={<JobDetailsPage />} />
 
-        <Route
-          path="/jobs/:id/apply"
-          element={<ApplyJobPage />}
-        />
+        <Route path="/jobs/:id/apply" element={<ApplyJobPage />} />
 
         <Route
           path="/companies/*"
