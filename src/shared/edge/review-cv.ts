@@ -13,39 +13,118 @@ const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+async function formatApplicationQA(
+  supabase: ReturnType<typeof createClient>,
+  applicationAnswers: Record<string, unknown>
+): Promise<string> {
+  const questionsAnswers = (applicationAnswers as any)?.questions || {};
+  const questionIds = Object.keys(questionsAnswers);
+
+  if (questionIds.length === 0) {
+    return "\n\nApplication Q&A: This job has no application questions. Do not penalize for missing answers.";
+  }
+
+  try {
+    // Fetch question texts from questions table
+    const { data: questions, error: qError } = await supabase
+      .from("questions")
+      .select("id, question")
+      .in("id", questionIds);
+    console.log(questions);
+
+    if (qError || !questions || questions.length === 0) {
+      // Fallback to showing IDs with answers
+      const fallbackQA = Object.entries(questionsAnswers)
+        .map(([id, answer]) => `Q (ID: ${id}): ${answer || "(no answer provided)"}`)
+        .join("\n\n");
+      return `\n\nApplication Q&A submitted by the candidate:\n${fallbackQA}`;
+    }
+
+    // Build formatted Q&A with question text + answers
+    const qaList = questions
+      .map(q => {
+        const answer = questionsAnswers[q.id];
+        const answerText = answer === null || answer === undefined || answer === "" 
+          ? "(no answer provided)" 
+          : String(answer);
+        return `Q: ${q.text}\nA: ${answerText}`;
+      })
+      .join("\n\n");
+
+    return `\n\nApplication Q&A submitted by the candidate:\n${qaList}`;
+  } catch (err) {
+    console.warn("Failed to fetch questions:", err);
+    // Fallback
+    return `\n\nApplication Q&A submitted by the candidate:\n${JSON.stringify(questionsAnswers, null, 2)}`;
+  }
+}
+
 function buildPrompt(params: {
   jobTitle: string;
   jobDescription: string;
   jobSkills: string[];
   jobRequirements: string[];
   cvText: string;
-  applicationAnswers: Record<string, unknown>;
+  formattedQA: string;
 }): string {
-  const { jobTitle, jobDescription, jobSkills, jobRequirements, cvText, applicationAnswers } = params;
-
-  const qaSection =
-    applicationAnswers && Object.keys(applicationAnswers).length
-      ? `\n\nApplication Q&A submitted by the candidate:\n${JSON.stringify(applicationAnswers, null, 2)}`
-      : "";
-
-  return `You are an expert technical recruiter evaluating a candidate's CV for a job opening.
+  const { jobTitle, jobDescription, jobSkills, jobRequirements, cvText, formattedQA } = params;
+  console.log(formattedQA)
+  return `You are a strict technical recruiter. Your job is to protect the hiring team's time by filtering out weak candidates. You must be critical and honest, not generous.
 
 JOB POSTING:
 Title: ${jobTitle}
 Description: ${jobDescription}
 Required Skills: ${jobSkills?.join(", ") || "Not specified"}
-Requirements: ${jobRequirements?.join("; ") || "Not specified"}
-${qaSection}
+Requirements: ${jobRequirements?.join("; ") || "Not specified"}${formattedQA}
 
 CANDIDATE CV TEXT:
-${cvText.slice(0, 8000)}
+${cvText}
 
-Evaluate the CV against the job posting and return ONLY a valid JSON object with exactly these fields, no extra text, no markdown, no code blocks:
+---
+
+STRICT SCORING RULES — READ CAREFULLY BEFORE SCORING:
+
+1. BASELINE: Start at 50. Only award points for clearly demonstrated evidence. Do not assume or infer skills not explicitly stated.
+
+2. UNANSWERED QUESTIONS PENALTY (only applies if the job has application questions):
+   - If any question is blank, unanswered, or evasive: deduct 10 points per question.
+   - If ALL questions are unanswered: cap cv_score at 45 regardless of CV quality.
+   - If the job has NO application questions: skip this rule entirely. Do not penalize.
+
+3. IRRELEVANT CV PENALTY:
+   - If the candidate's experience is in a different field than the job: score 20–35.
+   - If fewer than 40% of required skills are present in the CV: score below 50.
+   - If the CV appears generic or not tailored to this role: deduct 5–10 points.
+
+4. MISSING REQUIREMENTS PENALTY:
+   - Each hard requirement (from jobRequirements) that is clearly absent: deduct 8 points.
+   - Each required skill (from jobSkills) that is absent: deduct 5 points.
+
+5. SCORE ANCHORS — use these to calibrate:
+   - 85–100: Nearly perfect match. All required skills present, requirements met, questions answered thoroughly.
+   - 70–84: Strong match with minor gaps. Most skills present, most questions answered.
+   - 55–69: Partial match. Notable gaps, some unanswered questions or missing skills.
+   - 40–54: Weak match. Multiple missing requirements or unanswered questions.
+   - 0–39: Poor match. Irrelevant background, unanswered questions, or insufficient evidence.
+
+6. RECOMMENDATION RULES (strict):
+   - "proceed" → only if cv_score >= 70 AND all required skills are present AND no key questions unanswered.
+   - "review" → cv_score 50–69 OR has potential but has gaps worth discussing.
+   - "reject" → cv_score < 50 OR CV is irrelevant OR critical questions left unanswered.
+
+7. GENERAL RULES:
+   - Score only on evidence present in the CV and Q&A. Absence of evidence is evidence of absence.
+   - Do not give benefit of the doubt for vague or generic statements.
+   - Gaps must be specific and actionable — not filler.
+   - Feedback must be honest enough that a hiring manager can act on it.
+
+Return ONLY a valid JSON object with exactly these fields, no extra text, no markdown, no code blocks:
 {
   "cv_score": <integer 0-100>,
-  "feedback": "<3-5 sentence overall assessment suitable for the hiring team>",
+  "feedback": "<3-5 sentence honest assessment for the hiring team, including any unanswered questions or red flags>",
   "strengths": ["<strength 1>", "<strength 2>", "<strength 3>"],
-  "gaps": ["<gap 1>", "<gap 2>"],
+  "weaknesses": ["<weakness 1>", "<weakness 2>", "<weakness 3>"],
+  "gaps": ["<specific gap 1>", "<specific gap 2>", "<specific gap 3>"],
   "recommendation": "<one of: proceed | review | reject>",
   "dimension_scores": {
     "technical_skills": <integer 0-100>,
@@ -53,18 +132,7 @@ Evaluate the CV against the job posting and return ONLY a valid JSON object with
     "education": <integer 0-100>,
     "soft_skills": <integer 0-100>
   }
-}
-
-Scoring guide for cv_score:
-- 85-100: Exceptional match, highly recommended
-- 70-84: Good match, worth proceeding
-- 55-69: Partial match, needs review
-- 0-54: Poor match, consider rejecting
-
-Rules:
-- Base your score only on information present in the CV and Q&A
-- Be concise but specific in feedback and gaps
-- Do not include any text outside the JSON object`;
+}`;
 }
 
 // ─── Main handler ─────────────────────────────────────────────────────────────
@@ -146,6 +214,9 @@ serve(async (req) => {
       throw new Error("CV appears to be empty or unreadable (insufficient text extracted)");
     }
 
+    // ── 4. Format Q&A with question text ─────────────────────────────────────
+    const formattedQA = await formatApplicationQA(supabase, application.answers ?? {});
+
     // ── 5. Call HuggingFace Qwen ────────────────────────────────────────────
     const prompt = buildPrompt({
       jobTitle: job.title,
@@ -153,7 +224,7 @@ serve(async (req) => {
       jobSkills: job.skills ?? [],
       jobRequirements: job.requirements ?? [],
       cvText,
-      applicationAnswers: application.answers ?? {},
+      formattedQA,
     });
 
     const hfResponse = await fetch(HF_CHAT_URL, {
@@ -194,6 +265,7 @@ serve(async (req) => {
       cv_score: number;
       feedback: string;
       strengths: string[];
+      weaknesses: string[];
       gaps: string[];
       recommendation: string;
       dimension_scores: Record<string, number>;
@@ -211,6 +283,7 @@ serve(async (req) => {
     const feedbackJson = JSON.stringify({
       feedback: parsed.feedback,
       strengths: parsed.strengths,
+      weaknesses: parsed.weaknesses,
       gaps: parsed.gaps,
       recommendation: parsed.recommendation,
       dimension_scores: parsed.dimension_scores,
@@ -238,6 +311,8 @@ serve(async (req) => {
           confidence: (parsed.dimension_scores?.technical_skills ?? 70) / 100,
           reasoning: parsed.feedback,
           recommendation: parsed.recommendation,
+          strengths: parsed.strengths || [],
+          weaknesses: parsed.weaknesses || [],
         },
         { onConflict: "application_stage_id" }
       );
@@ -254,6 +329,7 @@ serve(async (req) => {
         cv_score: cvScore,
         feedback: parsed.feedback,
         strengths: parsed.strengths,
+        weaknesses: parsed.weaknesses,
         gaps: parsed.gaps,
         recommendation: parsed.recommendation,
         dimension_scores: parsed.dimension_scores,

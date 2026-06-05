@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/shared/services/supabase";
 import { uploadRecording } from "../services/video_storage_service";
+import { Camera, CheckCircle2, Redo2, Video, StopCircle } from "lucide-react";
 
 const MAX_SECONDS = 180;
 
@@ -9,7 +10,7 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
   const [isRecording, setIsRecording] = useState(false);
   const [timeLeft, setTimeLeft] = useState(MAX_SECONDS);
   const [videoUrl, setVideoUrl] = useState(null);
-  const [status, setStatus] = useState("idle"); // idle | previewing | recording | reviewing | uploading
+  const [status, setStatus] = useState("idle");
 
   const videoRef = useRef(null);
   const recorderRef = useRef(null);
@@ -17,14 +18,6 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
   const chunksRef = useRef([]);
   const blobRef = useRef(null);
   const timerRef = useRef(null);
-
-  useEffect(() => {
-    requestCamera();
-    return () => {
-      streamRef.current?.getTracks().forEach((t) => t.stop());
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, []);
 
   const requestCamera = async () => {
     try {
@@ -34,9 +27,18 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
       setPermissionGranted(true);
       setStatus("previewing");
     } catch {
-      alert("Camera and microphone access is required to record your answer.");
+      setPermissionGranted(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- intentional: request camera on mount
+    requestCamera();
+    return () => {
+      streamRef.current?.getTracks().forEach((t) => t.stop());
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
 
   const startRecording = () => {
     chunksRef.current = [];
@@ -91,10 +93,8 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
     setStatus("uploading");
 
     try {
-      // 1. Upload recording to storage
       const { fileName } = await uploadRecording(blobRef.current, applicationStageId, question.id);
 
-      // 2. Call whisper-api synchronously — wait for transcript
       const { data: whisperData, error: whisperErr } = await supabase.functions.invoke("whisper-api", {
         body: { audioPath: fileName, questionId: question.id },
       });
@@ -105,7 +105,6 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
       onAnswer(transcript || "[No transcript available]");
     } catch (err) {
       console.error("Upload/transcription failed:", err);
-      // Still advance with empty transcript so the interview doesn't get stuck
       onAnswer("[Transcription failed]");
     }
   };
@@ -114,27 +113,29 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
 
   if (!permissionGranted) {
     return (
-      <div className="flex flex-col items-center justify-center gap-5 py-12">
-        <div className="size-16 rounded-full bg-[--stage-interview]/10 flex items-center justify-center">
-          <svg className="size-8 text-[--stage-interview]" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9A2.25 2.25 0 0013.5 5.25h-9A2.25 2.25 0 002.25 9.75v9A2.25 2.25 0 004.5 18.75z" />
-          </svg>
+      <div className="flex flex-col items-center justify-center gap-6 py-10">
+        <div className="size-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
+          <Camera className="size-7 text-accent" />
         </div>
-        <div className="text-center space-y-1">
+        <div className="text-center space-y-1.5">
           <p className="text-sm font-medium text-foreground">Camera access required</p>
-          <p className="text-xs text-muted-foreground">Please allow access to record your answer</p>
+          <p className="text-xs text-muted-foreground max-w-xs">Allow camera and microphone access to record your video answer</p>
         </div>
-        <button onClick={requestCamera} className="bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity">
-          Enable Camera &amp; Microphone
+        <button
+          onClick={requestCamera}
+          className="flex items-center gap-2 bg-accent text-accent-foreground rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+        >
+          <Video className="size-4" />
+          Enable Camera & Microphone
         </button>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Video preview / review */}
-      <div className="relative rounded-2xl overflow-hidden bg-[#0a0f1a] aspect-video flex items-center justify-center border border-border">
+      <div className="relative rounded-2xl overflow-hidden bg-[#0a0f1a] aspect-video flex items-center justify-center border border-border shadow-md shadow-cerulean-900/10">
         {videoUrl && status === "reviewing" ? (
           <video src={videoUrl} controls autoPlay className="w-full h-full object-cover" />
         ) : (
@@ -143,55 +144,69 @@ export default function VideoQuestion({ question, applicationStageId, onAnswer }
 
         {/* Recording indicator */}
         {isRecording && (
-          <div className="absolute top-3 left-3 flex items-center gap-2 bg-black/60 backdrop-blur rounded-full px-3 py-1.5">
-            <span className="size-2 rounded-full bg-destructive animate-pulse" />
-            <span className="text-white text-xs font-medium">{fmt(timeLeft)}</span>
+          <div className="absolute top-3 left-3 flex items-center gap-2.5 bg-foreground/10 backdrop-blur-md rounded-full px-3.5 py-1.5 border border-white/10">
+            <span className="size-2.5 rounded-full bg-destructive animate-pulse shadow-md shadow-destructive" />
+            <span className="text-white text-xs font-medium tabular-nums">{fmt(timeLeft)}</span>
           </div>
         )}
 
+        {/* Uploading overlay */}
         {status === "uploading" && (
-          <div className="absolute inset-0 bg-black/60 flex flex-col items-center justify-center gap-3">
-            <div className="size-10 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-            <p className="text-white text-sm font-medium">Transcribing your answer…</p>
-            <p className="text-white/60 text-xs">This may take a few seconds</p>
+          <div className="absolute inset-0 bg-foreground/60 backdrop-blur-sm flex flex-col items-center justify-center gap-4">
+            <div className="size-10 rounded-xl border-2 border-white/20 border-t-white animate-spin" />
+            <div className="text-center">
+              <p className="text-white text-sm font-medium">Transcribing your answer…</p>
+              <p className="text-white/60 text-xs mt-0.5">This may take a few seconds</p>
+            </div>
+          </div>
+        )}
+
+        {/* Idle overlay (camera not yet active) */}
+        {status === "idle" && (
+          <div className="absolute inset-0 bg-[#0a0f1a] flex flex-col items-center justify-center gap-3">
+            <Camera className="size-8 text-foreground/20" />
+            <p className="text-xs text-muted-foreground">Initializing camera…</p>
           </div>
         )}
       </div>
 
       {/* Controls */}
-      <div className="space-y-2">
+      <div className="space-y-2.5">
         {status === "previewing" && (
           <button
             onClick={startRecording}
-            className="w-full bg-destructive text-destructive-foreground rounded-lg py-3 text-sm font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            className="w-full flex items-center justify-center gap-2.5 bg-destructive text-destructive-foreground rounded-xl py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-destructive/40"
           >
-            <span className="size-2 rounded-full bg-white animate-pulse" />
-            Start Recording (max 3 min)
+            <span className="size-3 rounded-full bg-white animate-pulse" />
+            <span>Start Recording</span>
+            <span className="text-destructive-foreground/70 text-xs">(max 3 min)</span>
           </button>
         )}
 
         {status === "recording" && (
           <button
             onClick={stopRecording}
-            className="w-full bg-foreground text-background rounded-lg py-3 text-sm font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            className="w-full flex items-center justify-center gap-2.5 bg-foreground text-background rounded-xl py-3 text-sm font-medium hover:opacity-90 transition-all"
           >
-            <svg className="size-4" fill="currentColor" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2" /></svg>
+            <StopCircle className="size-5" />
             Stop Recording
           </button>
         )}
 
         {status === "reviewing" && (
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2.5">
             <button
               onClick={startRecording}
-              className="border bg-background text-foreground rounded-lg py-2.5 text-sm font-medium hover:bg-secondary transition-colors"
+              className="flex items-center justify-center gap-2 border border-border bg-card text-foreground rounded-xl py-3 text-sm font-medium hover:bg-secondary hover:border-primary/30 transition-all"
             >
+              <Redo2 className="size-4" />
               Re-record
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-primary text-primary-foreground rounded-lg py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
             >
+              <CheckCircle2 className="size-4" />
               Submit Answer →
             </button>
           </div>

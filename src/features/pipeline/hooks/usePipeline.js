@@ -23,7 +23,7 @@ export const usePipeline = (jobId) => {
       setJob(data);
       // Sort stages by order_index on load
       const sorted = (data.recruitment_stages || []).sort(
-        (a, b) => a.order_index - b.order_index
+        (a, b) => a.order_index - b.order_index,
       );
       setStages(sorted);
     } catch (err) {
@@ -40,29 +40,30 @@ export const usePipeline = (jobId) => {
 
   // Add a stage from the library — optimistic local update then persist
   const handleAddStage = async (libraryItem) => {
-    // Find the Shortlist stage (order_index 20) to insert before it
-    const shortlistStage = stages.find((s) => s.stage_type === "shortlist");
-    
-    // Default to end of custom stages (before offer) if no shortlist is found
-    const customStages = stages.filter(s => !s.is_locked);
-    const lastCustomIndex = customStages.length > 0 
-      ? customStages[customStages.length - 1].order_index 
-      : 10; // After CV Review (10)
-      
-    // Next index is simply one more than the last custom stage, bounded by Shortlist (20)
-    // If we exceed 19, we have a problem, but for now we'll just increment
-    const nextIndex = lastCustomIndex + 1;
+    // Separate locked and unlocked stages
+    const unlockedStages = stages.filter((s) => !s.is_locked);
+
+    // Find the maximum order_index among unlocked stages
+    const maxUnlockedIndex =
+      unlockedStages.length > 0
+        ? Math.max(...unlockedStages.map((s) => s.order_index))
+        : 10; // After CV Review (10)
+
+    // Next index is one more than the max, but cap at 9998 (before Offer at 9999)
+    const nextIndex = Math.min(maxUnlockedIndex + 1, 9998);
 
     const totalWeight = stages.reduce(
       (sum, s) => sum + (parseFloat(s.weight) || 0),
-      0
+      0,
     );
     // Use an epsilon for floating point comparison issues (e.g. 0.9000000000000001)
-    const isFull = totalWeight > 0.901; 
-    let newWeight = isFull ? 0 : 0.10;
+    const isFull = totalWeight > 0.901;
+    let newWeight = isFull ? 0 : 0.1;
 
     if (isFull) {
-      setWarning("The composite weight can't exceed 100%. Stage added with 0% weight. Please free up weight from other stages to add weight to this one.");
+      setWarning(
+        "The composite weight can't exceed 100%. Stage added with 0% weight. Please free up weight from other stages to add weight to this one.",
+      );
       setTimeout(() => setWarning(null), 5000);
     }
 
@@ -73,11 +74,14 @@ export const usePipeline = (jobId) => {
       order_index: nextIndex,
       weight: newWeight,
       pass_score: null,
+      num_questions: 0,
     };
 
     try {
       const created = await createStage(jobId, stageData);
-      setStages((prev) => [...prev, created]);
+      setStages((prev) =>
+        [...prev, created].sort((a, b) => a.order_index - b.order_index),
+      );
     } catch (err) {
       console.error("Failed to add stage:", err);
       setError(err.message);
@@ -89,7 +93,7 @@ export const usePipeline = (jobId) => {
     try {
       const updated = await updateStage(stageId, updates);
       setStages((prev) =>
-        prev.map((s) => (s.id === stageId ? { ...s, ...updated } : s))
+        prev.map((s) => (s.id === stageId ? { ...s, ...updated } : s)),
       );
     } catch (err) {
       console.error("Failed to update stage:", err);
@@ -99,17 +103,32 @@ export const usePipeline = (jobId) => {
 
   // Delete a stage, recompute order_index for remaining, persist via two-phase upsert (Fix 2)
   const handleDeleteStage = async (stageId) => {
-    const remaining = stages
-      .filter((s) => s.id !== stageId)
-      .map((s, idx) => ({ ...s, order_index: idx }));
+    const deleted = stages.find((s) => s.id === stageId);
+    const remaining = stages.filter((s) => s.id !== stageId);
+
+    // Separate locked and unlocked stages
+    const lockedStages = remaining.filter((s) => s.is_locked);
+    const unlockedStages = remaining.filter((s) => !s.is_locked);
+
+    // Reassign indices to unlocked stages starting from 11 (after CV Review at 10)
+    const unlockedWithNewIndex = unlockedStages.map((s, idx) => ({
+      ...s,
+      order_index: 11 + idx,
+    }));
+
+    // Combine them back sorted by order_index
+    const finalStages = [...lockedStages, ...unlockedWithNewIndex].sort(
+      (a, b) => a.order_index - b.order_index,
+    );
 
     // Optimistic update
-    setStages(remaining);
+    setStages(finalStages);
 
     try {
       await deleteStage(stageId);
-      if (remaining.length > 0) {
-        await reorderStages(remaining);
+      // Only reorder if there are unlocked stages that changed their indices
+      if (unlockedWithNewIndex.length > 0 && !deleted.is_locked) {
+        await reorderStages(unlockedWithNewIndex);
       }
     } catch (err) {
       console.error("Failed to delete stage:", err);
@@ -124,7 +143,7 @@ export const usePipeline = (jobId) => {
     // We only reorder the UNLOCKED stages, keeping the locked ones fixed at their indexes
     const unlockedOnly = reorderedList.filter((s) => !s.is_locked);
     const lockedOnly = stages.filter((s) => s.is_locked);
-    
+
     // Assign new indexes to unlocked stages starting from 11 (after CV Review)
     const withNewIndex = unlockedOnly.map((s, idx) => ({
       ...s,
@@ -133,7 +152,7 @@ export const usePipeline = (jobId) => {
 
     // Combine them back for optimistic update
     const finalStages = [...lockedOnly, ...withNewIndex].sort(
-      (a, b) => a.order_index - b.order_index
+      (a, b) => a.order_index - b.order_index,
     );
 
     // Optimistic update

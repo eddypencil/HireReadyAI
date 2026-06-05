@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { STAGE_TYPE_OPTIONS } from "../constants/stageLibrary";
-
-const DEBOUNCE_MS = 400;
+import { Save } from "lucide-react";
 
 export default function StageDetailsPanel({ stage, stages, onUpdate }) {
   const [form, setForm] = useState({
@@ -9,7 +8,10 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
     stage_type: "",
     weight: 1,
     description: "",
+    num_questions: 0,
   });
+  const [isSaving, setIsSaving] = useState(false);
+  const [hasChanges, setHasChanges] = useState(false);
 
   // Sync local form state when selected stage changes
   useEffect(() => {
@@ -19,12 +21,11 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
         stage_type: stage.stage_type || "",
         weight: stage.weight ?? 1,
         description: stage.description || "",
+        num_questions: stage.num_questions || 0,
       });
+      setHasChanges(false);
     }
-  }, [stage?.id]);
-
-  // Debounce ref for the weight slider (Fix 3)
-  const weightDebounceRef = useRef(null);
+  }, [stage]);
 
   if (!stage) {
     return (
@@ -40,21 +41,29 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
     );
   }
 
-  const handleImmediateChange = (field, value) => {
+  const handleChange = (field, value) => {
     const updated = { ...form, [field]: value };
     setForm(updated);
-    onUpdate(stage.id, { ...updated });
+    setHasChanges(true);
   };
 
   const handleWeightChange = (value) => {
     const numVal = parseFloat(value);
-    setForm((prev) => ({ ...prev, weight: numVal }));
+    handleChange("weight", numVal);
+  };
 
-    // Debounce the Supabase call for weight slider (Fix 3)
-    if (weightDebounceRef.current) clearTimeout(weightDebounceRef.current);
-    weightDebounceRef.current = setTimeout(() => {
-      onUpdate(stage.id, { ...form, weight: numVal });
-    }, DEBOUNCE_MS);
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      // Explicitly exclude order_index to prevent unique constraint violations
+      const { order_index, ...updateData } = form;
+      await onUpdate(stage.id, updateData);
+      setHasChanges(false);
+    } catch (err) {
+      console.error("Failed to save stage:", err);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const weightPct = Math.round((form.weight ?? 0) * 100);
@@ -63,9 +72,12 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
   const totalOtherWeights = (stages || [])
     .filter((s) => s.id !== stage.id)
     .reduce((sum, s) => sum + (parseFloat(s.weight) || 0), 0);
-  
+
   // Use a tiny epsilon offset because of floating point math (e.g. 0.8 + 0.2000000000000001)
-  const maxAllowedWeight = Math.max(0, Math.round((1 - totalOtherWeights) * 100) / 100);
+  const maxAllowedWeight = Math.max(
+    0,
+    Math.round((1 - totalOtherWeights) * 100) / 100,
+  );
 
   return (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -76,7 +88,11 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
         </p>
         <p className="text-sm font-semibold text-gray-900 leading-tight truncate flex items-center gap-1.5">
           {form.name || "Untitled Stage"}
-          {stage.is_locked && <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium">Locked</span>}
+          {stage.is_locked && (
+            <span className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded font-medium">
+              Locked
+            </span>
+          )}
         </p>
         <p className="text-xs text-gray-400 truncate">
           {form.stage_type?.replace(/_/g, " ")}
@@ -93,7 +109,7 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
             type="text"
             value={form.name}
             disabled={stage.is_locked}
-            onChange={(e) => handleImmediateChange("name", e.target.value)}
+            onChange={(e) => handleChange("name", e.target.value)}
             className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400 focus:border-transparent transition-shadow disabled:bg-gray-50 disabled:text-gray-500"
           />
         </div>
@@ -106,7 +122,7 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
           <select
             value={form.stage_type}
             disabled={stage.is_locked}
-            onChange={(e) => handleImmediateChange("stage_type", e.target.value)}
+            onChange={(e) => handleChange("stage_type", e.target.value)}
             className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400 focus:border-transparent transition-shadow disabled:bg-gray-50 disabled:text-gray-500 cursor-pointer disabled:cursor-not-allowed"
           >
             <option value="">Select type…</option>
@@ -115,13 +131,16 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
                 {opt.label}
               </option>
             ))}
-            {stage.is_locked && !STAGE_TYPE_OPTIONS.some(o => o.value === form.stage_type) && (
-              <option value={form.stage_type}>{form.stage_type.replace(/_/g, " ")}</option>
-            )}
+            {stage.is_locked &&
+              !STAGE_TYPE_OPTIONS.some((o) => o.value === form.stage_type) && (
+                <option value={form.stage_type}>
+                  {form.stage_type.replace(/_/g, " ")}
+                </option>
+              )}
           </select>
         </div>
 
-        {/* Weight — debounced (Fix 3) */}
+        {/* Weight */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
             <label className="text-xs font-semibold text-gray-600">
@@ -151,9 +170,28 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
             rows={3}
             value={form.description}
             disabled={stage.is_locked}
-            onChange={(e) => handleImmediateChange("description", e.target.value)}
+            onChange={(e) => handleChange("description", e.target.value)}
             className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400 focus:border-transparent transition-shadow resize-none disabled:bg-gray-50 disabled:text-gray-500"
             placeholder="Describe what happens in this stage…"
+          />
+        </div>
+
+        {/* Number of Questions */}
+        <div>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+            Number of Questions
+          </label>
+          <input
+            type="number"
+            min="0"
+            max="100"
+            value={form.num_questions || 0}
+            disabled={stage.is_locked}
+            onChange={(e) =>
+              handleChange("num_questions", parseInt(e.target.value) || 0)
+            }
+            className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400 focus:border-transparent transition-shadow disabled:bg-gray-50 disabled:text-gray-500"
+            placeholder="Enter number of questions…"
           />
         </div>
 
@@ -162,18 +200,33 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
           <p className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase">
             Advanced (Coming Soon)
           </p>
-          {["AI Evaluation", "Manual Review Required", "Auto Advance", "Auto Reject"].map(
-            (label) => (
-              <div
-                key={label}
-                className="flex items-center justify-between opacity-40 cursor-not-allowed"
-              >
-                <span className="text-xs text-gray-500">{label}</span>
-                <div className="w-8 h-4 bg-gray-200 rounded-full" />
-              </div>
-            )
-          )}
+          {[
+            "AI Evaluation",
+            "Manual Review Required",
+            "Auto Advance",
+            "Auto Reject",
+          ].map((label) => (
+            <div
+              key={label}
+              className="flex items-center justify-between opacity-40 cursor-not-allowed"
+            >
+              <span className="text-xs text-gray-500">{label}</span>
+              <div className="w-8 h-4 bg-gray-200 rounded-full" />
+            </div>
+          ))}
         </div>
+      </div>
+
+      {/* Save Button Footer */}
+      <div className="px-5 py-4 border-t border-gray-100 bg-white flex gap-2">
+        <button
+          onClick={handleSave}
+          disabled={!hasChanges || stage.is_locked || isSaving}
+          className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-dark-amethyst-600 text-white text-sm font-semibold rounded-lg hover:bg-dark-amethyst-700 disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed transition-colors"
+        >
+          <Save className="w-4 h-4" />
+          {isSaving ? "Saving..." : "Save Changes"}
+        </button>
       </div>
     </div>
   );
