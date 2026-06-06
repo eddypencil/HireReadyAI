@@ -26,6 +26,14 @@ const stageConfig = {
     label: "Rejected",
     color: "bg-red-100 text-red-700",
   },
+  cv_review: {
+    label: "CV Review",
+    color: "bg-slate-100 text-slate-700",
+  },
+  shortlist: {
+    label: "Shortlisting",
+    color: "bg-purple-100 text-purple-700",
+  },
   [APPLICATION_STAGE.cv_screening]: {
     label: "CV Screening",
     color: "bg-slate-100 text-slate-700",
@@ -92,9 +100,9 @@ export default function ApplicationsList({ applications }) {
     );
   }
 
-  const getActiveStage = (app) => {
+  const getStageInfo = (app) => {
     if (!app.application_stages || !Array.isArray(app.application_stages))
-      return null;
+      return { label: stageConfig[app.current_stage]?.label || app.current_stage, color: stageConfig[app.current_stage]?.color || "bg-gray-100 text-gray-700" };
 
     const sortedStages = [...app.application_stages].sort((a, b) => {
       const orderA = a.recruitment_stages?.order_index || 0;
@@ -102,12 +110,50 @@ export default function ApplicationsList({ applications }) {
       return orderA - orderB;
     });
 
-    const inProgressStage = sortedStages.find(
-      (s) => s.status === "in_progress",
-    );
-    if (inProgressStage) return inProgressStage;
+    // Check for rejected
+    const isRejected = sortedStages.some((s) => s.status === "rejected");
+    if (isRejected) {
+      return { label: "Rejected", color: "bg-red-100 text-red-700" };
+    }
 
-    return sortedStages.find((s) => s.status === "pending");
+    // Find the first non-completed stage (no score)
+    const firstNonCompleted = sortedStages.find((s) => !s.score);
+
+    if (firstNonCompleted) {
+      const type = firstNonCompleted.recruitment_stages?.stage_type;
+      const name = firstNonCompleted.recruitment_stages?.name;
+
+      // Check if previous stage has score (meaning current is waiting)
+      const idx = sortedStages.indexOf(firstNonCompleted);
+      const prevHasScore = idx > 0 && sortedStages[idx - 1]?.score;
+
+      if (prevHasScore) {
+        return {
+          label: name || "Processing",
+          color: stageConfig[type]?.color || "bg-amber-100 text-amber-700",
+          waiting: true,
+        };
+      }
+
+      // This stage is currently active (in_progress or first pending)
+      return {
+        label: name || "Processing",
+        color: stageConfig[type]?.color || "bg-indigo-100 text-indigo-700",
+      };
+    }
+
+    // All stages have scores — use the last stage
+    const lastStage = sortedStages[sortedStages.length - 1];
+    if (lastStage) {
+      const lastType = lastStage.recruitment_stages?.stage_type;
+      const lastName = lastStage.recruitment_stages?.name;
+      return {
+        label: lastName || "Completed",
+        color: stageConfig[lastType]?.color || "bg-emerald-100 text-emerald-700",
+      };
+    }
+
+    return { label: stageConfig[app.current_stage]?.label || app.current_stage, color: stageConfig[app.current_stage]?.color || "bg-gray-100 text-gray-700" };
   };
 
   const showViewAll = applications.length > 3;
@@ -135,22 +181,7 @@ export default function ApplicationsList({ applications }) {
         {applications.map((app) => {
           const job = app.job_postings;
           const company = job?.companies;
-          const activeStage = getActiveStage(app);
-
-          let displayLabel = app.current_stage;
-          let displayColor =
-            stageConfig[app.current_stage]?.color ||
-            "bg-gray-100 text-gray-700";
-
-          if (activeStage) {
-            const type = activeStage.recruitment_stages?.stage_type;
-            displayLabel = activeStage.recruitment_stages?.name || "Processing";
-            displayColor =
-              stageConfig[type]?.color ||
-              stageConfig[APPLICATION_STAGE.interview].color;
-          } else if (stageConfig[app.current_stage]) {
-            displayLabel = stageConfig[app.current_stage].label;
-          }
+          const stageInfo = getStageInfo(app);
 
           return (
             <div
@@ -164,11 +195,18 @@ export default function ApplicationsList({ applications }) {
                       {job?.title || "Unknown Position"}
                     </h3>
 
-                    <span
-                      className={`text-xs font-medium px-3 py-1 rounded-full border border-dark-amethyst-100 ${displayColor}`}
-                    >
-                      {displayLabel}
-                    </span>
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span
+                        className={`text-xs font-medium px-3 py-1 rounded-full border border-dark-amethyst-100 ${stageInfo.color}`}
+                      >
+                        {stageInfo.label}
+                      </span>
+                      {stageInfo.waiting && (
+                        <span className="text-xs font-medium px-3 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                          Waiting
+                        </span>
+                      )}
+                    </div>
                   </div>
 
                   <p className="text-sm text-dark-amethyst-500 mt-1">

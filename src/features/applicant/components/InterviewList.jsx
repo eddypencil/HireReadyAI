@@ -10,6 +10,8 @@ const stageConfig = {
     [APPLICATION_STAGE.rejected]: { label: "Rejected", color: "bg-red-100 text-red-700 border-red-200" },
 
     // Pipeline Stages
+    cv_review: { label: "CV Review", color: "bg-slate-100 text-slate-700 border-slate-200" },
+    shortlist: { label: "Shortlisting", color: "bg-purple-100 text-purple-700 border-purple-200" },
     [APPLICATION_STAGE.cv_screening]: { label: "CV Screening", color: "bg-slate-100 text-slate-700 border-slate-200" },
     [APPLICATION_STAGE.ai_screening]: { label: "AI Screening", color: "bg-purple-100 text-purple-700 border-purple-200" },
     [APPLICATION_STAGE.assessment_test]: { label: "Assessment Test", color: "bg-indigo-100 text-indigo-700 border-indigo-300 font-bold animate-pulse" },
@@ -21,6 +23,8 @@ const stageConfig = {
     [APPLICATION_STAGE.background_check]: { label: "Background Check", color: "bg-orange-100 text-orange-700 border-orange-200" },
     [APPLICATION_STAGE.offer]: { label: "Offer", color: "bg-green-100 text-green-700 border-green-200" },
 };
+
+const AUTOMATED_STAGES = ["cv_review", "shortlist", "offer"];
 
 const INTERVIEW_STAGE_TYPES = [
     APPLICATION_STAGE.assessment_test,
@@ -44,34 +48,63 @@ export default function InterviewList({ applications }) {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("all_interviews");
 
-    // Helper to find an active interview stage
-    const getActiveInterviewStage = (app) => {
-        if (!app.application_stages || !Array.isArray(app.application_stages)) return null;
-        
-        const sortedStages = [...app.application_stages].sort((a, b) => {
+    const getSortedStages = (app) => {
+        if (!app.application_stages || !Array.isArray(app.application_stages)) return [];
+        return [...app.application_stages].sort((a, b) => {
             const orderA = a.recruitment_stages?.order_index || 0;
             const orderB = b.recruitment_stages?.order_index || 0;
             return orderA - orderB;
         });
+    };
 
-        // in_progress takes precedence
-        let active = sortedStages.find(s => s.status === "in_progress" && INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages?.stage_type));
-        
-        // Otherwise, first pending
-        if (!active) {
-            active = sortedStages.find(s => s.status === "pending" && INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages?.stage_type));
+    const getStageStatus = (app) => {
+        const sorted = getSortedStages(app);
+        if (sorted.length === 0) return null;
+
+        // Check for rejected
+        const isRejected = sorted.some(s => s.status === "rejected");
+        if (isRejected) return { status: "rejected", label: "Rejected", color: "bg-red-100 text-red-700 border-red-200" };
+
+        // Only consider interview-type stages (exclude automated: cv_review, shortlist, offer, etc.)
+        const interviewStages = sorted.filter(s => INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages?.stage_type));
+        if (interviewStages.length === 0) return null;
+
+        // Find the first interview stage that is actively in_progress
+        const activeInterview = interviewStages.find(s => s.status === "in_progress" && !s.score);
+        if (activeInterview) {
+            const type = activeInterview.recruitment_stages?.stage_type;
+            return {
+                status: "in_progress",
+                label: activeInterview.recruitment_stages?.name || "Interview Stage",
+                color: stageConfig[type]?.color || stageConfig[APPLICATION_STAGE.interview].color,
+                stageType: type,
+            };
         }
-        
-        return active;
+
+        // No active interview — check if any interview stage is pending (waiting to be activated)
+        const pendingInterview = interviewStages.find(s => !s.score);
+        if (pendingInterview) {
+            const type = pendingInterview.recruitment_stages?.stage_type;
+            const name = pendingInterview.recruitment_stages?.name;
+            return {
+                status: "waiting",
+                label: name || "Processing",
+                color: stageConfig[type]?.color || "bg-amber-100 text-amber-700 border-amber-200",
+                waiting: true,
+            };
+        }
+
+        // All interview stages have scores
+        return {
+            status: "completed",
+            label: "Completed",
+            color: "bg-emerald-100 text-emerald-700 border-emerald-200",
+        };
     };
 
     const interviewProcesses = applications?.filter((app) => {
-        const activeStage = getActiveInterviewStage(app);
-        return activeStage ||
-            app.current_stage === APPLICATION_STAGE.interview ||
-            app.current_stage === APPLICATION_STAGE.shortlisted ||
-            app.current_stage === APPLICATION_STAGE.hired ||
-            app.current_stage === APPLICATION_STAGE.rejected;
+        const stageStatus = getStageStatus(app);
+        return stageStatus !== null;
     }) || [];
 
     if (interviewProcesses.length === 0) {
@@ -84,16 +117,17 @@ export default function InterviewList({ applications }) {
     }
 
     const countAll = interviewProcesses.length;
-    const countInterviews = interviewProcesses.filter(app => getActiveInterviewStage(app) || app.current_stage === APPLICATION_STAGE.interview).length;
-    const countCompleted = interviewProcesses.filter(app => !getActiveInterviewStage(app) && app.current_stage === APPLICATION_STAGE.hired).length;
-    const countRejected = interviewProcesses.filter(app => !getActiveInterviewStage(app) && app.current_stage === APPLICATION_STAGE.rejected).length;
+    const countInterviews = interviewProcesses.filter(app => getStageStatus(app)?.status === "in_progress").length;
+    const countCompleted = interviewProcesses.filter(app => getStageStatus(app)?.status === "completed").length;
+    const countRejected = interviewProcesses.filter(app => getStageStatus(app)?.status === "rejected").length;
+    const countWaiting = interviewProcesses.filter(app => getStageStatus(app)?.status === "waiting").length;
 
     const filteredInterviews = interviewProcesses.filter((app) => {
-        const activeStage = getActiveInterviewStage(app);
+        const status = getStageStatus(app)?.status;
         if (activeTab === "all_interviews") return true;
-        if (activeTab === "interview") return activeStage || app.current_stage === APPLICATION_STAGE.interview;
-        if (activeTab === "completed") return !activeStage && app.current_stage === APPLICATION_STAGE.hired;
-        if (activeTab === "rejected") return !activeStage && app.current_stage === APPLICATION_STAGE.rejected;
+        if (activeTab === "interview") return status === "in_progress" || status === "waiting";
+        if (activeTab === "completed") return status === "completed";
+        if (activeTab === "rejected") return status === "rejected";
         return true;
     });
 
@@ -115,7 +149,7 @@ export default function InterviewList({ applications }) {
                     onClick={() => setActiveTab("interview")}
                     className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all ${activeTab === "interview" ? "bg-indigo-600 text-white shadow-sm" : "bg-indigo-50 text-indigo-600 hover:bg-indigo-100"}`}
                 >
-                    Active Interviews - {countInterviews}
+                    Active Interviews - {countInterviews + countWaiting}
                 </button>
                 <button
                     onClick={() => setActiveTab("completed")}
@@ -140,19 +174,8 @@ export default function InterviewList({ applications }) {
                     filteredInterviews.map((app) => {
                         const job = app.job_postings;
                         const company = job?.companies;
-                        const activeStage = getActiveInterviewStage(app);
-                        const isInterviewActive = !!activeStage || app.current_stage === APPLICATION_STAGE.interview;
-                        
-                        let displayLabel = app.current_stage;
-                        let displayColor = stageConfig[app.current_stage]?.color || "bg-gray-100 text-gray-700";
-
-                        if (activeStage) {
-                            const type = activeStage.recruitment_stages?.stage_type;
-                            displayLabel = activeStage.recruitment_stages?.name || "Interview Stage";
-                            displayColor = stageConfig[type]?.color || stageConfig[APPLICATION_STAGE.interview].color;
-                        } else if (stageConfig[app.current_stage]) {
-                            displayLabel = stageConfig[app.current_stage].label;
-                        }
+                        const stageStatus = getStageStatus(app);
+                        const isInterviewActive = stageStatus?.status === "in_progress";
 
                         return (
                             <div
@@ -164,9 +187,16 @@ export default function InterviewList({ applications }) {
                                         <h4 className="font-semibold text-gray-800 text-base tracking-tight">
                                             {job?.title || "Unknown Position"}
                                         </h4>
-                                        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${displayColor}`}>
-                                            {displayLabel}
-                                        </span>
+                                        <div className="flex items-center gap-1.5 flex-wrap">
+                                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${stageStatus?.color || "bg-gray-100 text-gray-700 border-gray-200"}`}>
+                                                {stageStatus?.label || "Unknown"}
+                                            </span>
+                                            {stageStatus?.waiting && (
+                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border bg-amber-50 text-amber-600 border-amber-200">
+                                                    Waiting for Next Stage
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
 
                                     <p className="text-sm text-gray-600 font-medium">
@@ -183,12 +213,12 @@ export default function InterviewList({ applications }) {
                                 </div>
 
                                 <div className="flex items-center gap-3 shrink-0">
-                                    {isInterviewActive && (
+                                    {isInterviewActive && stageStatus?.stageType && !AUTOMATED_STAGES.includes(stageStatus.stageType) && (
                                         <button
                                             onClick={() => navigate(`/interview/${app.id}`)}
                                             className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs hover:bg-indigo-700 transition-all"
                                         >
-                                            {activeStage ? `Start ${activeStage.recruitment_stages?.name}` : "Start AI Interview"}
+                                            {stageStatus.stageType ? `Start ${stageStatus.label}` : "Start AI Interview"}
                                         </button>
                                     )}
                                     {app.cv_file_url && (

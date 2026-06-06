@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { STAGE_TYPE_OPTIONS } from "../constants/stageLibrary";
 import { Save } from "lucide-react";
 
@@ -56,7 +56,7 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
     setIsSaving(true);
     try {
       // Explicitly exclude order_index to prevent unique constraint violations
-      const { order_index, ...updateData } = form;
+      const { ...updateData } = form;
       await onUpdate(stage.id, updateData);
       setHasChanges(false);
     } catch (err) {

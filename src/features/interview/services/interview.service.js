@@ -1,10 +1,22 @@
 import { supabase } from "@/shared/services/supabase";
 
 /**
- * Find the currently active (in_progress or pending) interview stage for an application.
- * Excludes cv_review stages.
+ * Find the currently active interview stage for an application.
+ * Only returns stages where the applicant actively participates (interview-type stages)
+ * AND the stage status is "in_progress" — meaning the recruiter/system has activated it.
+ * Excludes automated stages like cv_review, shortlist, offer, etc.
  */
 export const fetchActiveInterviewStage = async (applicationId) => {
+  const INTERVIEW_STAGE_TYPES = [
+    "assessment_test",
+    "coding_test",
+    "video_interview",
+    "technical_interview",
+    "hr_interview",
+    "manager_interview",
+    "ai_screening",
+  ];
+
   const { data, error } = await supabase
     .from("application_stages")
     .select(`
@@ -14,15 +26,17 @@ export const fetchActiveInterviewStage = async (applicationId) => {
       )
     `)
     .eq("application_id", applicationId)
-    .in("status", ["in_progress", "pending"]);
+    .eq("status", "in_progress");
 
   if (error) throw error;
 
-  // Client-side filter: exclude cv_review stages
-  const stage = (data ?? []).find(
-    (s) => s.recruitment_stages.stage_type !== "cv_review"
-  );
-  return stage ?? null;
+  // Filter to interview stages only + sort by pipeline order
+  // (excludes automated stages: cv_review, shortlist, offer, background_check, cv_screening)
+  const stages = (data ?? [])
+    .filter((s) => INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages.stage_type))
+    .sort((a, b) => (a.recruitment_stages.order_index || 0) - (b.recruitment_stages.order_index || 0));
+
+  return stages[0] ?? null;
 };
 
 /**
