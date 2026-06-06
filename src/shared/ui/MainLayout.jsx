@@ -53,7 +53,7 @@ export default function MainLayout() {
           icon: KanbanSquare,
         },
         {
-          to: "/companies/jd_generator",
+          to: "/companies/jd-generator",
           label: "nav.jd_generator",
           icon: Wand2,
         },
