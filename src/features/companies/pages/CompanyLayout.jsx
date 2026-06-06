@@ -16,6 +16,8 @@ import {
 } from "lucide-react";
 import RecruiterDashboardPage from "../../recruiter/pages/RecruiterDashboardPage";
 import PipelineCandidatesPage from "../../recruiter/pages/PipelineCandidatesPage";
+import CandidateProfilePage from "../../recruiter/pages/CandidateProfilePage";
+import CandidateAssessmentsPage from "../../recruiter/pages/CandidateAssessmentsPage";
 import ShortlistsPage from "../../shortlist/pages/ShortlistsPage";
 import PipelineBuilderPage from "../../pipeline/pages/PipelineBuilderPage";
 import {
@@ -156,6 +158,14 @@ function CompanyLayout() {
           <Route
             path="candidates"
             element={<PipelineCandidatesPage company={company} jobs={jobs} />}
+          />
+          <Route
+            path="candidates/:id"
+            element={<CandidateProfilePage />}
+          />
+          <Route
+            path="candidates/:id/assessments"
+            element={<CandidateAssessmentsPage />}
           />
           <Route path="pipelines/:jobId" element={<PipelineBuilderPage />} />
           <Route

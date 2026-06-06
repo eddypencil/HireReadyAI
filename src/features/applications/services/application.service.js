@@ -21,12 +21,16 @@ export const fetchApplicationsByApplicantId = async (applicantId) => {
           logo_url
         )
       ),
+      current_recruitment_stage:recruitment_stages!current_stage_id (
+        id,
+        name,
+        stage_type,
+        order_index
+      ),
       application_stages (
         id,
-        status,
+        stage_id,
         score,
-        started_at,
-        completed_at,
         recruitment_stages (
           id,
           name,
@@ -73,13 +77,6 @@ export const fetchApplicationById = async (applicationId) => {
 
 //apply
 export const createApplication = async (applicationData) => {
-  const { data: application, error } = await supabase
-    .from("applications")
-    .insert([applicationData])
-    .select()
-    .single();
-  if (error) throw error;
-
   // Find the CV Review stage for this job to auto-assign the applicant
   const { data: cvReviewStage } = await supabase
     .from("recruitment_stages")
@@ -88,6 +85,18 @@ export const createApplication = async (applicationData) => {
     .eq("stage_type", "cv_review")
     .limit(1)
     .single();
+
+  const insertData = {
+    ...applicationData,
+    current_stage_id: cvReviewStage?.id || null,
+  };
+
+  const { data: application, error } = await supabase
+    .from("applications")
+    .insert([insertData])
+    .select()
+    .single();
+  if (error) throw error;
 
   if (cvReviewStage) {
     await supabase.from("application_stages").upsert(

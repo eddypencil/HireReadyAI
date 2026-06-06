@@ -196,7 +196,7 @@ serve(async (req) => {
   // ── 3. Find the CV Review application_stage ───────────────────────────────
   const { data: cvStageRow } = await supabase
     .from("application_stages")
-    .select("id, recruitment_stages!inner(stage_type, order_index)")
+    .select("id, recruitment_stages!inner(stage_type, order_index, min_score)")
     .eq("application_id", applicationId)
     .eq("recruitment_stages.stage_type", "cv_review")
     .maybeSingle();
@@ -289,7 +289,8 @@ serve(async (req) => {
       dimension_scores: parsed.dimension_scores,
     });
 
-    const stageStatus = cvScore >= 55 ? "passed" : "failed";
+    const minScore = cvStageRow?.recruitment_stages?.min_score ?? 55;
+    const stageStatus = cvScore >= minScore ? "passed" : "failed";
 
     // Update application_stages CV review row
     if (cvStageRow?.id) {
@@ -318,10 +319,10 @@ serve(async (req) => {
       );
     }
 
-    // Update applications.cv_score
+    // Update applications.cv_score and set is_rejected if below threshold
     await supabase
       .from("applications")
-      .update({ cv_score: cvScore })
+      .update({ cv_score: cvScore, is_rejected: stageStatus === "failed" })
       .eq("id", applicationId);
 
     return new Response(

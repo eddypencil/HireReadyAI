@@ -344,7 +344,6 @@ serve(async (req) => {
 
   // Use num_questions from recruitment_stages, fallback to max_questions in evaluation_criteria, then fallback to 8
   const maxQuestions: number = stage.num_questions ?? ((stage.evaluation_criteria?.max_questions as number) ?? 8);
-  const passScore: number = stage.pass_score ?? 60;
 
   // ── 2. Save the incoming answer FIRST so history count is accurate ──────────
   // We save the answer before fetching history so that answeredInDB reflects
@@ -517,7 +516,7 @@ serve(async (req) => {
     );
   }
 
-  // ── 7. Session over — finalize stage ──────────────────────────────────────
+  // ── 7. Session over — save evaluation ─────────────────────────────────────
   const shouldFinalize = isSessionOver || aiResult.is_final;
 
   if (shouldFinalize) {
@@ -530,7 +529,6 @@ serve(async (req) => {
     };
 
     const { overall_score, recommendation, reasoning, strengths, weaknesses } = summary;
-    const passed = overall_score >= passScore;
 
     await supabase.from("application_stage_evaluations").upsert(
       {
@@ -545,17 +543,21 @@ serve(async (req) => {
       { onConflict: "application_stage_id" }
     );
 
+    // Update stage status and set is_rejected based on pass_score
+    const passScore = stage.pass_score ?? 55;
+    const stagePassed = overall_score >= passScore;
     await supabase
       .from("application_stages")
-      .update({
-        status: passed ? "passed" : "failed",
-        score: overall_score,
-        ai_feedback: reasoning,
-        completed_at: new Date().toISOString(),
-      })
+      .update({ status: stagePassed ? "passed" : "failed", score: overall_score, completed_at: new Date().toISOString() })
       .eq("id", applicationStageId);
 
-    // Return response without auto-advancing
+    if (!stagePassed) {
+      await supabase
+        .from("applications")
+        .update({ is_rejected: true })
+        .eq("id", application.id);
+    }
+
     return new Response(
       JSON.stringify({
         question: null,
@@ -625,13 +627,6 @@ serve(async (req) => {
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
-
-  // Mark stage as in_progress if it was pending
-  await supabase
-    .from("application_stages")
-    .update({ status: "in_progress", started_at: new Date().toISOString() })
-    .eq("id", applicationStageId)
-    .eq("status", "pending");
 
   return new Response(
     JSON.stringify({

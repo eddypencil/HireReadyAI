@@ -24,8 +24,6 @@ const stageConfig = {
     [APPLICATION_STAGE.offer]: { label: "Offer", color: "bg-green-100 text-green-700 border-green-200" },
 };
 
-const AUTOMATED_STAGES = ["cv_review", "shortlist", "offer"];
-
 const INTERVIEW_STAGE_TYPES = [
     APPLICATION_STAGE.assessment_test,
     APPLICATION_STAGE.coding_test,
@@ -48,53 +46,29 @@ export default function InterviewList({ applications }) {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("all_interviews");
 
-    const getSortedStages = (app) => {
-        if (!app.application_stages || !Array.isArray(app.application_stages)) return [];
-        return [...app.application_stages].sort((a, b) => {
-            const orderA = a.recruitment_stages?.order_index || 0;
-            const orderB = b.recruitment_stages?.order_index || 0;
-            return orderA - orderB;
-        });
-    };
-
     const getStageStatus = (app) => {
-        const sorted = getSortedStages(app);
-        if (sorted.length === 0) return null;
+        const currentStageId = app.current_stage_id;
+        if (!currentStageId) return null;
 
-        // Check for rejected
-        const isRejected = sorted.some(s => s.status === "rejected");
-        if (isRejected) return { status: "rejected", label: "Rejected", color: "bg-red-100 text-red-700 border-red-200" };
+        const recStage = app.current_recruitment_stage;
+        if (!recStage || !INTERVIEW_STAGE_TYPES.includes(recStage.stage_type)) return null;
 
-        // Only consider interview-type stages (exclude automated: cv_review, shortlist, offer, etc.)
-        const interviewStages = sorted.filter(s => INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages?.stage_type));
-        if (interviewStages.length === 0) return null;
+        // Find the matching application_stages entry (may not exist if stage was just assigned)
+        const appStage = (app.application_stages || []).find(
+            (s) => s.stage_id === currentStageId,
+        );
 
-        // Find the first interview stage that is actively in_progress
-        const activeInterview = interviewStages.find(s => s.status === "in_progress" && !s.score);
-        if (activeInterview) {
-            const type = activeInterview.recruitment_stages?.stage_type;
+        const hasScore = appStage?.score != null;
+
+        if (!hasScore) {
             return {
                 status: "in_progress",
-                label: activeInterview.recruitment_stages?.name || "Interview Stage",
-                color: stageConfig[type]?.color || stageConfig[APPLICATION_STAGE.interview].color,
-                stageType: type,
+                label: recStage.name || "Interview Stage",
+                color: stageConfig[recStage.stage_type]?.color || stageConfig[APPLICATION_STAGE.interview].color,
+                stageType: recStage.stage_type,
             };
         }
 
-        // No active interview — check if any interview stage is pending (waiting to be activated)
-        const pendingInterview = interviewStages.find(s => !s.score);
-        if (pendingInterview) {
-            const type = pendingInterview.recruitment_stages?.stage_type;
-            const name = pendingInterview.recruitment_stages?.name;
-            return {
-                status: "waiting",
-                label: name || "Processing",
-                color: stageConfig[type]?.color || "bg-amber-100 text-amber-700 border-amber-200",
-                waiting: true,
-            };
-        }
-
-        // All interview stages have scores
         return {
             status: "completed",
             label: "Completed",
@@ -213,7 +187,7 @@ export default function InterviewList({ applications }) {
                                 </div>
 
                                 <div className="flex items-center gap-3 shrink-0">
-                                    {isInterviewActive && stageStatus?.stageType && !AUTOMATED_STAGES.includes(stageStatus.stageType) && (
+                                    {isInterviewActive && stageStatus?.stageType && (
                                         <button
                                             onClick={() => navigate(`/interview/${app.id}`)}
                                             className="bg-indigo-600 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-xs hover:bg-indigo-700 transition-all"

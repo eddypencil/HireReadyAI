@@ -11,7 +11,8 @@ export async function getPipelineCandidates(companyId) {
       composite_score,
       is_rejected,
       cv_score,
-      profiles ( full_name ),
+      current_stage_id,
+      profiles ( full_name, headline, phone ),
       job_postings!inner ( id, title, company_id ),
       application_stages (
         id,
@@ -19,8 +20,9 @@ export async function getPipelineCandidates(companyId) {
         score,
         started_at,
         completed_at,
+        ai_feedback,
         recruitment_stages ( id, name, stage_type, order_index, is_locked ),
-        application_stage_evaluations ( ai_score, confidence, recommendation )
+        application_stage_evaluations ( ai_score, confidence, recommendation, reasoning, strengths, weaknesses )
       )
     `);
 
@@ -70,38 +72,103 @@ export async function getStageByTypeAndJob(stageType, jobId) {
 
 /**
  * Move an application to a different stage.
- * Closes the currently in_progress stage, then opens the new target stage.
- * Uses upsert on application_stages in case the row doesn't exist yet.
+ * Rules:
+ *  - current_stage_id must exist on the application.
+ *  - Candidate can only move to stages they don't already have a score in.
+ *  - Target stage must not be locked.
+ *  - Simply updates current_stage_id — no stage_status manipulation.
  */
 export async function moveToStage(applicationId, targetStageId) {
-  // Step 1: Close any in_progress stage
-  const { error: closeErr } = await supabase
+  // Step 1: Verify the application has a current_stage_id
+  const { data: app, error: appError } = await supabase
+    .from("applications")
+    .select("current_stage_id")
+    .eq("id", applicationId)
+    .maybeSingle();
+
+  if (appError) return { error: appError };
+  if (!app || !app.current_stage_id)
+    return { error: new Error("Application has no current stage assigned") };
+
+  // Step 2: Check current stage has evaluations
+  const { data: currentEvals, error: evalError } = await supabase
     .from("application_stages")
-    .update({
-      status: "passed",
-      completed_at: new Date().toISOString(),
-    })
+    .select(
+      `
+      id,
+      application_stage_evaluations ( ai_score )
+    `,
+    )
     .eq("application_id", applicationId)
-    .eq("status", "in_progress");
+    .eq("stage_id", app.current_stage_id)
+    .maybeSingle();
 
-  if (closeErr) return { error: closeErr };
+  if (evalError) return { error: evalError };
 
-  // Step 2: Upsert the target stage row as in_progress
-  const { error: openErr } = await supabase.from("application_stages").upsert(
-    {
-      application_id: applicationId,
-      stage_id: targetStageId,
-      status: "in_progress",
-      started_at: new Date().toISOString(),
-    },
-    { onConflict: "application_id,stage_id" },
-  );
+  if (
+    !currentEvals ||
+    !currentEvals.application_stage_evaluations?.some(
+      (e) => e.ai_score !== null && e.ai_score !== undefined,
+    )
+  )
+    return {
+      error: new Error(
+        "Current stage has no evaluations — cannot advance candidate",
+      ),
+    };
 
-  if (openErr) return { error: openErr };
+  // Step 3: Check target stage isn't locked
+  const { data: targetStage, error: stageError } = await supabase
+    .from("recruitment_stages")
+    .select("is_locked")
+    .eq("id", targetStageId)
+    .maybeSingle();
+
+  if (stageError) return { error: stageError };
+  if (!targetStage)
+    return { error: new Error("Target stage not found") };
+  if (targetStage.is_locked)
+    return { error: new Error("Target stage is locked") };
+
+  // Step 3: Check target stage doesn't already have a score
+  const { data: targetStageData, error: targetError } = await supabase
+    .from("application_stages")
+    .select(
+      `
+      id,
+      application_stage_evaluations ( ai_score )
+    `,
+    )
+    .eq("application_id", applicationId)
+    .eq("stage_id", targetStageId)
+    .maybeSingle();
+
+  if (targetError) return { error: targetError };
+
+  if (targetStageData) {
+    const targetHasScore =
+      targetStageData.application_stage_evaluations?.some(
+        (e) => e.ai_score !== null && e.ai_score !== undefined,
+      );
+    if (targetHasScore)
+      return {
+        error: new Error(
+          "Target stage already has a score for this candidate",
+        ),
+      };
+  }
+
+  // Step 4: Update current_stage_id on the application
+  const { error: updateErr } = await supabase
+    .from("applications")
+    .update({ current_stage_id: targetStageId })
+    .eq("id", applicationId);
+
+  if (updateErr) return { error: updateErr };
+
   return { error: null };
 }
 
-// Keep old exports for backward compatibility during migration
 export const closeCurrentStage = async (applicationId) =>
   supabase
     .from("application_stages")
@@ -109,16 +176,14 @@ export const closeCurrentStage = async (applicationId) =>
     .eq("application_id", applicationId)
     .eq("status", "in_progress");
 
-export const openStage = async (applicationId, stageId) =>
-  supabase.from("application_stages").upsert(
-    {
-      application_id: applicationId,
-      stage_id: stageId,
-      status: "in_progress",
-      started_at: new Date().toISOString(),
-    },
-    { onConflict: "application_id,stage_id" },
-  );
+export const openStage = async (applicationId, stageId) => {
+  const { error } = await supabase
+    .from("applications")
+    .update({ current_stage_id: stageId })
+    .eq("id", applicationId);
+
+  return { error };
+};
 
 /**
  * Seed the 3 locked anchor stages for a newly created job.

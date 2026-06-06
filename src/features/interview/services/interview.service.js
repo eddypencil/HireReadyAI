@@ -1,10 +1,9 @@
 import { supabase } from "@/shared/services/supabase";
 
 /**
- * Find the currently active interview stage for an application.
- * Only returns stages where the applicant actively participates (interview-type stages)
- * AND the stage status is "in_progress" — meaning the recruiter/system has activated it.
- * Excludes automated stages like cv_review, shortlist, offer, etc.
+ * Find the current interview stage for an application using current_stage_id.
+ * Only returns interview-type stages (excludes automated stages like cv_review, shortlist, offer).
+ * Creates the application_stages record on first access if it doesn't exist yet.
  */
 export const fetchActiveInterviewStage = async (applicationId) => {
   const INTERVIEW_STAGE_TYPES = [
@@ -17,26 +16,59 @@ export const fetchActiveInterviewStage = async (applicationId) => {
     "ai_screening",
   ];
 
-  const { data, error } = await supabase
+  // 1. Get current_stage_id from the application
+  const { data: app, error: appError } = await supabase
+    .from("applications")
+    .select("current_stage_id")
+    .eq("id", applicationId)
+    .single();
+
+  if (appError) throw appError;
+  if (!app?.current_stage_id) return null;
+
+  // 2. Check if the stage is an interview type
+  const { data: recStage, error: recError } = await supabase
+    .from("recruitment_stages")
+    .select("id, stage_type")
+    .eq("id", app.current_stage_id)
+    .single();
+
+  if (recError) throw recError;
+  if (!recStage || !INTERVIEW_STAGE_TYPES.includes(recStage.stage_type)) return null;
+
+  // 3. Find or create the application_stages record
+  const { data: existing, error: findError } = await supabase
     .from("application_stages")
     .select(`
-      id, status,
+      id,
       recruitment_stages!inner (
         id, name, description, stage_type, pass_score, evaluation_criteria, order_index
       )
     `)
     .eq("application_id", applicationId)
-    .eq("status", "in_progress");
+    .eq("stage_id", app.current_stage_id)
+    .maybeSingle();
 
-  if (error) throw error;
+  if (findError) throw findError;
+  if (existing) return existing;
 
-  // Filter to interview stages only + sort by pipeline order
-  // (excludes automated stages: cv_review, shortlist, offer, background_check, cv_screening)
-  const stages = (data ?? [])
-    .filter((s) => INTERVIEW_STAGE_TYPES.includes(s.recruitment_stages.stage_type))
-    .sort((a, b) => (a.recruitment_stages.order_index || 0) - (b.recruitment_stages.order_index || 0));
+  // 4. Create the record on first access
+  const { data: created, error: createError } = await supabase
+    .from("application_stages")
+    .upsert(
+      { application_id: applicationId, stage_id: app.current_stage_id },
+      { onConflict: "application_id,stage_id" },
+    )
+    .select(`
+      id,
+      recruitment_stages!inner (
+        id, name, description, stage_type, pass_score, evaluation_criteria, order_index
+      )
+    `)
+    .single();
 
-  return stages[0] ?? null;
+  if (createError) throw createError;
+  return created;
 };
 
 /**
