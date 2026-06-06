@@ -7,7 +7,7 @@ export default function ProfileStrength() {
   const { applications } = useApplications();
 
   const strength = useMemo(() => {
-    let score = 40; // base score
+    let score = 40;
 
     if (profile?.cv_url) score += 20;
     if (profile?.skills?.length >= 5) score += 15;
@@ -39,47 +39,42 @@ export default function ProfileStrength() {
   const remaining = checklist.filter((i) => !i.done).length;
 
   return (
-    <div className="bg-white rounded-2xl border border-dark-amethyst-100 p-7 shadow-sm space-y-5">
-      {/* Header */}
+    <div className="bg-background rounded-2xl border border-border p-7 shadow-xs space-y-5">
       <div className="flex justify-between items-start">
-        <h2 className="text-base font-bold text-dark-amethyst-950">
+        <h2 className="text-base font-bold text-sidebar">
           Profile strength
         </h2>
 
-        <span className="text-2xl font-bold text-dark-amethyst-600">
-          {strength}
+        <span className="text-2xl font-bold text-accent">
+          {strength}%
         </span>
       </div>
 
-      {/* Subtitle */}
-      <p className="text-sm text-dark-amethyst-500 -mt-2">
+      <p className="text-sm text-muted-foreground -mt-2">
         Complete profile = better matches
       </p>
 
-      {/* Progress bar */}
-      <div className="w-full bg-dark-amethyst-100 rounded-full h-2.5">
+      <div className="w-full bg-secondary rounded-full h-2.5">
         <div
-          className="bg-dark-amethyst-600 h-2.5 rounded-full transition-all"
+          className="bg-accent h-2.5 rounded-full transition-all duration-300"
           style={{ width: `${strength}%` }}
         />
       </div>
 
-      {/* Checklist */}
-      <div className="space-y-2 text-sm">
+      <div className="space-y-2 text-sm font-medium">
         {checklist.map((item, idx) => (
-          <p
-            key={idx}
-            className={
-              item.done ? "text-dark-amethyst-800" : "text-dark-amethyst-600"
-            }
-          >
-            {item.label}
-          </p>
+          <div key={idx} className="flex items-center gap-2">
+            <span className={`text-xs ${item.done ? "text-green-500" : "text-muted-foreground/40"}`}>
+              {item.done ? "✓" : "○"}
+            </span>
+            <p className={item.done ? "text-sidebar" : "text-muted-foreground"}>
+              {item.label}
+            </p>
+          </div>
         ))}
       </div>
 
-      {/* Footer */}
-      <p className="text-xs text-dark-amethyst-400">
+      <p className="text-xs text-muted-foreground/60">
         {remaining} things left to complete profile
       </p>
     </div>

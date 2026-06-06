@@ -4,67 +4,67 @@ import { APPLICATION_STAGE } from "@/shared/constants/enums";
 const stageConfig = {
   [APPLICATION_STAGE.applied]: {
     label: "Applied",
-    color: "bg-blue-100 text-blue-700",
+    color: "bg-blue-500/10 text-blue-600 border-blue-500/20",
   },
   [APPLICATION_STAGE.screening]: {
     label: "Screening",
-    color: "bg-yellow-100 text-yellow-700",
+    color: "bg-amber-500/10 text-amber-600 border-amber-500/20",
   },
   [APPLICATION_STAGE.shorListed]: {
     label: "Shortlisted",
-    color: "bg-purple-100 text-purple-700",
+    color: "bg-emerald-500/10 text-emerald-600 border-emerald-500/20",
   },
   [APPLICATION_STAGE.interview]: {
     label: "Interview",
-    color: "bg-indigo-100 text-indigo-700",
+    color: "bg-accent/10 text-accent border-accent/20",
   },
   [APPLICATION_STAGE.hired]: {
     label: "Hired",
-    color: "bg-emerald-100 text-emerald-700",
+    color: "bg-green-500/10 text-green-600 border-green-500/20",
   },
   [APPLICATION_STAGE.rejected]: {
     label: "Rejected",
-    color: "bg-red-100 text-red-700",
+    color: "bg-destructive/10 text-destructive border-destructive/20",
   },
   [APPLICATION_STAGE.cv_screening]: {
     label: "CV Screening",
-    color: "bg-slate-100 text-slate-700",
+    color: "bg-secondary text-muted-foreground border-border",
   },
   [APPLICATION_STAGE.ai_screening]: {
     label: "AI Screening",
-    color: "bg-purple-100 text-purple-700",
+    color: "bg-accent/10 text-accent border-accent/20",
   },
   [APPLICATION_STAGE.assessment_test]: {
     label: "Assessment Test",
-    color: "bg-indigo-100 text-indigo-700",
+    color: "bg-indigo-500/10 text-indigo-600 border-indigo-500/20",
   },
   [APPLICATION_STAGE.coding_test]: {
     label: "Coding Test",
-    color: "bg-blue-100 text-blue-700",
+    color: "bg-sky-500/10 text-sky-600 border-sky-500/20",
   },
   [APPLICATION_STAGE.video_interview]: {
     label: "Video Interview",
-    color: "bg-cyan-100 text-cyan-700",
+    color: "bg-cyan-500/10 text-cyan-600 border-cyan-500/20",
   },
   [APPLICATION_STAGE.technical_interview]: {
     label: "Technical Interview",
-    color: "bg-indigo-100 text-indigo-700",
+    color: "bg-accent/10 text-accent border-accent/20",
   },
   [APPLICATION_STAGE.hr_interview]: {
     label: "HR Interview",
-    color: "bg-fuchsia-100 text-fuchsia-700",
+    color: "bg-pink-500/10 text-pink-600 border-pink-500/20",
   },
   [APPLICATION_STAGE.manager_interview]: {
     label: "Manager Interview",
-    color: "bg-violet-100 text-violet-700",
+    color: "bg-violet-500/10 text-violet-600 border-violet-500/20",
   },
   [APPLICATION_STAGE.background_check]: {
     label: "Background Check",
-    color: "bg-orange-100 text-orange-700",
+    color: "bg-orange-500/10 text-orange-600 border-orange-500/20",
   },
   [APPLICATION_STAGE.offer]: {
     label: "Offer",
-    color: "bg-green-100 text-green-700",
+    color: "bg-green-500/10 text-green-600 border-green-500/20",
   },
 };
 
@@ -81,11 +81,11 @@ export default function ApplicationsList({ applications }) {
 
   if (!applications || applications.length === 0) {
     return (
-      <div className="bg-white rounded-2xl border border-dark-amethyst-100 p-7 shadow-sm">
-        <h2 className="text-base font-bold text-dark-amethyst-950">
+      <div className="bg-background rounded-2xl border border-border p-7 shadow-xs">
+        <h2 className="text-base font-bold text-sidebar">
           Active applications
         </h2>
-        <p className="text-sm text-dark-amethyst-500 mt-2">
+        <p className="text-sm text-muted-foreground mt-2">
           No applications yet
         </p>
       </div>
@@ -113,24 +113,22 @@ export default function ApplicationsList({ applications }) {
   const showViewAll = applications.length > 3;
 
   return (
-    <div className="bg-white rounded-2xl border border-dark-amethyst-100 p-7 space-y-5 shadow-sm">
-      {/* Header */}
+    <div className="bg-background rounded-2xl border border-border p-7 space-y-5 shadow-xs">
       <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-dark-amethyst-950">
+        <h2 className="text-base font-bold text-sidebar">
           Active applications
         </h2>
 
         {showViewAll && (
           <button
             onClick={() => navigate("/applications")}
-            className="text-sm font-medium text-dark-amethyst-600 hover:text-dark-amethyst-700 transition"
+            className="text-sm font-medium text-muted-foreground hover:text-accent transition-colors cursor-pointer"
           >
             View all
           </button>
         )}
       </div>
 
-      {/* List */}
       <div className="space-y-4">
         {applications.map((app) => {
           const job = app.job_postings;
@@ -140,7 +138,7 @@ export default function ApplicationsList({ applications }) {
           let displayLabel = app.current_stage;
           let displayColor =
             stageConfig[app.current_stage]?.color ||
-            "bg-gray-100 text-gray-700";
+            "bg-secondary text-muted-foreground border-border";
 
           if (activeStage) {
             const type = activeStage.recruitment_stages?.stage_type;
@@ -155,27 +153,27 @@ export default function ApplicationsList({ applications }) {
           return (
             <div
               key={app.id}
-              className="p-4 rounded-xl border border-dark-amethyst-100 hover:bg-dark-amethyst-50 transition"
+              className="p-4 rounded-xl border border-border bg-background hover:bg-secondary/40 transition-all duration-200"
             >
               <div className="flex justify-between items-start gap-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <h3 className="text-sm font-semibold text-dark-amethyst-800 truncate">
+                    <h3 className="text-sm font-semibold text-sidebar truncate">
                       {job?.title || "Unknown Position"}
                     </h3>
 
                     <span
-                      className={`text-xs font-medium px-3 py-1 rounded-full border border-dark-amethyst-100 ${displayColor}`}
+                      className={`text-[11px] font-medium px-2.5 py-0.5 rounded-full border ${displayColor}`}
                     >
                       {displayLabel}
                     </span>
                   </div>
 
-                  <p className="text-sm text-dark-amethyst-500 mt-1">
+                  <p className="text-sm text-muted-foreground mt-1">
                     {company?.name || "Unknown Company"}
                   </p>
 
-                  <div className="flex gap-3 mt-2 text-xs text-dark-amethyst-400">
+                  <div className="flex gap-3 mt-2 text-xs text-muted-foreground/60">
                     <span>Applied {formatDate(app.applied_at)}</span>
 
                     {job?.closed_at && (
@@ -187,7 +185,7 @@ export default function ApplicationsList({ applications }) {
                 {/* Open Button */}
                 <button
                   onClick={() => navigate(`/jobs/${job?.id}`)}
-                  className="text-sm font-medium text-dark-amethyst-600 border border-dark-amethyst-200 px-4 py-1.5 rounded-xl hover:bg-dark-amethyst-50 transition"
+                  className="text-sm font-medium text-sidebar bg-background border border-border px-4 py-1.5 rounded-xl hover:bg-secondary hover:border-accent/40 transition-all duration-200 cursor-pointer"
                 >
                   Open
                 </button>

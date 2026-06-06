@@ -80,7 +80,7 @@ export default function JobPostings({ jobs, searchQuery, company }) {
       };
 
       const updatedJob = await updateJobPosting(selectedJobId, updates);
-      
+
       // Update local state
       setLocalJobs((prev) =>
         prev.map((job) => (job.id === selectedJobId ? { ...job, ...updatedJob } : job))
@@ -95,9 +95,9 @@ export default function JobPostings({ jobs, searchQuery, company }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full font-sans bg-gray-50/50">
+    <div className="flex flex-col md:flex-row h-full font-sans bg-background">
       {/* Left Sidebar - Job List */}
-      <JobSidebar 
+      <JobSidebar
         jobs={localJobs}
         activeTab={activeTab}
         searchQuery={searchQuery}
@@ -110,15 +110,15 @@ export default function JobPostings({ jobs, searchQuery, company }) {
       />
 
       {/* Main Detail View */}
-      <div className="flex-1 bg-white h-full md:overflow-y-auto">
+      <div className="flex-1 bg-background h-full md:overflow-y-auto border-l border-border/40">
         {!selectedJob ? (
-          <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+          <div className="h-full flex items-center justify-center text-muted-foreground/60 text-xs font-medium">
             Select a job to view details
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto p-6 lg:p-10 pb-24">
-            
-            <JobDetailHeader 
+          <div className="max-w-4xl mx-auto p-5 lg:p-8 pb-16 space-y-4">
+
+            <JobDetailHeader
               selectedJob={selectedJob}
               isEditing={isEditing}
               editForm={editForm}
@@ -130,7 +130,7 @@ export default function JobPostings({ jobs, searchQuery, company }) {
               onOpenSidebar={() => setIsSidebarOpen(true)}
             />
 
-            <JobInfoGrid 
+            <JobInfoGrid
               selectedJob={selectedJob}
               isEditing={isEditing}
               editForm={editForm}
@@ -138,15 +138,15 @@ export default function JobPostings({ jobs, searchQuery, company }) {
               company={company}
             />
 
-            <div className="space-y-6">
-              <JobContentCards 
+            <div className="space-y-4">
+              <JobContentCards
                 selectedJob={selectedJob}
                 isEditing={isEditing}
                 editForm={editForm}
                 setEditForm={setEditForm}
               />
 
-              <JobPipelinePreview 
+              <JobPipelinePreview
                 pipelineStages={pipelineStages}
                 loadingStages={loadingStages}
                 selectedJobId={selectedJobId}

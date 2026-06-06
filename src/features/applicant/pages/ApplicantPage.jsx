@@ -20,9 +20,11 @@ export default function ApplicantPage() {
     getAllApplications,
     updateApplicationStage,
   } = useApplications();
+
   useEffect(() => {
     setLocalProfile(profile);
   }, [profile]);
+
   useEffect(() => {
     if (user?.id) {
       getAllApplications(user.id);
@@ -31,9 +33,9 @@ export default function ApplicantPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-dark-amethyst-50 flex flex-col items-center justify-center text-dark-amethyst-800">
-        <div className="w-8 h-8 border-2 border-dark-amethyst-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-3 text-sm text-dark-amethyst-500">
+      <div className="min-h-screen bg-secondary/30 flex flex-col items-center justify-center text-sidebar">
+        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-3 text-sm text-muted-foreground animate-pulse">
           Loading applications...
         </p>
       </div>
@@ -42,14 +44,14 @@ export default function ApplicantPage() {
 
   if (error) {
     return (
-      <div className="p-6 text-red-600 bg-red-50 border border-red-200 rounded-xl">
+      <div className="p-6 text-destructive bg-destructive/5 border border-destructive/20 rounded-xl text-sm font-medium">
         {error}
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-dark-amethyst-50 text-dark-amethyst-800 p-6 space-y-6 font-sans">
+    <div className="min-h-screen bg-secondary/30 text-sidebar p-6 space-y-6 font-sans">
       {/* HEADER (DB ONLY) */}
       <ApplicantHeader
         fullName={localProfile?.fullName}

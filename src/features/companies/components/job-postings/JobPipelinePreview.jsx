@@ -2,62 +2,62 @@ import { GitBranch, Wand2, ChevronRight } from "lucide-react";
 
 export default function JobPipelinePreview({ pipelineStages, loadingStages, selectedJobId, selectedJobTitle, navigate }) {
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 lg:p-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
         <div>
-          <h2 className="text-xs font-bold tracking-widest uppercase text-dark-amethyst-600 mb-1">
+          <h2 className="text-[10px] font-bold tracking-wider uppercase text-primary mb-1">
             Hiring pipeline for this job
           </h2>
-          <div className="flex items-center gap-2">
-            <GitBranch className="w-5 h-5 text-dark-amethyst-950" />
-            <h3 className="text-lg font-bold text-gray-900">{selectedJobTitle} Pipeline</h3>
+          <div className="flex items-center gap-1.5">
+            <GitBranch className="w-4 h-4 text-foreground" />
+            <h3 className="text-base font-bold text-foreground">{selectedJobTitle} Pipeline</h3>
           </div>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-0.5">
             {pipelineStages.length} stages &middot; Owned by this job posting
           </p>
         </div>
-        <button 
+        <button
           onClick={() => navigate(`/companies/pipelines/${selectedJobId}`)}
-          className="flex items-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          className="self-start sm:self-center flex items-center gap-1.5 bg-secondary hover:bg-secondary/80 text-secondary-foreground border border-border px-3 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer select-none"
         >
-          <GitBranch className="w-4 h-4" />
+          <GitBranch className="w-3.5 h-3.5" />
           Edit pipeline
         </button>
       </div>
 
-      <div className="overflow-x-auto pb-4 scrollbar-thin scrollbar-thumb-gray-200">
+      <div className="overflow-x-auto pb-2 scrollbar-none">
         {loadingStages ? (
-          <div className="flex gap-4">
+          <div className="flex gap-3">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="w-64 h-24 shrink-0 bg-gray-50 rounded-xl animate-pulse"></div>
+              <div key={i} className="w-56 h-20 shrink-0 bg-muted/50 rounded-xl animate-pulse border border-border/40"></div>
             ))}
           </div>
         ) : pipelineStages.length === 0 ? (
-          <div className="text-center py-6 border-2 border-dashed border-gray-200 rounded-xl text-gray-500 text-sm">
+          <div className="text-center py-8 border border-dashed border-border rounded-xl text-muted-foreground text-xs font-medium">
             No stages defined for this pipeline.
           </div>
         ) : (
-          <div className="flex gap-4 min-w-max">
+          <div className="flex gap-2 min-w-max items-center">
             {pipelineStages.map((stage, idx) => (
               <div key={stage.id} className="flex items-center">
-                <div className="w-64 border border-gray-200 rounded-xl p-4 bg-white shadow-xs">
-                  <p className="text-[10px] font-bold tracking-widest text-gray-400 uppercase mb-2">
+                <div className="w-56 border border-border/60 rounded-xl p-3.5 bg-background shadow-xs">
+                  <p className="text-[9px] font-bold tracking-wider text-muted-foreground/70 uppercase mb-1">
                     Stage {idx + 1}
                   </p>
-                  <p className="text-sm font-bold text-gray-900 mb-3 truncate">
+                  <p className="text-xs font-bold text-foreground mb-2.5 truncate">
                     {stage.name}
                   </p>
-                  <div className="flex items-center gap-2">
-                    <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-semibold">
+                  <div className="flex items-center gap-1.5">
+                    <span className="bg-muted text-muted-foreground px-1.5 py-0.5 rounded text-[10px] font-semibold">
                       {Math.round((stage.weight || 0) * 100)}%
                     </span>
-                    <span className="bg-blue-50 text-blue-600 border border-blue-100 px-2 py-1 rounded text-xs font-semibold flex items-center gap-1">
-                      <Wand2 className="w-3 h-3" /> AI
+                    <span className="bg-primary/10 text-primary border border-primary/20 px-1.5 py-0.5 rounded text-[10px] font-semibold flex items-center gap-1">
+                      <Wand2 className="w-2.5 h-2.5" /> AI
                     </span>
                   </div>
                 </div>
                 {idx < pipelineStages.length - 1 && (
-                  <ChevronRight className="w-5 h-5 text-gray-300 mx-2 shrink-0" />
+                  <ChevronRight className="w-4 h-4 text-muted-foreground/40 mx-1 shrink-0" />
                 )}
               </div>
             ))}

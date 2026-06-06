@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -8,92 +8,150 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-import { Field, FieldGroup } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { useState } from "react"
-import { TextareaField } from "./textArea"
-import InterviewQuestion from "@/features/interview/models/interview-question.model"
+} from "@/components/ui/dialog";
+import { Field, FieldGroup } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState } from "react";
+import { TextareaField } from "./textArea";
 
 export function AddInterviewDialog() {
-    const [applicationID, setApplicationID] = useState("");
-    const [jobID, setJobID] = useState("");
-    const [reRecordMins, setReRecordMins] = useState(0);
-    const [error, setError] = useState("");
-    const [questionsText, setQuestionsText] = useState("");
-    const [questionsList, setQuestionList] = useState([]);
-    const [loading, setLoading] = useState(false);
+  const [applicationID, setApplicationID] = useState("");
+  const [jobID, setJobID] = useState("");
+  const [reRecordMins, setReRecordMins] = useState(0);
+  const [error, setError] = useState("");
+  const [questionsText, setQuestionsText] = useState("");
+  const [questionsList, setQuestionList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    async function submitInterview(e) {
-      e.preventDefault();
-      if (!applicationID || !jobID) {
-        setError("Application ID and Job ID are required");
-        return;
-      }
-      setLoading(true);
-      setError("");
-      try {
-        const array = questionsText.split(/\r?\n/).filter(q => q.trim() !== "").map(q => q.trim())
-        setQuestionList(array)
-
-        // Legacy: Interview creation moved to application stages
-        console.warn("AddInterviewDialog is obsolete in new stage-based schema");
-      } catch (err) {
-        console.log(err)
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+  async function submitInterview(e) {
+    e.preventDefault();
+    if (!applicationID || !jobID) {
+      setError("Application ID and Job ID are required");
+      return;
     }
+    setLoading(true);
+    setError("");
+    try {
+      const array = questionsText
+        .split(/\r?\n/)
+        .filter((q) => q.trim() !== "")
+        .map((q) => q.trim());
+      setQuestionList(array);
+
+      // Legacy: Interview creation moved to application stages
+      console.warn("AddInterviewDialog is obsolete in new stage-based schema");
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Open Dialog</Button>
+        <Button variant="outline" className="text-xs font-medium cursor-pointer">
+          Open Dialog
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
-        <form onSubmit={submitInterview}>
-          <DialogHeader>
-            <DialogTitle>SEND AN INTERVIEW INVITATION</DialogTitle>
-            <DialogDescription>
-              send an interview to an applicant
+      <DialogContent className="sm:max-w-sm border-border/60 bg-background p-5 font-sans">
+        <form onSubmit={submitInterview} className="space-y-4">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-sm font-bold text-foreground tracking-tight uppercase">
+              Send an Interview Invitation
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Send an automated interview to an applicant.
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="application-id">application id</Label>
-              <Input id="applicant-id" name="applicant-id" onChange={(e)=>{setApplicationID(e.target.value)}}/>
+
+          <FieldGroup className="space-y-3">
+            <Field className="space-y-1">
+              <Label htmlFor="application-id" className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                Application ID
+              </Label>
+              <Input
+                id="application-id"
+                name="application-id"
+                value={applicationID}
+                onChange={(e) => setApplicationID(e.target.value)}
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring"
+                placeholder="e.g. app_123"
+              />
             </Field>
-            <Field>
-              <Label htmlFor="job-id">job id</Label>
-              <Input id="job-id" name="job-id" onChange={(e) => setJobID(e.target.value)} />
+
+            <Field className="space-y-1">
+              <Label htmlFor="job-id" className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                Job ID
+              </Label>
+              <Input
+                id="job-id"
+                name="job-id"
+                value={jobID}
+                onChange={(e) => setJobID(e.target.value)}
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring"
+                placeholder="e.g. job_456"
+              />
             </Field>
-            <Field>
-              <Label htmlFor="rerecord-input">rerecord availible after </Label>
-              <Input id="rerecord-input" name="rerecord-input" type="number" className="no-spinner" onChange={(e) => {
-                    const value = Number(e.target.value);
-                    if(value < 0){
-                        setError("Rerecord minutes has to be more than 0")
-                    }else{
-                        setError("")
-                        setReRecordMins(value)
-                    }
-              }}/>
-              {error&&<p className="italic text-red-400 text-sm">{error}</p>}
+
+            <Field className="space-y-1">
+              <Label htmlFor="rerecord-input" className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                Re-record available after (mins)
+              </Label>
+              <Input
+                id="rerecord-input"
+                name="rerecord-input"
+                type="number"
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring no-spinner"
+                placeholder="0 for instant"
+                onChange={(e) => {
+                  const value = Number(e.target.value);
+                  if (value < 0) {
+                    setError("Re-record minutes must be 0 or more");
+                  } else {
+                    setError("");
+                    setReRecordMins(value);
+                  }
+                }}
+              />
             </Field>
-             <Field>
-               <TextareaField value={questionsText} onChange={(e)=>{setQuestionsText(e.target.value)}}/>
-             </Field>
+
+            <Field className="space-y-1">
+              <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                Interview Questions
+              </Label>
+              <TextareaField
+                value={questionsText}
+                onChange={(e) => setQuestionsText(e.target.value)}
+                placeholder="Enter each question on a new line..."
+              />
+            </Field>
           </FieldGroup>
-          <DialogFooter>
+
+          {error && (
+            <p className="text-[11px] font-medium text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-2.5 py-1.5 transition-all">
+              {error}
+            </p>
+          )}
+
+          <DialogFooter className="gap-2 pt-2 border-t border-border/40 mt-2 sm:justify-end">
             <DialogClose asChild>
-              <Button type="button" variant="outline">Cancel</Button>
+              <Button type="button" variant="outline" className="h-8 text-xs font-medium cursor-pointer">
+                Cancel
+              </Button>
             </DialogClose>
-            <Button type="submit" disabled={loading}>{loading ? "Sending..." : "Send interview"}</Button>
+            <Button
+              type="submit"
+              disabled={loading || !!error}
+              className="h-8 text-xs font-medium cursor-pointer"
+            >
+              {loading ? "Sending..." : "Send interview"}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

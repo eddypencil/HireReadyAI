@@ -23,36 +23,36 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
   };
 
   return (
-    <>
+    <div className="space-y-4 font-sans">
       {/* Job Summary */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-        <h3 className="text-sm font-bold text-gray-900 mb-4">Job summary</h3>
+      <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 hover:border-accent/30 transition-colors duration-200">
+        <h3 className="text-sm font-bold text-sidebar uppercase tracking-wider mb-3">Job summary</h3>
         {isEditing ? (
           <textarea
-            rows={4}
-            className="w-full text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400"
+            rows={3}
+            className="w-full text-sm font-medium text-sidebar bg-background border border-border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all resize-y"
             value={editForm.description || ""}
             onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
           />
         ) : (
-          <div className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+          <div className="text-sm text-muted-foreground font-medium leading-relaxed whitespace-pre-wrap">
             {selectedJob.description || "No description provided."}
           </div>
         )}
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         {/* Responsibilities */}
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-          <h3 className="text-sm font-bold text-gray-900 mb-4">Responsibilities</h3>
-          <ul className="space-y-3">
+        <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 hover:border-accent/30 transition-colors duration-200">
+          <h3 className="text-sm font-bold text-sidebar uppercase tracking-wider mb-3">Responsibilities</h3>
+          <ul className="space-y-2.5">
             {isEditing ? (
               <>
                 {(editForm.responsibilities || []).map((resp, i) => (
-                  <li key={i} className="flex items-start gap-2">
+                  <li key={i} className="flex items-center gap-2">
                     <button
                       onClick={() => removeArrayItem(i, "responsibilities")}
-                      className="mt-0.5 text-gray-400 hover:text-red-500"
+                      className="text-muted-foreground/60 hover:text-destructive transition-colors shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -63,7 +63,7 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
                         newArr[i] = e.target.value;
                         setEditForm({ ...editForm, responsibilities: newArr });
                       }}
-                      className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                      className="w-full text-sm font-medium bg-secondary/20 border border-border rounded-lg h-9 px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                     />
                   </li>
                 ))}
@@ -72,35 +72,35 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
                     type="text"
                     placeholder="Type and press Enter to add..."
                     onKeyDown={(e) => handleArrayInputKeyDown(e, "responsibilities")}
-                    className="w-full text-sm bg-white border border-gray-200 rounded px-3 py-2 text-gray-500"
+                    className="w-full text-sm font-medium bg-background border border-border border-dashed rounded-lg h-9 px-3 text-muted-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                   />
                 </li>
               </>
             ) : (
               (selectedJob.responsibilities || []).map((resp, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-dark-amethyst-500 shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-600 leading-relaxed">{resp}</span>
+                <li key={i} className="flex items-start gap-2.5">
+                  <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm text-muted-foreground font-medium leading-relaxed">{resp}</span>
                 </li>
               ))
             )}
             {!isEditing && (!selectedJob.responsibilities || selectedJob.responsibilities.length === 0) && (
-              <span className="text-sm text-gray-400">None specified.</span>
+              <span className="text-xs text-muted-foreground/50 font-medium pl-0.5">None specified.</span>
             )}
           </ul>
         </div>
 
         {/* Requirements */}
-        <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-          <h3 className="text-sm font-bold text-gray-900 mb-4">Requirements</h3>
-          <ul className="space-y-3">
+        <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 hover:border-accent/30 transition-colors duration-200">
+          <h3 className="text-sm font-bold text-sidebar uppercase tracking-wider mb-3">Requirements</h3>
+          <ul className="space-y-2.5">
             {isEditing ? (
               <>
                 {(editForm.requirements || []).map((req, i) => (
-                  <li key={i} className="flex items-start gap-2">
+                  <li key={i} className="flex items-center gap-2">
                     <button
                       onClick={() => removeArrayItem(i, "requirements")}
-                      className="mt-0.5 text-gray-400 hover:text-red-500"
+                      className="text-muted-foreground/60 hover:text-destructive transition-colors shrink-0"
                     >
                       <X className="w-4 h-4" />
                     </button>
@@ -111,7 +111,7 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
                         newArr[i] = e.target.value;
                         setEditForm({ ...editForm, requirements: newArr });
                       }}
-                      className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                      className="w-full text-sm font-medium bg-secondary/20 border border-border rounded-lg h-9 px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                     />
                   </li>
                 ))}
@@ -120,35 +120,35 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
                     type="text"
                     placeholder="Type and press Enter to add..."
                     onKeyDown={(e) => handleArrayInputKeyDown(e, "requirements")}
-                    className="w-full text-sm bg-white border border-gray-200 rounded px-3 py-2 text-gray-500"
+                    className="w-full text-sm font-medium bg-background border border-border border-dashed rounded-lg h-9 px-3 text-muted-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                   />
                 </li>
               </>
             ) : (
               (selectedJob.requirements || []).map((req, i) => (
-                <li key={i} className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-dark-amethyst-500 shrink-0 mt-0.5" />
-                  <span className="text-sm text-gray-600 leading-relaxed">{req}</span>
+                <li key={i} className="flex items-start gap-2.5">
+                  <CheckCircle className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                  <span className="text-sm text-muted-foreground font-medium leading-relaxed">{req}</span>
                 </li>
               ))
             )}
             {!isEditing && (!selectedJob.requirements || selectedJob.requirements.length === 0) && (
-              <span className="text-sm text-gray-400">None specified.</span>
+              <span className="text-xs text-muted-foreground/50 font-medium pl-0.5">None specified.</span>
             )}
           </ul>
         </div>
       </div>
 
       {/* Skills */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 lg:p-8">
-        <h3 className="text-sm font-bold text-gray-900 mb-4">Skills</h3>
+      <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 hover:border-accent/30 transition-colors duration-200">
+        <h3 className="text-sm font-bold text-sidebar uppercase tracking-wider mb-3">Skills</h3>
         <div className="flex flex-wrap gap-2">
           {isEditing ? (
             <>
               {(editForm.skills || []).map((skill, i) => (
-                <div key={i} className="flex items-center gap-1 bg-mauve-magic-50 text-mauve-magic-700 border border-mauve-magic-200 px-3 py-1.5 rounded-full text-sm font-medium">
-                  {skill}
-                  <button onClick={() => removeArrayItem(i, "skills")} className="hover:text-red-500 ml-1">
+                <div key={i} className="flex items-center gap-1.5 bg-primary/10 text-primary border border-primary/20 px-3 h-8 rounded-full text-xs font-semibold">
+                  <span>{skill}</span>
+                  <button onClick={() => removeArrayItem(i, "skills")} className="hover:text-destructive transition-colors ml-0.5">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -157,21 +157,21 @@ export default function JobContentCards({ selectedJob, isEditing, editForm, setE
                 type="text"
                 placeholder="Add skill..."
                 onKeyDown={(e) => handleArrayInputKeyDown(e, "skills")}
-                className="text-sm bg-white border border-gray-200 rounded-full px-4 py-1.5 focus:outline-none focus:ring-2 focus:ring-mauve-magic-400 w-32"
+                className="text-xs font-semibold bg-background border border-border border-dashed rounded-full px-3 h-8 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary placeholder:text-muted-foreground/40 transition-all w-28"
               />
             </>
           ) : (
             (selectedJob.skills || []).map((skill, i) => (
-              <span key={i} className="bg-mauve-magic-50 text-mauve-magic-700 border border-mauve-magic-200 px-4 py-1.5 rounded-full text-sm font-medium">
+              <span key={i} className="bg-primary/10 text-primary border border-primary/15 px-3 py-1 rounded-full text-xs font-semibold tracking-wide">
                 {skill}
               </span>
             ))
           )}
           {!isEditing && (!selectedJob.skills || selectedJob.skills.length === 0) && (
-            <span className="text-sm text-gray-400">None specified.</span>
+            <span className="text-xs text-muted-foreground/50 font-medium pl-0.5">None specified.</span>
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 }

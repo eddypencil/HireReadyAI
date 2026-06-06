@@ -6,53 +6,45 @@ export default function DashboardStats({ stats }) {
     {
       label: "Total Jobs",
       value: stats.totalJobs,
-      icon: <Briefcase className="w-5 h-5 text-dark-amethyst-600" />,
-      bgColor: "bg-white",
-      borderColor: "border-dark-amethyst-200",
-      textColor: "text-dark-amethyst-950",
+      icon: <Briefcase className="w-4 h-4 text-primary" />,
+      iconBg: "bg-primary/10",
     },
     {
       label: "Total Applicants",
       value: stats.totalApplicants,
-      icon: <Users className="w-5 h-5 text-dark-amethyst-500" />,
-      bgColor: "bg-white",
-      borderColor: "border-dark-amethyst-200",
-      textColor: "text-dark-amethyst-950",
+      icon: <Users className="w-4 h-4 text-primary" />,
+      iconBg: "bg-primary/10",
     },
     {
       label: "Accepted",
       value: stats.totalAccepted,
-      icon: <CheckCircle className="w-5 h-5 text-green-500" />,
-      bgColor: "bg-white",
-      borderColor: "border-green-200",
-      textColor: "text-dark-amethyst-950",
+      icon: <CheckCircle className="w-4 h-4 text-emerald-500" />,
+      iconBg: "bg-emerald-500/10",
     },
     {
       label: "Rejected",
       value: stats.totalRejected,
-      icon: <XCircle className="w-5 h-5 text-red-500" />,
-      bgColor: "bg-white",
-      borderColor: "border-red-200",
-      textColor: "text-dark-amethyst-950",
+      icon: <XCircle className="w-4 h-4 text-destructive" />,
+      iconBg: "bg-destructive/10",
     },
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 font-sans">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-6 font-sans">
       {cards.map((card, idx) => (
         <div
           key={idx}
-          className={`${card.bgColor} border ${card.borderColor} rounded-xl p-6 shadow-xs flex items-center justify-between hover:shadow-md transition-shadow duration-200`}
+          className="bg-background border border-border/60 rounded-xl p-4 shadow-xs flex items-center justify-between hover:border-border transition-colors duration-200"
         >
-          <div>
-            <p className="text-dark-amethyst-400 text-sm font-medium mb-1 tracking-wide">
+          <div className="min-w-0">
+            <p className="text-muted-foreground text-xs font-semibold tracking-wider uppercase mb-0.5 truncate">
               {card.label}
             </p>
-            <h3 className={`text-3xl font-bold ${card.textColor}`} style={{ fontFamily: "'Inter', sans-serif" }}>
+            <h3 className="text-2xl font-bold text-foreground tracking-tight">
               {card.value}
             </h3>
           </div>
-          <div className="w-12 h-12 rounded-full bg-dark-amethyst-50 flex items-center justify-center">
+          <div className={`w-9 h-9 rounded-lg ${card.iconBg} flex items-center justify-center shrink-0`}>
             {card.icon}
           </div>
         </div>

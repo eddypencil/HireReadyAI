@@ -1,19 +1,11 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
-import { Wand2 } from "lucide-react";
 import { useUser } from "@/features/auth/context/user.context";
 import Navbar from "@/shared/ui/Navbar";
 import JobPostings from "./JobPostings";
 import CompanyProfile from "./CompanyProfile";
 import JDGeneratorPage from "./JDGeneratorPage";
 import NoCompanyView from "./NoCompanyView";
-import {
-  Briefcase,
-  Building2,
-  LayoutDashboard,
-  ClipboardCheck,
-  GitBranch,
-} from "lucide-react";
 import RecruiterDashboardPage from "../../recruiter/pages/RecruiterDashboardPage";
 import PipelineCandidatesPage from "../../recruiter/pages/PipelineCandidatesPage";
 import ShortlistsPage from "../../shortlist/pages/ShortlistsPage";
@@ -93,16 +85,19 @@ function CompanyLayout() {
 
   if (loading || dataLoading)
     return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-slate-900 font-sans">
-        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-2 text-slate-500 text-sm">Loading...</p>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-sidebar font-sans select-none">
+        <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="mt-2.5 text-muted-foreground text-xs font-semibold tracking-wide">Loading system data...</p>
       </div>
     );
 
   if (error) {
     return (
-      <div className="p-8 text-red-500 font-sans">
-        <p>Error: {error}</p>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center p-5 font-sans">
+        <div className="bg-destructive/10 border border-destructive/20 text-destructive rounded-xl p-4 max-w-md text-center shadow-xs">
+          <p className="text-sm font-semibold mb-1">Failed to load system state</p>
+          <p className="text-xs opacity-90 leading-relaxed font-mono">{error}</p>
+        </div>
       </div>
     );
   }
@@ -121,7 +116,7 @@ function CompanyLayout() {
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden w-full h-full">
+    <div className="flex-1 flex flex-col overflow-hidden w-full h-full bg-background font-sans">
       <Navbar
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}

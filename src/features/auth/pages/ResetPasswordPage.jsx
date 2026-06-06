@@ -18,7 +18,6 @@ export default function ResetPasswordPage() {
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      // If we're still waiting after 4 s with no event the link is bad/expired
       setPageState((current) => {
         if (current === "waiting") return "invalid";
         return current;
@@ -79,8 +78,8 @@ export default function ResetPasswordPage() {
         subheading="Please wait while we confirm your reset link"
       >
         <div className="flex flex-col items-center gap-6 py-6">
-          <div className="w-12 h-12 rounded-full border-2 border-dark-amethyst-200 border-t-dark-amethyst-600 animate-spin" />
-          <p className="text-dark-amethyst-400 text-sm text-center">
+          <div className="w-12 h-12 rounded-full border-2 border-border border-t-primary animate-spin" />
+          <p className="text-muted-foreground text-sm text-center font-medium">
             This only takes a moment.
           </p>
         </div>
@@ -95,31 +94,34 @@ export default function ResetPasswordPage() {
         subheading="This password reset link is invalid or has expired"
       >
         <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-red-50 border border-red-200">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-destructive/10 border border-destructive/20">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-                stroke="#ef4444"
+                stroke="currentColor"
+                className="text-destructive"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </div>
-          <p className="text-dark-amethyst-700 text-sm leading-7">
+
+          <p className="text-sidebar text-sm leading-7">
             Reset links expire after a short time and can only be used once.
             Request a new one below.
           </p>
+
           <Link
             to="/auth/forgot-password"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
-            style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
           >
             Request a new link
           </Link>
           <Link
             to="/auth/sign-in"
-            className="text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+            className="text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
           >
             Back to sign in
           </Link>
@@ -135,25 +137,27 @@ export default function ResetPasswordPage() {
         subheading="You can now sign in with your new password"
       >
         <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-dark-amethyst-100 border border-dark-amethyst-200">
+
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M20 6L9 17l-5-5"
-                stroke="#8400ff"
+                stroke="currentColor"
+                className="text-accent"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
             </svg>
           </div>
-          <p className="text-dark-amethyst-700 text-sm leading-7">
+          <p className="text-sidebar text-sm leading-7">
             Your password has been changed successfully. Redirecting you to
             sign in…
           </p>
           <Link
             to="/auth/sign-in"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
-            style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
           >
             Go to sign in
           </Link>
@@ -187,7 +191,7 @@ export default function ResetPasswordPage() {
         />
 
         {(validationError || apiError) && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
             <span>⚠</span>
             {validationError || apiError}
           </div>
@@ -196,15 +200,15 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-dark-amethyst-600 hover:bg-dark-amethyst-700 disabled:opacity-60"
-          style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover disabled:opacity-60"
+          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
         >
           {loading ? "Updating…" : "Update Password"}
         </button>
 
         <Link
           to="/auth/sign-in"
-          className="text-center text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+          className="text-center text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
         >
           Back to sign in
         </Link>

@@ -4,218 +4,41 @@
 @import "@fontsource-variable/geist";
 
 @custom-variant dark (&:is(.dark *));
+
 @theme {
-  --color-dark-amethyst-50: #efe5ff;
-  --color-dark-amethyst-100: #dfccff;
-  --color-dark-amethyst-200: #be99ff;
-  --color-dark-amethyst-300: #9e66ff;
-  --color-dark-amethyst-400: #7e33ff;
-  --color-dark-amethyst-500: #5e00ff;
-  --color-dark-amethyst-600: #4b00cc;
-  --color-dark-amethyst-700: #380099;
-  --color-dark-amethyst-800: #250066;
-  --color-dark-amethyst-900: #130033;
-  --color-dark-amethyst-950: #0d0024;
-
-  --color-dark-amethyst-50: #f3e5ff;
-  --color-dark-amethyst-100: #e6ccff;
-  --color-dark-amethyst-200: #ce99ff;
-  --color-dark-amethyst-300: #b566ff;
-  --color-dark-amethyst-400: #9c33ff;
-  --color-dark-amethyst-500: #8400ff;
-  --color-dark-amethyst-600: #6900cc;
-  --color-dark-amethyst-700: #4f0099;
-  --color-dark-amethyst-800: #350066;
-  --color-dark-amethyst-900: #1a0033;
-  --color-dark-amethyst-950: #120024;
-
-  --color-indigo-ink-50: #f3e7fd;
-  --color-indigo-ink-100: #e6d0fb;
-  --color-indigo-ink-200: #cda1f7;
-  --color-indigo-ink-300: #b571f4;
-  --color-indigo-ink-400: #9c42f0;
-  --color-indigo-ink-500: #8313ec;
-  --color-indigo-ink-600: #690fbd;
-  --color-indigo-ink-700: #4f0b8e;
-  --color-indigo-ink-800: #34085e;
-  --color-indigo-ink-900: #1a042f;
-  --color-indigo-ink-950: #120321;
-
-  --color-indigo-velvet-50: #f2e9fc;
-  --color-indigo-velvet-100: #e5d3f8;
-  --color-indigo-velvet-200: #cca7f1;
-  --color-indigo-velvet-300: #b27bea;
-  --color-indigo-velvet-400: #994fe3;
-  --color-indigo-velvet-500: #7f22dd;
-  --color-indigo-velvet-600: #661cb0;
-  --color-indigo-velvet-700: #4c1584;
-  --color-indigo-velvet-800: #330e58;
-  --color-indigo-velvet-900: #19072c;
-  --color-indigo-velvet-950: #12051f;
-
-  --color-royal-violet-50: #f3eafa;
-  --color-royal-violet-100: #e7d5f6;
-  --color-royal-violet-200: #ceacec;
-  --color-royal-violet-300: #b682e3;
-  --color-royal-violet-400: #9d59d9;
-  --color-royal-violet-500: #852fd0;
-  --color-royal-violet-600: #6a26a6;
-  --color-royal-violet-700: #501c7d;
-  --color-royal-violet-800: #351353;
-  --color-royal-violet-900: #1b092a;
-  --color-royal-violet-950: #13071d;
-
-  --color-lavender-purple-50: #f3eafb;
-  --color-lavender-purple-100: #e7d4f7;
-  --color-lavender-purple-200: #cfa9ef;
-  --color-lavender-purple-300: #b87ee7;
-  --color-lavender-purple-400: #a054de;
-  --color-lavender-purple-500: #8829d6;
-  --color-lavender-purple-600: #6d21ab;
-  --color-lavender-purple-700: #521881;
-  --color-lavender-purple-800: #361056;
-  --color-lavender-purple-900: #1b082b;
-  --color-lavender-purple-950: #13061e;
-
-  --color-mauve-magic-50: #f4e5ff;
-  --color-mauve-magic-100: #e9ccff;
-  --color-mauve-magic-200: #d399ff;
-  --color-mauve-magic-300: #bd66ff;
-  --color-mauve-magic-400: #a733ff;
-  --color-mauve-magic-500: #9000ff;
-  --color-mauve-magic-600: #7400cc;
-  --color-mauve-magic-700: #570099;
-  --color-mauve-magic-800: #3a0066;
-  --color-mauve-magic-900: #1d0033;
-  --color-mauve-magic-950: #140024;
-
-  --color-mauve-50: #f6e5ff;
-  --color-mauve-100: #ecccff;
-  --color-mauve-200: #da99ff;
-  --color-mauve-300: #c766ff;
-  --color-mauve-400: #b433ff;
-  --color-mauve-500: #a200ff;
-  --color-mauve-600: #8100cc;
-  --color-mauve-700: #610099;
-  --color-mauve-800: #410066;
-  --color-mauve-900: #200033;
-  --color-mauve-950: #170024;
-
-  /* --- NEW BLUES --- */
-  --color-deep-space-blue: #012a4a;
-  --color-deep-space-blue-100: #00090f;
-  --color-deep-space-blue-200: #00111e;
-  --color-deep-space-blue-300: #011a2d;
-  --color-deep-space-blue-400: #01233c;
-  --color-deep-space-blue-500: #012a4a;
-  --color-deep-space-blue-600: #025ca1;
-  --color-deep-space-blue-700: #048df6;
-  --color-deep-space-blue-800: #54b4fc;
-  --color-deep-space-blue-900: #aad9fe;
-
-  --color-yale-blue: #01497c;
-  --color-yale-blue-100: #000f19;
-  --color-yale-blue-200: #011e32;
-  --color-yale-blue-300: #012c4c;
-  --color-yale-blue-400: #013b65;
-  --color-yale-blue-500: #01497c;
-  --color-yale-blue-600: #0277ca;
-  --color-yale-blue-700: #1c9ffd;
-  --color-yale-blue-800: #68bffd;
-  --color-yale-blue-900: #b3dffe;
-
-  --color-rich-cerulean: #2a6f97;
-  --color-rich-cerulean-100: #09161e;
-  --color-rich-cerulean-200: #112d3c;
-  --color-rich-cerulean-300: #1a435b;
-  --color-rich-cerulean-400: #225979;
-  --color-rich-cerulean-500: #2a6f97;
-  --color-rich-cerulean-600: #3a93c7;
-  --color-rich-cerulean-700: #6baed5;
-  --color-rich-cerulean-800: #9cc9e3;
-  --color-rich-cerulean-900: #cee4f1;
-
-  --color-cerulean: #2c7da0;
-  --color-cerulean-100: #091920;
-  --color-cerulean-200: #123240;
-  --color-cerulean-300: #1a4b60;
-  --color-cerulean-400: #236480;
-  --color-cerulean-500: #2c7da0;
-  --color-cerulean-600: #3fa1ca;
-  --color-cerulean-700: #6fb8d8;
-  --color-cerulean-800: #9fd0e5;
-  --color-cerulean-900: #cfe7f2;
-
-  --color-air-force-blue: #468faf;
-  --color-air-force-blue-100: #0e1d23;
-  --color-air-force-blue-200: #1c3946;
-  --color-air-force-blue-300: #2a5669;
-  --color-air-force-blue-400: #38738c;
-  --color-air-force-blue-500: #468faf;
-  --color-air-force-blue-600: #67a7c3;
-  --color-air-force-blue-700: #8dbdd2;
-  --color-air-force-blue-800: #b3d3e1;
-  --color-air-force-blue-900: #d9e9f0;
-
-  --color-steel-blue: #61a5c2;
-  --color-steel-blue-100: #10222a;
-  --color-steel-blue-200: #214454;
-  --color-steel-blue-300: #31677e;
-  --color-steel-blue-400: #4189a7;
-  --color-steel-blue-500: #61a5c2;
-  --color-steel-blue-600: #81b7ce;
-  --color-steel-blue-700: #a0c9da;
-  --color-steel-blue-800: #c0dbe6;
-  --color-steel-blue-900: #dfedf3;
-
-  --color-sky-blue: #89c2d9;
-  --color-sky-blue-100: #112b35;
-  --color-sky-blue-200: #22566a;
-  --color-sky-blue-300: #34819f;
-  --color-sky-blue-400: #52a6c7;
-  --color-sky-blue-500: #89c2d9;
-  --color-sky-blue-600: #a0cee0;
-  --color-sky-blue-700: #b7dae8;
-  --color-sky-blue-800: #cfe6f0;
-  --color-sky-blue-900: #e7f3f7;
-
-  --color-light-blue: #a9d6e5;
-  --color-light-blue-100: #12333d;
-  --color-light-blue-200: #25657b;
-  --color-light-blue-300: #3798b8;
-  --color-light-blue-400: #6bb9d3;
-  --color-light-blue-500: #a9d6e5;
-  --color-light-blue-600: #badeea;
-  --color-light-blue-700: #cbe6f0;
-  --color-light-blue-800: #dceff5;
-  --color-light-blue-900: #eef7fa;
-
-  --color-primary: var(--color-yale-blue);
-  --color-primary-foreground: #ffffff;
-  --color-secondary: var(--color-light-blue-900);
-  --color-secondary-foreground: var(--color-deep-space-blue);
-  --color-accent: var(--color-air-force-blue);
-  --color-accent-foreground: #ffffff;
+  --color-sidebar: #012a4a;
+  --color-primary: #01497c;
+  --color-primary-hover: #013a63;
+  --color-muted-foreground: #2a6f97;
+  --color-accent: #468faf;
+  --color-border: #cfe7f2;
   --color-background: #ffffff;
-  --color-foreground: var(--color-deep-space-blue);
-  --color-card: #ffffff;
-  --color-card-foreground: var(--color-deep-space-blue);
-  --color-muted: var(--color-sky-blue-900);
-  --color-muted-foreground: var(--color-rich-cerulean);
-  --color-border: var(--color-cerulean-900);
-  --color-ring: var(--color-air-force-blue);
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-destructive: #ef4444;
+  --color-secondary: #eef7fa;
+  --color-muted: #e7f3f7;
+  --color-foreground: #012a4a;
+
+  --color-success: oklch(0.62 0.14 165);
+  --color-warning: oklch(0.78 0.15 75);
+  --color-destructive: oklch(0.58 0.21 27);
   --color-destructive-foreground: #ffffff;
+
+  --stage-applied: #89c2d9;
+  --stage-screening: #61a5c2;
+  --stage-interview: #2c7da0;
+  --stage-assessment: #2a6f97;
+  --stage-final: #01497c;
+  --stage-hired: #468faf;
+
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-display: "Plus Jakarta Sans", sans-serif;
 }
 
 @utility no-spinner {
   -moz-appearance: textfield;
+
   &::-webkit-inner-spin-button,
   &::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 }
-

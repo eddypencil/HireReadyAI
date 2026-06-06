@@ -56,7 +56,7 @@ export default function SignInPage() {
           hint={
             <Link
               to="/auth/forgot-password"
-              className="text-xs text-dark-amethyst-500 hover:text-dark-amethyst-700 hover:underline"
+              className="text-xs text-accent hover:underline"
             >
               Forgot password?
             </Link>
@@ -64,7 +64,7 @@ export default function SignInPage() {
         />
 
         {error && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
             <span>⚠</span>
             {error}
           </div>
@@ -73,9 +73,9 @@ export default function SignInPage() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-dark-amethyst-600
-            ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-dark-amethyst-700"}`}
-          style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+          className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary
+            ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-primary-hover"}`}
+          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
@@ -89,30 +89,30 @@ export default function SignInPage() {
       </form>
 
       <div className="flex items-center gap-3 my-5">
-        <span className="flex-1 h-px bg-dark-amethyst-200" />
-        <span className="text-xs text-dark-amethyst-300">or</span>
-        <span className="flex-1 h-px bg-dark-amethyst-200" />
+        <span className="flex-1 h-px bg-border/20" />
+        <span className="text-xs text-muted-foreground/60">or</span>
+        <span className="flex-1 h-px bg-border/20" />
       </div>
 
       <SocialButton provider="google" />
 
-      <p className="text-center text-xs text-dark-amethyst-300 mt-5">
+      <p className="text-center text-xs text-muted-foreground/80 mt-5">
         By signing in you agree to our{" "}
-        <a href="#" className="underline hover:text-dark-amethyst-500">
+        <a href="#" className="underline hover:text-accent">
           Terms
         </a>{" "}
         and{" "}
-        <a href="#" className="underline hover:text-dark-amethyst-500">
+        <a href="#" className="underline hover:text-accent">
           Privacy
         </a>
         .
       </p>
 
-      <p className="text-center text-xs text-dark-amethyst-400 mt-3">
+      <p className="text-center text-xs text-muted-foreground/80 mt-3">
         Don't have an account?{" "}
         <Link
           to="/auth/sign-up"
-          className="text-dark-amethyst-600 font-semibold hover:underline"
+          className="text-accent font-semibold hover:underline"
         >
           Create one
         </Link>

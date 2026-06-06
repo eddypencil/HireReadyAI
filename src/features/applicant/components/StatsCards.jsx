@@ -12,10 +12,10 @@ export default function StatsCards({ applications }) {
       {stats.map((s) => (
         <div
           key={s.label}
-          className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow"
+          className="bg-background border border-border rounded-xl p-4 shadow-xs hover:border-accent/30 transition-all duration-200"
         >
-          <p className="text-sm text-gray-500">{s.label}</p>
-          <h2 className="text-2xl font-bold text-gray-800">{s.value}</h2>
+          <p className="text-sm text-muted-foreground font-medium">{s.label}</p>
+          <h2 className="text-2xl font-bold text-sidebar mt-1">{s.value}</h2>
         </div>
       ))}
     </div>

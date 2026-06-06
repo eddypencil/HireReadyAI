@@ -16,26 +16,27 @@ export default function DashboardCharts({ pipelineSummaryData, trendData, topJob
     if (!pipelineSummaryData || pipelineSummaryData.applied === 0) return 0;
     return Math.round((val / pipelineSummaryData.applied) * 100);
   };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 font-sans">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 font-sans">
       {/* Pipeline Summary Component */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 col-span-1 lg:col-span-2 xl:col-span-1">
-        <div className="flex justify-between items-start mb-6">
+      <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 col-span-1 lg:col-span-2 xl:col-span-1">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-xl font-bold text-[#0f172a] mb-1" style={{ fontFamily: "'Inter', sans-serif" }}>
+            <h3 className="text-base font-bold text-foreground tracking-tight">
               Pipeline summary
             </h3>
-            <p className="text-sm text-[#64748b]">
+            <p className="text-xs text-muted-foreground">
               Across all active roles · last 7 days
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-medium text-dark-amethyst-600 bg-dark-amethyst-50 border border-dark-amethyst-200">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20">
             Live
           </span>
         </div>
 
         {pipelineSummaryData && (
-          <div className="flex gap-2 mb-8">
+          <div className="flex gap-2 mb-6">
             {[
               { label: "Applied", value: pipelineSummaryData.applied, pct: 100 },
               { label: "Screened", value: pipelineSummaryData.screened, pct: calcPct(pipelineSummaryData.screened) },
@@ -43,17 +44,17 @@ export default function DashboardCharts({ pipelineSummaryData, trendData, topJob
               { label: "Interviewed", value: pipelineSummaryData.interviewed, pct: calcPct(pipelineSummaryData.interviewed) },
               { label: "Shortlisted", value: pipelineSummaryData.shortlisted, pct: calcPct(pipelineSummaryData.shortlisted) },
             ].map((stage, idx) => (
-              <div key={idx} className="flex flex-col flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-[#64748b]">{stage.label}</span>
-                  {idx > 0 && <span className="text-xs font-semibold text-[#0f172a]">{stage.pct}%</span>}
+              <div key={idx} className="flex flex-col flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-1 mb-0.5">
+                  <span className="text-[10px] font-medium text-muted-foreground truncate">{stage.label}</span>
+                  {idx > 0 && <span className="text-[10px] font-bold text-foreground">{stage.pct}%</span>}
                 </div>
-                <span className="text-2xl font-bold text-[#0f172a] mb-3" style={{ fontFamily: "'Inter', sans-serif" }}>
+                <span className="text-lg font-bold text-foreground mb-1.5 tracking-tight">
                   {stage.value}
                 </span>
-                <div className="h-1.5 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-dark-amethyst-500 rounded-full transition-all duration-500" 
+                <div className="h-1 w-full bg-muted rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-primary rounded-full transition-all duration-500"
                     style={{ width: `${stage.pct}%` }}
                   />
                 </div>
@@ -63,39 +64,46 @@ export default function DashboardCharts({ pipelineSummaryData, trendData, topJob
         )}
 
         {/* Trend Area Chart */}
-        <div className="h-[200px] -mx-2">
+        <div className="h-[180px] -mx-2">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart data={trendData} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
               <defs>
                 <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8400ff" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#8400ff" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.15} />
+                  <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis 
-                dataKey="day" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: '#64748b', fontSize: 12 }} 
-                dy={10}
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.4} />
+              <XAxis
+                dataKey="day"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 500 }}
+                dy={8}
               />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: '#64748b', fontSize: 12 }} 
-                tickCount={5}
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 500 }}
+                tickCount={4}
               />
-              <Tooltip 
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'var(--background)',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--shadow-xs)',
+                  fontSize: '11px',
+                  color: 'var(--foreground)'
+                }}
               />
-              <Area 
-                type="monotone" 
-                dataKey="applications" 
-                stroke="#8400ff" 
+              <Area
+                type="monotone"
+                dataKey="applications"
+                stroke="var(--primary)"
                 strokeWidth={2}
-                fillOpacity={1} 
-                fill="url(#colorApps)" 
+                fillOpacity={1}
+                fill="url(#colorApps)"
               />
             </AreaChart>
           </ResponsiveContainer>
@@ -103,38 +111,47 @@ export default function DashboardCharts({ pipelineSummaryData, trendData, topJob
       </div>
 
       {/* Top Jobs Chart */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6">
+      <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5">
         <div className="mb-4">
-          <h3 className="text-lg font-bold text-dark-amethyst-950" style={{ fontFamily: "'Inter', sans-serif" }}>
+          <h3 className="text-base font-bold text-foreground tracking-tight">
             Top Jobs by Applicants
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs text-muted-foreground">
             Most active job postings
           </p>
         </div>
-        <div className="h-64">
+        <div className="h-[210px] -mx-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={topJobsData}
-              margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+              margin={{ top: 5, right: 10, left: -25, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
-              <XAxis 
-                dataKey="name" 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: '#6b7280', fontSize: 11 }} 
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.4} />
+              <XAxis
+                dataKey="name"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 500 }}
+                dy={8}
               />
-              <YAxis 
-                axisLine={false} 
-                tickLine={false} 
-                tick={{ fill: '#6b7280', fontSize: 12 }} 
+              <YAxis
+                axisLine={false}
+                tickLine={false}
+                tick={{ fill: 'var(--muted-foreground)', fontSize: 10, fontWeight: 500 }}
+                tickCount={4}
               />
-              <Tooltip 
-                cursor={{ fill: '#f9fafb' }}
-                contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+              <Tooltip
+                cursor={{ fill: 'var(--muted)', opacity: 0.4 }}
+                contentStyle={{
+                  backgroundColor: 'var(--background)',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border)',
+                  boxShadow: 'var(--shadow-xs)',
+                  fontSize: '11px',
+                  color: 'var(--foreground)'
+                }}
               />
-              <Bar dataKey="applicants" fill="#ce99ff" radius={[4, 4, 0, 0]} barSize={32} />
+              <Bar dataKey="applicants" fill="var(--primary)" opacity={0.85} radius={[4, 4, 0, 0]} barSize={24} />
             </BarChart>
           </ResponsiveContainer>
         </div>

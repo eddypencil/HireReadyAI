@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function FormField({
   label,
@@ -13,49 +14,37 @@ export default function FormField({
   const isPassword = type === "password";
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
-  const handleFocus = (e) => {
-    e.target.style.borderColor = "#8400ff";
-    e.target.style.boxShadow = "0 0 0 3px rgba(132,0,255,0.08)";
-  };
-
-  const handleBlur = (e) => {
-    e.target.style.borderColor = "";
-    e.target.style.boxShadow = "none";
-  };
-
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex justify-between items-center">
-        <label className="text-xs font-medium text-dark-amethyst-500 tracking-wide">
+        <label className="text-xs font-medium text-muted-foreground tracking-wide">
           {label}
         </label>
         {hint && hint}
       </div>
 
       <div className="relative">
+
         <input
           type={inputType}
           required={required}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
-          className={`w-full h-11 rounded-xl px-4 text-sm text-dark-amethyst-900 bg-white border border-dark-amethyst-100 outline-none transition-all duration-200 placeholder:text-dark-amethyst-200 ${isPassword ? "pr-12" : ""}`}
-          onFocus={handleFocus}
-          onBlur={handleBlur}
+          className={`w-full h-11 rounded-xl px-4 text-sm text-sidebar bg-background border border-border outline-none transition-all duration-200 placeholder:text-muted-foreground/40 focus-visible:border-accent focus-visible:ring-3 focus-visible:ring-accent/20 ${isPassword ? "pr-12" : ""}`}
         />
 
         {isPassword && (
           <button
             type="button"
             onClick={() => setShowPassword((v) => !v)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center"
+            className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer bg-transparent border-none p-0 flex items-center justify-center text-muted-foreground/60 hover:text-sidebar transition-colors outline-none"
           >
-            <img
-              src={showPassword ? "/public/eye.png" : "/public/eye (1).png"}
-              alt={showPassword ? "Hide password" : "Show password"}
-              className="w-5 h-5"
-              style={{ mixBlendMode: "multiply" }}
-            />
+            {showPassword ? (
+              <Eye className="w-5 h-5" />
+            ) : (
+              <EyeOff className="w-5 h-5" />
+            )}
           </button>
         )}
       </div>

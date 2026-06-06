@@ -40,91 +40,91 @@ export default function JobInfoGrid({
   };
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-8 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-1 h-full bg-dark-amethyst-400"></div>
+    <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 mb-5 relative overflow-hidden font-sans">
+      <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-3.5 mb-4.5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <TrendingUp className="w-3.5 h-3.5 text-dark-amethyst-500" /> Seniority Level
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <TrendingUp className="w-3.5 h-3.5 text-primary" /> Seniority Level
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.seniority_level || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, seniority_level: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.seniority_level) || "Engineering"}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <MapPin className="w-3.5 h-3.5 text-red-400" /> Location
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <MapPin className="w-3.5 h-3.5 text-destructive/80" /> Location
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {clean(company?.location) || "N/A"}
           </p>
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Monitor className="w-3.5 h-3.5 text-fuchsia-500" /> Work Type
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Monitor className="w-3.5 h-3.5 text-accent" /> Work Type
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.work_location || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, work_location: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.work_location) || "Remote"}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Briefcase className="w-3.5 h-3.5 text-orange-400" /> Type
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Briefcase className="w-3.5 h-3.5 text-orange-500/80" /> Type
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.job_type || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, job_type: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.job_type) || "Full-time"}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <BanknoteIcon className="w-3.5 h-3.5 text-green-500" /> Salary
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <BanknoteIcon className="w-3.5 h-3.5 text-emerald-500" /> Salary
           </div>
           {isEditing ? (
             <div className="flex items-center gap-1">
               <input
                 type="number"
-                className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                 value={editForm.salary_min || ""}
                 placeholder="Min"
                 onChange={(e) =>
                   setEditForm({ ...editForm, salary_min: e.target.value })
                 }
               />
-              <span>-</span>
+              <span className="text-muted-foreground text-xs">-</span>
               <input
                 type="number"
-                className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                 value={editForm.salary_max || ""}
                 placeholder="Max"
                 onChange={(e) =>
@@ -133,7 +133,7 @@ export default function JobInfoGrid({
               />
             </div>
           ) : (
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-semibold text-sidebar pl-0.5">
               {selectedJob.salary_min
                 ? `$${selectedJob.salary_min.toLocaleString()}`
                 : "N/A"}{" "}
@@ -145,37 +145,37 @@ export default function JobInfoGrid({
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Calendar className="w-3.5 h-3.5" /> Published
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" /> Published
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {formatDate(selectedJob.created_at)}
           </p>
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Wand2 className="w-3.5 h-3.5 text-mauve-magic-500" /> AI Shortlist
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Wand2 className="w-3.5 h-3.5 text-primary" /> AI Shortlist
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {selectedJob.shortlist_entries?.[0]?.count || 0} strong fits
           </p>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 pt-5 border-t border-gray-100">
+      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/55">
         <button
           onClick={() => navigate(`/recruiter/candidatespipline?jobId=${selectedJob.id}&companyId=${company?.id}`)}
-          className="flex items-center gap-2 bg-dark-amethyst-600 hover:bg-dark-amethyst-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer select-none"
         >
-          <User className="w-4 h-4" />
-          Open candidate board <ChevronRight className="w-4 h-4" />
+          <User className="w-3.5 h-3.5" />
+          Open candidate board <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
         </button>
-        <button className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors">
-          <ExternalLink className="w-4 h-4" />
+        <button className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
+          <ExternalLink className="w-3.5 h-3.5" />
           View public posting
         </button>
-        <button className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors">
-          <Copy className="w-4 h-4" />
+        <button className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
+          <Copy className="w-3.5 h-3.5" />
           Copy link
         </button>
       </div>
