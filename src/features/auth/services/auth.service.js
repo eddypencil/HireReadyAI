@@ -50,6 +50,20 @@ export const signIn = async (email, password) => {
   return data.user;
 };
 
+export const signInWithGoogle = async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${window.location.origin}/auth/callback`,
+      queryParams: {
+        prompt: 'select_account',
+      },
+    },
+  });
+  if (error) throw error;
+  return data;
+};
+
 export const logOut = async () => {
   const { error } = await supabase.auth.signOut();
   if (error) throw error;

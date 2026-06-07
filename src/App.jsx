@@ -5,6 +5,8 @@ import SignInPage from "@/features/auth/pages/SignInPage";
 import SignUpPage from "@/features/auth/pages/SignUpPage";
 import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage";
 import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
+import AuthCallback from "@/features/auth/pages/AuthCallback";
+import GoogleRoleSelect from "@/features/auth/pages/GoogleRoleSelect";
 import { USER_ROLE } from "@/shared/constants/enums";
 import ApplicantPage from "@/features/applicant/pages/ApplicantPage";
 import JobsPage from "@/features/jobs/pages/JobsPage";
@@ -51,6 +53,9 @@ function App() {
       <Route path="/auth/sign-up" element={<SignUpPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/auth/select-role" element={<GoogleRoleSelect />} />
+      
       <Route
         element={
           <ProtectedRoute>
