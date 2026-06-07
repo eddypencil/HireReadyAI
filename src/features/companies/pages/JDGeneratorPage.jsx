@@ -120,6 +120,18 @@ export default function JDGeneratorPage({ company, profile }) {
     if (!workLocation) newErrors.workLocation = "Please select a work type";
     if (!experienceYears)
       newErrors.experienceYears = "Please select experience required";
+    if (salaryMin || salaryMax) {
+      const min = Number(salaryMin);
+      const max = Number(salaryMax);
+      if (salaryMin && isNaN(min)) newErrors.salary = "Salary must be a number";
+      if (salaryMax && isNaN(max)) newErrors.salary = "Salary must be a number";
+      else if (salaryMin && salaryMax && min > max)
+        newErrors.salary = "Max salary must be greater than Min salary";
+      else if (salaryMin && !salaryMax)
+        newErrors.salary = "Please enter a Max salary";
+      else if (salaryMax && !salaryMin)
+        newErrors.salary = "Please enter a Min salary";
+    }
     return newErrors;
   }
 
@@ -166,8 +178,6 @@ export default function JDGeneratorPage({ company, profile }) {
           experienceYears,
           companyName: company?.name || "",
           companyIndustry: company?.industry || "",
-          salaryMin: salaryMin ? Number(salaryMin) : null,
-          salaryMax: salaryMax ? Number(salaryMax) : null,
         }),
       });
 
@@ -207,8 +217,8 @@ export default function JDGeneratorPage({ company, profile }) {
         responsibilities: aiResult.responsibilities,
         requirements: aiResult.requirements,
         skills: aiResult.skills,
-        salary_min: aiResult.salary_min || null,
-        salary_max: aiResult.salary_max || null,
+        salaryMin: salaryMin ? Number(salaryMin) : null,
+        salaryMax: salaryMax ? Number(salaryMax) : null,
       });
 
       // Step 2: Save application questions (only if withQuestions is true)
@@ -503,9 +513,12 @@ export default function JDGeneratorPage({ company, profile }) {
                   <input
                     type="number"
                     value={salaryMin}
-                    onChange={(e) => setSalaryMin(e.target.value)}
+                    onChange={(e) => {
+                      setSalaryMin(e.target.value);
+                      setErrors((p) => ({ ...p, salary: "" }));
+                    }}
                     placeholder="Min"
-                    className={inputClass}
+                    className={fieldClass(inputClass, "salary")}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                   />
@@ -515,13 +528,19 @@ export default function JDGeneratorPage({ company, profile }) {
                   <input
                     type="number"
                     value={salaryMax}
-                    onChange={(e) => setSalaryMax(e.target.value)}
+                    onChange={(e) => {
+                      setSalaryMax(e.target.value);
+                      setErrors((p) => ({ ...p, salary: "" }));
+                    }}
                     placeholder="Max"
-                    className={inputClass}
+                    className={fieldClass(inputClass, "salary")}
                     onFocus={handleFocus}
                     onBlur={handleBlur}
                   />
                 </div>
+                {errors.salary && (
+                  <p className="text-xs text-red-500 mt-0.5">{errors.salary}</p>
+                )}
               </div>
 
               <div className="flex flex-col gap-1.5">
@@ -662,8 +681,8 @@ export default function JDGeneratorPage({ company, profile }) {
                   <div className="flex items-center gap-2 text-dark-amethyst-600 text-sm mt-2">
                     <BanknoteIcon size={16} className="text-green-500" />
                     <span>
-                      {aiResult?.salary_min && aiResult?.salary_max
-                        ? `${aiResult.salary_min.toLocaleString()} – ${aiResult.salary_max.toLocaleString()} EGP`
+                      {salaryMin && salaryMax
+                        ? `${Number(salaryMin).toLocaleString()} – ${Number(salaryMax).toLocaleString()} EGP`
                         : "Salary: Confidential"}
                     </span>
                   </div>
