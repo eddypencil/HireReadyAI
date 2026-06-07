@@ -44,7 +44,6 @@ export default function JDGeneratorPage({ company, profile }) {
   const [publishError, setPublishError] = useState(null);
   const [published, setPublished] = useState(false);
 
-  // التنسيقات الموحدة القائمة على متغيرات الشاد سين
   const inputClass =
     "w-full h-10 rounded-xl px-3.5 text-sm text-foreground bg-background border border-input outline-none transition-all duration-200 placeholder:text-muted-foreground/50 focus-visible:ring-2 focus-visible:ring-ring focus-visible:border-primary disabled:opacity-50 disabled:cursor-not-allowed";
 

@@ -55,7 +55,6 @@ export default function MainLayout() {
         />
       )}
 
-      {/* تم تغيير الخلفية هنا لتصبح bg-sidebar الكحلي المعتمد في التصميم */}
       <div
         className={`
         fixed inset-y-0 left-0 z-50 w-64 bg-sidebar text-white flex flex-col p-4 shrink-0
@@ -66,7 +65,6 @@ export default function MainLayout() {
         <div className="flex flex-col h-full justify-between">
           <div className="space-y-6">
             <div className="flex items-center justify-between px-3 py-2">
-              {/* إزالة التدرج الموف وجعل الكلمة بيضاء ناصعة واضحة متناسقة مع الهوية البصرية */}
               <span className="text-xl font-bold tracking-tight text-white">
                 HireReadyAI
               </span>
@@ -92,7 +90,6 @@ export default function MainLayout() {
                       : "text-white/80 hover:bg-white/10 hover:text-white"
                       }`}
                   >
-                    {/* تم ربط لون الأيقونة بالـ accent والسماوي الناعم */}
                     <Icon
                       className={`w-4 h-4 ${active ? "text-white" : "text-accent"}`}
                     />
@@ -116,7 +113,6 @@ export default function MainLayout() {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden w-full">
-        {/* شريط الهاتف العلوي تم تعديل نصوصه وخلفيته للتوافق الكامل مع درجات النظام */}
         <div className="md:hidden flex items-center bg-background border-b border-border p-4 shrink-0">
           <button
             onClick={() => setIsSidebarOpen(true)}

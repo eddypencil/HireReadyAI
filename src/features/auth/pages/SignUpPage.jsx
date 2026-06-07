@@ -122,7 +122,6 @@ export default function SignUpPage() {
           </div>
         )}
 
-        {/* تم تعديل لون كلمة Create account لتصبح بيضاء صريحة text-white */}
         <button
           type="submit"
           disabled={loading}

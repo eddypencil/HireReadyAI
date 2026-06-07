@@ -10,7 +10,6 @@ export default function SignInPage() {
   const { signInUser, loading, user, profile } = useUser();
   const navigate = useNavigate();
 
-  // Redirect once user + profile are resolved after sign-in
   useEffect(() => {
     if (!user || !profile) return;
     if (profile.role === USER_ROLE.applicant) {
