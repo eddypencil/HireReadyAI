@@ -154,31 +154,7 @@ const CandidateCard = ({
       style={{ boxShadow: "0 1px 4px rgba(1,73,124,0.1)" }}
     >
       <div className="p-4 cursor-grab active:cursor-grabbing select-none">
-        {/* Header */}
-        <div className="flex items-start gap-3 mb-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white text-sm shrink-0"
-            style={{
-              background: "linear-gradient(135deg, #01497c 0%, #012a4a 100%)",
-            }}
-          >
-            {getInitials(candidate.name)}
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-bold text-deep-space-blue truncate">
-              {candidate.name}
-
-              {candidate.is_rejected && (
-                <span className="text-[10px] px-2 py-0.5 rounded bg-red-100 text-red-600 border border-red-200 ml-1">
-                  Rejected
-                </span>
-              )}
-            </p>
-            <p className="text-xs text-air-force-blue mt-0.5">
-              {timeAgo(candidate.applied_at)}
-            </p>
-          </div>
-        </div>
+        
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-bold text-white text-sm shrink-0 font-display">
             {getInitials(candidate.name)}
