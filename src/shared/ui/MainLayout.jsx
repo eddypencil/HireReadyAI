@@ -6,6 +6,7 @@ import { USER_ROLE } from "@/shared/constants/enums";
 import { useEffect } from "react";
 import LanguageSwitcher from "@/shared/ui/LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import { useTheme } from "@/shared/context/theme";
 import {
   Briefcase,
   Building2,
@@ -18,6 +19,8 @@ import {
   CheckCircle,
   Wand2,
   KanbanSquare,
+  Sun,
+  Moon,
 } from "lucide-react";
 
 export default function MainLayout() {
@@ -76,6 +79,7 @@ export default function MainLayout() {
     return best;
   })();
   const { t, i18n } = useTranslation();
+  const { darkMode, toggle: toggleTheme } = useTheme();
 
   useEffect(() => {
     const isArabic = i18n.language === "ar";
@@ -140,7 +144,14 @@ export default function MainLayout() {
             </nav>
           </div>
 
-          <div className="px-3 py-2 border-t border-white/10 mt-auto">
+          <div className="px-3 py-2 border-t border-white/10 mt-auto space-y-1">
+            <button
+              onClick={toggleTheme}
+              className="w-full flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white transition-colors py-2 cursor-pointer"
+            >
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {darkMode ? t("light_mode") : t("dark_mode")}
+            </button>
             <button
               onClick={signOutUser}
               className="w-full flex items-center gap-3 text-sm font-medium text-red-400 hover:text-red-300 transition-colors py-2 cursor-pointer"

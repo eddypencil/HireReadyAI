@@ -1,5 +1,7 @@
 {
   "logout": "Logout",
+  "dark_mode": "Dark Mode",
+  "light_mode": "Light Mode",
 
   "nav": {
     "dashboard": "Dashboard",

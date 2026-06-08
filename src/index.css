@@ -6,20 +6,28 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --color-sidebar: #012a4a;
+  --color-background: #ffffff;
+  --color-foreground: #012a4a;
+  --color-surface: #ffffff;
+  --color-surface-muted: #eef7fa;
+  --color-surface-hover: #e7f3f7;
+  --color-card: #ffffff;
   --color-primary: #01497c;
   --color-primary-hover: #013a63;
-  --color-muted-foreground: #2a6f97;
-  --color-accent: #468faf;
+  --color-secondary: #e7f3f7;
+  --color-muted: #eef7fa;
+  --color-muted-foreground: #468faf;
+  --color-accent: #2a6f97;
+  --color-sidebar: #012a4a;
+  --color-sidebar-foreground: #cfe7f2;
+  --color-sidebar-active: #01497c;
   --color-border: #cfe7f2;
-  --color-background: #ffffff;
-  --color-secondary: #eef7fa;
-  --color-muted: #e7f3f7;
-  --color-foreground: #012a4a;
+  --color-input: #cfe7f2;
+  --color-ring: #2a6f97;
 
-  --color-success: oklch(0.62 0.14 165);
-  --color-warning: oklch(0.78 0.15 75);
-  --color-destructive: oklch(0.58 0.21 27);
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-destructive: #dc2626;
   --color-destructive-foreground: #ffffff;
 
   --stage-applied: #89c2d9;
@@ -31,6 +39,32 @@
 
   --font-sans: "Plus Jakarta Sans", sans-serif;
   --font-display: "Plus Jakarta Sans", sans-serif;
+}
+
+.dark {
+  --color-background: #061826;
+  --color-foreground: #eef7fa;
+  --color-surface: #0b2336;
+  --color-surface-muted: #0e2a40;
+  --color-surface-hover: #143b56;
+  --color-card: #0b2336;
+  --color-primary: #468faf;
+  --color-primary-hover: #61a5c2;
+  --color-secondary: #143b56;
+  --color-muted: #0e2a40;
+  --color-muted-foreground: #89c2d9;
+  --color-accent: #2a6f97;
+  --color-sidebar: #02192b;
+  --color-sidebar-foreground: #cfe7f2;
+  --color-sidebar-active: #01497c;
+  --color-border: rgba(207, 231, 242, 0.1);
+  --color-input: rgba(207, 231, 242, 0.16);
+  --color-ring: #468faf;
+
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
 }
 
 @utility no-spinner {

@@ -7,9 +7,11 @@ import App from "./App.jsx";
 import { UserProvider } from "./features/auth/context/user.context";
 import { BrowserRouter } from "react-router-dom";
 import { ApplicationProvider } from "./features/applications/context/application.context";
+import { ThemeProvider } from "./shared/context/theme";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <ThemeProvider>
     <UserProvider>
       <ApplicationProvider>
         <BrowserRouter>
@@ -17,5 +19,6 @@ createRoot(document.getElementById("root")).render(
         </BrowserRouter>
       </ApplicationProvider>
     </UserProvider>
+    </ThemeProvider>
   </StrictMode>,
 );
