@@ -20,30 +20,28 @@ export default function JobFilters({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-white rounded-2xl border border-dark-amethyst-100 p-5 space-y-6">
-      <div className="flex items-center justify-between">
-        <h3 className="text-sm font-bold text-dark-amethyst-950">
-          {t("job_filters.title")}
-        </h3>
+    <div className="bg-background rounded-xl border border-border p-4 space-y-4 sticky top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto">
 
+      {/* Header */}
+      <div className="flex items-center justify-between pb-1 border-b border-border">
+        <h3 className="text-sm font-bold text-foreground">Filter</h3>
         <button
           onClick={onClear}
-          className="text-xs text-dark-amethyst-500 hover:text-dark-amethyst-700 hover:underline font-medium"
+          className="text-xs text-muted-foreground hover:text-foreground hover:underline font-medium transition-colors"
         >
           {t("job_filters.clear_all")}
         </button>
       </div>
 
-      {/* Date Posted */}
-      <div className="space-y-2.5">
-        <h4 className="text-xs font-semibold text-dark-amethyst-800 uppercase tracking-wide">
+      {/* Date Posted */}      <div className="space-y-1.5">
+        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">
           {t("job_filters.date_posted")}
         </h4>
 
         <select
           value={datePosted}
           onChange={(e) => setDatePosted(e.target.value)}
-          className="w-full h-9 px-3 rounded-lg text-sm text-dark-amethyst-800 border border-dark-amethyst-100 bg-dark-amethyst-50 outline-none focus:border-dark-amethyst-400 transition"
+          className="w-full h-8 px-2 rounded-md text-xs text-foreground border border-border bg-muted/50 outline-none focus:ring-1 focus:ring-ring focus:bg-background transition cursor-pointer"
         >
           <option value="">{t("job_filters.anytime")}</option>
           <option value="24h">{t("job_filters.last_24h")}</option>
@@ -53,21 +51,21 @@ export default function JobFilters({
       </div>
 
       {/* Salary */}
-      <div className="space-y-2.5">
-        <h4 className="text-xs font-semibold text-dark-amethyst-800 uppercase tracking-wide">
+      <div className="space-y-1.5">
+        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">
           {t("job_filters.salary")}
         </h4>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5">
           <input
             type="number"
             value={salaryMin}
             onChange={(e) => setSalaryMin(e.target.value)}
             placeholder={t("job_filters.min")}
-            className="w-full h-9 px-3 rounded-lg text-sm text-dark-amethyst-800 border border-dark-amethyst-100 bg-dark-amethyst-50 outline-none focus:border-dark-amethyst-400 transition placeholder:text-dark-amethyst-300"
+            className="w-full h-8 px-2 rounded-md text-xs text-foreground border border-border bg-muted/50 outline-none focus:ring-1 focus:ring-ring focus:bg-background transition placeholder:text-muted-foreground/60"
           />
 
-          <span className="text-dark-amethyst-300 text-sm shrink-0">
+          <span className="text-muted-foreground/50 text-xs shrink-0">
             {t("job_filters.to")}
           </span>
 
@@ -76,33 +74,32 @@ export default function JobFilters({
             value={salaryMax}
             onChange={(e) => setSalaryMax(e.target.value)}
             placeholder={t("job_filters.max")}
-            className="w-full h-9 px-3 rounded-lg text-sm text-dark-amethyst-800 border border-dark-amethyst-100 bg-dark-amethyst-50 outline-none focus:border-dark-amethyst-400 transition placeholder:text-dark-amethyst-300"
+            className="w-full h-8 px-2 rounded-md text-xs text-foreground border border-border bg-muted/50 outline-none focus:ring-1 focus:ring-ring focus:bg-background transition placeholder:text-muted-foreground/60"
           />
         </div>
       </div>
 
-      {/* Job Type */}
-      <div className="space-y-2.5">
-        <h4 className="text-xs font-semibold text-dark-amethyst-800 uppercase tracking-wide">
+      {/* Job Type */}      <div className="space-y-1.5">
+        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">
           {t("job_filters.job_type")}
         </h4>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {[
             { label: t("job_filters.full_time"), value: "full_time" },
             { label: t("job_filters.part_time"), value: "part_time" },
           ].map(({ label, value }) => (
             <label
               key={value}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 cursor-pointer group"
             >
               <input
                 type="checkbox"
                 checked={jobType === value}
                 onChange={() => setJobType(jobType === value ? "" : value)}
-                className="w-4 h-4 rounded border-dark-amethyst-200 accent-dark-amethyst-600 cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
               />
-              <span className="text-sm text-dark-amethyst-700 group-hover:text-dark-amethyst-900 transition">
+              <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                 {label}
               </span>
             </label>
@@ -110,13 +107,12 @@ export default function JobFilters({
         </div>
       </div>
 
-      {/* Work Location */}
-      <div className="space-y-2.5">
-        <h4 className="text-xs font-semibold text-dark-amethyst-800 uppercase tracking-wide">
+      {/* Work Location */}      <div className="space-y-1.5">
+        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">
           {t("job_filters.work_location")}
         </h4>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {[
             { label: t("job_filters.on_site"), value: "on_site" },
             { label: t("job_filters.remote"), value: "remote" },
@@ -124,7 +120,7 @@ export default function JobFilters({
           ].map(({ label, value }) => (
             <label
               key={value}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 cursor-pointer group"
             >
               <input
                 type="checkbox"
@@ -132,9 +128,9 @@ export default function JobFilters({
                 onChange={() =>
                   setWorkLocation(workLocation === value ? "" : value)
                 }
-                className="w-4 h-4 rounded border-dark-amethyst-200 accent-dark-amethyst-600 cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
               />
-              <span className="text-sm text-dark-amethyst-700 group-hover:text-dark-amethyst-900 transition">
+              <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                 {label}
               </span>
             </label>
@@ -142,31 +138,31 @@ export default function JobFilters({
         </div>
       </div>
 
-      {/* Seniority */}
-      <div className="space-y-2.5">
-        <h4 className="text-xs font-semibold text-dark-amethyst-800 uppercase tracking-wide">
+      {/* Seniority */}      <div className="space-y-1.5">
+        <h4 className="text-[11px] font-bold text-muted-foreground uppercase tracking-wide">
           {t("job_filters.seniority")}
         </h4>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5">
           {Object.values(SENIORITY_LEVEL).map((lvl) => (
             <label
               key={lvl}
-              className="flex items-center gap-2.5 cursor-pointer group"
+              className="flex items-center gap-2 cursor-pointer group"
             >
               <input
                 type="checkbox"
                 checked={level === lvl}
                 onChange={() => setLevel(level === lvl ? "" : lvl)}
-                className="w-4 h-4 rounded border-dark-amethyst-200 accent-dark-amethyst-600 cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
               />
-              <span className="text-sm text-dark-amethyst-700 group-hover:text-dark-amethyst-900 transition capitalize">
+              <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors capitalize">
                 {lvl}
               </span>
             </label>
           ))}
         </div>
       </div>
+
     </div>
   );
 }

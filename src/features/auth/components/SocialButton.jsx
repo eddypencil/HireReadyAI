@@ -31,7 +31,8 @@ export default function SocialButton({ provider = "google", onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="w-full h-11 rounded-xl text-sm font-medium text-dark-amethyst-700 flex items-center justify-center gap-2.5 bg-white border border-dark-amethyst-100 hover:bg-dark-amethyst-50 hover:border-dark-amethyst-200 transition-all duration-200 cursor-pointer"
+
+      className="w-full h-11 rounded-xl text-sm font-medium text-sidebar flex items-center justify-center gap-2.5 bg-background border border-border hover:bg-secondary hover:border-accent/40 transition-all duration-200 cursor-pointer"
     >
       {icon}
       {label}

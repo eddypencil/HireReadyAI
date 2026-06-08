@@ -53,7 +53,7 @@ export default function MainLayout() {
           icon: KanbanSquare,
         },
         {
-          to: "/companies/jd_generator",
+          to: "/companies/jd-generator",
           label: "nav.jd_generator",
           icon: Wand2,
         },
@@ -75,7 +75,7 @@ export default function MainLayout() {
   }, [i18n.language]);
 
   return (
-    <div className="flex h-screen bg-gray-50/50 font-sans relative overflow-hidden">
+    <div className="flex h-screen bg-secondary/50 font-sans relative overflow-hidden">
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden transition-opacity duration-200"
@@ -85,7 +85,7 @@ export default function MainLayout() {
 
       <div
         className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-dark-amethyst-950 text-white flex flex-col p-4 shrink-0
+        fixed inset-y-0 left-0 z-50 w-64 bg-sidebar text-white flex flex-col p-4 shrink-0
         transform transition-transform duration-200 ease-in-out md:relative md:transform-none md:flex
         ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
       `}
@@ -93,13 +93,17 @@ export default function MainLayout() {
         <div className="flex flex-col h-full justify-between">
           <div className="space-y-6">
             <div className="flex items-center justify-between px-3 py-2">
-              <span className="text-xl font-bold tracking-tight bg-linear-to-r from-mauve-magic-300 to-dark-amethyst-200 bg-clip-text text-transparent">
+              <span className="text-xl font-bold tracking-tight text-white">
                 HireReadyAI
               </span>
-
-              <LanguageSwitcher />
+              <button
+                onClick={() => setIsSidebarOpen(false)}
+                className="text-white/60 hover:text-white p-1 rounded-lg md:hidden cursor-pointer"
+              >
+                <X className="w-5 h-5" />
+              </button>
             </div>
-
+            <LanguageSwitcher />
             <nav className="space-y-1">
               {links.map((link) => {
                 const Icon = link.icon;
@@ -112,11 +116,11 @@ export default function MainLayout() {
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       active
                         ? "bg-white/15 text-white font-semibold"
-                        : "text-gray-300 hover:bg-white/10 hover:text-white"
+                        : "text-white/80 hover:bg-white/10 hover:text-white"
                     }`}
                   >
                     <Icon
-                      className={`w-4 h-4 ${active ? "text-white" : "text-mauve-magic-300"}`}
+                      className={`w-4 h-4 ${active ? "text-white" : "text-accent"}`}
                     />
                     {t(link.label)}
                   </Link>
@@ -138,14 +142,14 @@ export default function MainLayout() {
       </div>
 
       <div className="flex-1 flex flex-col overflow-hidden w-full">
-        <div className="md:hidden flex items-center bg-white border-b border-gray-100 p-4 shrink-0">
+        <div className="md:hidden flex items-center bg-background border-b border-border p-4 shrink-0">
           <button
             onClick={() => setIsSidebarOpen(true)}
-            className="p-1.5 text-gray-500 hover:text-gray-700 rounded-lg cursor-pointer transition-colors border border-gray-200 bg-gray-50"
+            className="p-1.5 text-foreground hover:text-foreground/80 rounded-lg cursor-pointer transition-colors border border-border bg-secondary"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="ml-3 text-sm font-bold text-dark-amethyst-950">
+          <span className="ml-3 text-sm font-bold text-sidebar">
             {isApplicant ? "Applicant Dashboard" : "Recruiter Dashboard"}
           </span>
         </div>

@@ -42,39 +42,40 @@ export default function JobSidebar({
       {/* Sidebar Content */}
       <div
         className={`
-          fixed inset-y-0 left-0 z-[110] w-[320px] bg-white border-r border-gray-100 flex flex-col shrink-0 h-full overflow-hidden
-          transform transition-transform duration-200 ease-in-out lg:relative lg:z-auto lg:transform-none lg:w-[360px]
+          fixed inset-y-0 left-0 z-[110] w-[290px] bg-background border-r border-border/60 flex flex-col shrink-0 h-full overflow-hidden
+          transform transition-transform duration-200 ease-in-out lg:relative lg:z-auto lg:transform-none lg:w-[320px]
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
-        <div className="px-4 pt-4 pb-3 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
+        <div className="px-4 py-3 border-b border-border/60 flex items-center justify-between bg-background shrink-0">
           <div>
-            <p className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase">
+            <p className="text-[10px] font-bold text-muted-foreground/70 tracking-wider uppercase">
               {t("job_sidebar.open_roles")}
             </p>
             <p className="text-xs text-gray-500 mt-0.5">
               {t("job_sidebar.click_to_view")}
             </p>
+            <p className="text-xs text-muted-foreground mt-0.5">Click to view details</p>
           </div>
           <div className="flex items-center gap-1">
             <button
               onClick={() => navigate("/companies/jd-generator")}
-              className="p-1.5 hover:bg-gray-100 rounded-md text-gray-500 transition-colors"
+              className="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 hover:bg-gray-100 rounded-md text-gray-500 transition-colors lg:hidden"
+              className="p-1.5 hover:bg-muted rounded-md text-muted-foreground hover:text-foreground transition-colors lg:hidden cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-3 py-3 space-y-1.5 bg-gray-50/50">
+        <div className="flex-1 overflow-y-auto px-2.5 py-3 space-y-1 bg-muted/20">
           {filteredJobs.length === 0 ? (
-            <div className="text-sm text-gray-500 text-center py-4">
+            <div className="text-xs text-muted-foreground text-center py-6 font-medium">
               {t("job_sidebar.no_jobs")}
             </div>
           ) : (
@@ -91,45 +92,38 @@ export default function JobSidebar({
                     setIsEditing(false);
                     onClose(); // Auto close on mobile
                   }}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left border transition-colors group cursor-pointer ${
-                    isSelected
-                      ? "bg-dark-amethyst-50 border-dark-amethyst-200"
-                      : "bg-white hover:bg-dark-amethyst-50 hover:border-dark-amethyst-200 border-transparent shadow-xs hover:shadow-none"
-                  }`}
-                >
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors ${
-                      isSelected
-                        ? "bg-dark-amethyst-100 text-dark-amethyst-700"
-                        : "bg-gray-100 text-gray-500 group-hover:bg-dark-amethyst-100 group-hover:text-dark-amethyst-600"
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-left border transition-all group cursor-pointer ${isSelected
+                      ? "bg-accent text-accent-foreground border-border"
+                      : "bg-background border-transparent hover:bg-muted/60 hover:border-border/40 shadow-xs hover:shadow-none"
                     }`}
-                  >
-                    <Briefcase className="w-4 h-4" />
+                >
+                  <div className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 transition-colors ${isSelected
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
+                    }`}>
+                    <Briefcase className="w-3.5 h-3.5" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <p
-                        className={`text-sm font-medium leading-tight truncate transition-colors ${
-                          isSelected
-                            ? "text-dark-amethyst-900"
-                            : "text-gray-800 group-hover:text-dark-amethyst-900"
-                        }`}
-                      >
+                      <p className={`text-xs font-semibold leading-snug truncate transition-colors ${isSelected
+                          ? "text-foreground"
+                          : "text-foreground/90 group-hover:text-foreground"
+                        }`}>
                         {job.title}
                       </p>
                       {status === "Published" ? (
                         <span
-                          className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 ml-2 shadow-[0_0_4px_rgba(52,211,153,0.5)]"
+                          className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 ml-2 shadow-[0_0_4px_rgba(16,185,129,0.4)]"
                           title="Published"
                         ></span>
                       ) : (
                         <span
-                          className="w-1.5 h-1.5 rounded-full bg-gray-300 shrink-0 ml-2"
+                          className="w-1.5 h-1.5 rounded-full bg-muted-foreground/30 shrink-0 ml-2"
                           title="Closed"
                         ></span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-400 truncate mt-0.5">
+                    <p className="text-[11px] text-muted-foreground/80 truncate mt-0.5">
                       {job.seniority_level || t("job_sidebar.any_seniority")} ·{" "}
                       {applicantCount}{" "}
                       {t("job_sidebar.applicant", { count: applicantCount })}

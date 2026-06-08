@@ -16,20 +16,21 @@ export default function JobDetailHeader({
   const { t } = useTranslation();
 
   return (
-    <div className="flex flex-col xl:flex-row xl:items-start justify-between gap-6 mb-8">
-      <div>
-        <div className="flex items-center gap-3 mb-2">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 font-sans">
+      <div className="space-y-1.5 min-w-0 flex-1">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={onOpenSidebar}
-            className="lg:hidden p-2 -ml-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+            className="lg:hidden p-1.5 -ml-1 text-muted-foreground hover:text-sidebar hover:bg-secondary/60 rounded-lg transition-colors cursor-pointer"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-900">
+
+          <h1 className="text-xl lg:text-2xl font-bold text-sidebar tracking-tight flex-1">
             {isEditing ? (
               <input
                 type="text"
-                className="w-full font-bold bg-gray-50 border border-gray-200 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-dark-amethyst-400"
+                className="w-full h-10 font-bold bg-background border border-border rounded-lg px-3 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                 value={editForm.title}
                 onChange={(e) =>
                   setEditForm({ ...editForm, title: e.target.value })
@@ -40,37 +41,34 @@ export default function JobDetailHeader({
             )}
           </h1>
         </div>
-        <div className="flex items-center gap-2 text-sm text-gray-500 capitalize lg:ml-0 ml-10">
-          <span>
-            {selectedJob.seniority_level ||
-              t("job_detail_header.any_seniority")}
+
+        <div className="flex items-center flex-wrap gap-2 text-xs font-semibold text-muted-foreground/80 capitalize pl-1">
+          <span className="bg-secondary/40 px-2 py-0.5 rounded-md border border-border/40">
+            {selectedJob.seniority_level || "Any Seniority"}
           </span>
-          <span>&middot;</span>
-          <span>
-            {selectedJob.work_location?.replace("_", " ").trim() ||
-              t("job_detail_header.any_location")}
+          <span className="text-muted-foreground/30 font-normal">&middot;</span>
+          <span className="bg-secondary/40 px-2 py-0.5 rounded-md border border-border/40">
+            {selectedJob.work_location?.replace("_", " ").trim() || "Any Location"}
           </span>
-          <span>&middot;</span>
-          <span>
-            {selectedJob.job_type?.replace("_", "-") ||
-              t("job_detail_header.full_time")}
+          <span className="text-muted-foreground/30 font-normal">&middot;</span>
+          <span className="bg-secondary/40 px-2 py-0.5 rounded-md border border-border/40">
+            {selectedJob.job_type?.replace("_", "-") || "Full-time"}
           </span>
         </div>
       </div>
 
-      <div className="flex items-center gap-3 shrink-0">
+      <div className="flex items-center gap-2 shrink-0 sm:pt-0 pt-1">
         {!isEditing ? (
           <>
-            <button className="flex items-center gap-2 bg-gradient-to-r from-mauve-magic-500 to-dark-amethyst-500 hover:from-mauve-magic-600 hover:to-dark-amethyst-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-sm">
-              <Wand2 className="w-4 h-4" />
-              {/* TODO:  */}
+            <button className="flex items-center gap-1.5 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white px-3.5 h-9 rounded-lg text-xs font-semibold transition-all shadow-xs cursor-pointer select-none">
+              <Wand2 className="w-3.5 h-3.5" />
               {t("job_detail_header.regenerate")}
             </button>
             <button
               onClick={handleEditClick}
-              className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors shadow-xs"
+              className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer select-none"
             >
-              <Edit className="w-4 h-4" />
+              <Edit className="w-3.5 h-3.5" />
               {t("job_detail_header.edit")}
             </button>
           </>
@@ -78,17 +76,17 @@ export default function JobDetailHeader({
           <>
             <button
               onClick={handleCancelEdit}
-              className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors"
+              className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none"
             >
-              <X className="w-4 h-4" />
+              <X className="w-3.5 h-3.5" />
               {t("job_detail_header.cancel")}
             </button>
             <button
               onClick={handleSave}
               disabled={saving}
-              className="flex items-center gap-2 bg-dark-amethyst-600 hover:bg-dark-amethyst-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm disabled:opacity-50"
+              className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors shadow-xs disabled:opacity-50 cursor-pointer select-none"
             >
-              <Save className="w-4 h-4" />
+              <Save className="w-3.5 h-3.5" />
               {saving
                 ? t("job_detail_header.saving")
                 : t("job_detail_header.save")}

@@ -18,6 +18,7 @@ export default function AvatarModal({
   if (!open) return null;
 
   const handleUpload = async (file) => {
+    if (!file) return;
     try {
       setLoading(true);
       const url = await uploadAndSaveAvatar(file, userId);
@@ -29,6 +30,7 @@ export default function AvatarModal({
       setLoading(false);
     }
   };
+
 
   const handleDelete = async () => {
     try {

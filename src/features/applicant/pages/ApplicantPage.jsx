@@ -21,9 +21,11 @@ export default function ApplicantPage() {
     updateApplicationStage,
   } = useApplications();
 
+
   useEffect(() => {
     setLocalProfile(profile);
   }, [profile]);
+
 
   useEffect(() => {
     if (user?.id) {

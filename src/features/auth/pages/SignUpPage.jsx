@@ -117,7 +117,7 @@ export default function SignUpPage() {
         />
 
         {error && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20 dark:border-destructive/30">
             <span>⚠</span>
             {error}
           </div>
@@ -126,9 +126,9 @@ export default function SignUpPage() {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-dark-amethyst-600
-            ${loading ? "opacity-60 cursor-not-allowed" : "hover:bg-dark-amethyst-700"}`}
-          style={{ boxShadow: "0 2px 12px rgba(132,0,255,0.2)" }}
+          className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary
+            ${loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"}`}
+          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">
@@ -142,18 +142,18 @@ export default function SignUpPage() {
       </form>
 
       <div className="flex items-center gap-3 my-5">
-        <span className="flex-1 h-px bg-dark-amethyst-200" />
-        <span className="text-xs text-dark-amethyst-300">or</span>
-        <span className="flex-1 h-px bg-dark-amethyst-200" />
+        <span className="flex-1 h-px bg-border" />
+        <span className="text-xs text-muted-foreground">or</span>
+        <span className="flex-1 h-px bg-border" />
       </div>
 
       <SocialButton provider="google" />
 
-      <p className="text-center text-xs text-dark-amethyst-400 mt-6">
+      <p className="text-center text-xs text-muted-foreground mt-6">
         {t("sign_up.already_have")}{" "}
         <Link
           to="/auth/sign-in"
-          className="text-dark-amethyst-600 font-semibold hover:underline"
+          className="text-primary font-semibold hover:underline"
         >
           {t("sign_up.sign_in")}
         </Link>

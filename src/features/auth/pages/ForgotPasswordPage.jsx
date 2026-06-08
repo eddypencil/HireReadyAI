@@ -143,11 +143,12 @@ export default function ForgotPasswordPage() {
         subheading={t("forgot_password.success.subheading")}
       >
         <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-dark-amethyst-100 border border-dark-amethyst-200">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                stroke="#8400ff"
+                stroke="currentColor"
+                className="text-accent"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -156,21 +157,22 @@ export default function ForgotPasswordPage() {
           </div>
 
           <div>
-            <p className="text-dark-amethyst-700 text-sm leading-7">
+            <p className="text-sidebar text-sm leading-7">
               {t("forgot_password.success.message")}{" "}
-              <span className="text-dark-amethyst-600 font-semibold">
+              <span className="text-accent font-semibold">
                 {email}
               </span>
               .
             </p>
-            <p className="text-dark-amethyst-400 text-xs mt-2">
+            <p className="text-muted-foreground/80 text-xs mt-2">
               {t("forgot_password.success.spam_hint")}
             </p>
           </div>
 
           <Link
             to="/auth/sign-in"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
           >
             {t("forgot_password.back_to_sign_in")}
           </Link>
@@ -195,7 +197,7 @@ export default function ForgotPasswordPage() {
         />
 
         {error && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
             <span>⚠</span>
             {error}
           </div>
@@ -203,7 +205,8 @@ export default function ForgotPasswordPage() {
 
         <button
           type="submit"
-          className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-all"
+          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover"
+          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
         >
           {loading
             ? t("forgot_password.loading")
@@ -212,7 +215,7 @@ export default function ForgotPasswordPage() {
 
         <Link
           to="/auth/sign-in"
-          className="text-center text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline"
+          className="text-center text-xs text-muted-foreground/80 hover:text-accent hover:underline"
         >
           {t("forgot_password.back_to_sign_in")}
         </Link>

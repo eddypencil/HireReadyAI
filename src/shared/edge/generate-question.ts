@@ -16,6 +16,7 @@ const HF_MODEL = "Qwen/Qwen2.5-7B-Instruct";
 interface PreviousAnswer {
   questionId: string;
   answerText: string;
+  timeTaken?: number; // seconds
 }
 
 interface AnswerEvaluation {
@@ -26,19 +27,25 @@ interface AnswerEvaluation {
     score_impact: number;
     type: "strength" | "weakness";
   }>;
+  strengths: string[];
+  weaknesses: string[];
 }
 
 interface NextQuestion {
   text: string;
   type: "video" | "text" | "multiple_choice" | "code";
+  code_type?: "visuals" | "problem_solving" | null;
   options: string[] | null;
   language: string | null;
+  max_time: number | null; // seconds
 }
 
 interface SessionSummary {
   overall_score: number;
   recommendation: string;
   reasoning: string;
+  strengths: string[];
+  weaknesses: string[];
 }
 
 interface AIOutput {
@@ -66,6 +73,7 @@ function buildPrompt(params: {
     answer_text: string | null;
     score: number | null;
   }>;
+  typeConstraint: string;
   previousAnswerText: string | null;
   previousQuestionText: string | null;
   nextQuestionNumber: number;
@@ -77,14 +85,37 @@ function buildPrompt(params: {
     stageName, stageType, stageDescription, evaluationCriteria,
     jobTitle, jobSeniority, jobSkills, jobRequirements, cvScore,
     history, previousAnswerText, previousQuestionText,
-    nextQuestionNumber, maxQuestions, isFinalQuestion, isSessionOver,
+    nextQuestionNumber, maxQuestions, isFinalQuestion, isSessionOver,typeConstraint
   } = params;
+
+  const questionTypeGuide = stageType === "hr_interview"
+  ? `QUESTION TYPE — HR INTERVIEW:
+- DEFAULT to "video" for all behavioral, motivational, situational, and self-reflection questions
+- Use "text" ONLY for written exercises (e.g., "Write a short response to a client complaint")
+- Use "multiple_choice" ONLY for policy/compliance knowledge checks
+- NEVER use "code" in HR interviews`
+
+  : stageType === "technical_interview"
+  ? `QUESTION TYPE — TECHNICAL INTERVIEW:
+- Use "video" for: system design walkthroughs, architecture decisions, past project deep-dives, trade-off discussions
+- Use "text" for: short written explanations (under 3 sentences), debugging analysis without code
+- Use "code" for: algorithm implementation, fix-the-bug tasks, write-a-function tasks, or UI component implementation
+  * If the question relates to UI, frontend layout, HTML, CSS, React, or their equivalents from other languages, set "code_type" to "visuals".
+  * If the question involves algorithms, backend logic, data structures, or general problem-solving, set "code_type" to "problem_solving".
+- Use "multiple_choice" for: specific API knowledge, language syntax checks, tool/library familiarity
+- BIAS toward "video" and "code". Avoid "text" unless neither fits.`
+
+  : `QUESTION TYPE — ASSESSMENT:
+- Use "multiple_choice" for factual/knowledge checks (provide exactly 4 options)
+- Use "code" for algorithmic or implementation tasks (set "code_type" appropriately)
+- Use "text" for written analysis only when multiple_choice and code don't fit
+- NEVER use "video" in pure assessments`;
 
   const stageGuidance: Record<string, string> = {
     hr_interview:
       "Behavioral/cultural-fit interview. Prefer 'video' for personal/behavioral questions (STAR method). Assess communication clarity, motivation, values.",
     technical_interview:
-      "Technical depth interview. Use 'code' ONLY for tasks requiring actual code output. Use 'text' for conceptual/design/architecture questions. Use 'multiple_choice' for knowledge spot-checks.",
+      "Prefer 'video' for system design, architecture, and experience-based questions. Use 'code' when the answer literally requires writing code. Use 'text' sparingly.",
     assessment:
       "Skills assessment. Use 'multiple_choice' for factual knowledge. Use 'code' for algorithmic tasks. Use 'text' for analytical problems.",
   };
@@ -93,17 +124,35 @@ function buildPrompt(params: {
   const historyText = history.length > 0
     ? history.map((q, i) => {
         const ans = q.answer_text
-          ? (q.answer_text.length > 400 ? q.answer_text.slice(0, 400) + "..." : q.answer_text)
-          : "[No answer yet]";
+        ? (i >= history.length - 3
+            ? (q.answer_text.length > 800 ? q.answer_text.slice(0, 800) + "…" : q.answer_text)
+            : q.answer_text.slice(0, 200) + (q.answer_text.length > 200 ? "…" : ""))
+        : "[No answer]";
         const score = q.score != null ? ` | Score: ${q.score}/100` : "";
         return `Q${i + 1} (${q.question_type}): "${q.question_text}"\nA${i + 1}: "${ans}"${score}`;
       }).join("\n\n")
     : "No questions asked yet.";
+  
+  const codeQuestionsSoFar = history
+  .filter(q => q.question_type === "code")
+  .map((q, i) => `- Q${i + 1}: "${q.question_text}"`)
+  .join("\n");
+
+    const codeRepetitionGuard = codeQuestionsSoFar.length > 0
+      ? `=== CODE QUESTIONS ALREADY ASKED ===
+    ${codeQuestionsSoFar}
+
+    STRICT RULE: The next code question MUST:
+    1. Test a completely different concept/pattern than all questions above
+    2. NOT be a variation or extension of any previous code question
+    3. NOT reuse the same data structure theme (e.g. if arrays were used twice, switch to strings, trees, maps, etc.)
+    4. NOT increase complexity of a problem already asked — that is considered a duplicate`
+      : "";
 
   const answerSection = previousAnswerText
     ? `\n=== CURRENT ANSWER TO EVALUATE ===\nQuestion: "${previousQuestionText}"\nCandidate's Answer: "${previousAnswerText.slice(0, 2000)}"\n`
     : "";
-
+  
   let taskText: string;
   if (isSessionOver) {
     taskText = `=== TASK ===
@@ -147,13 +196,9 @@ Candidate CV Score: ${cvScore != null ? `${cvScore}/100` : "Unknown"}
 ${historyText}
 ${answerSection}
 ${taskText}
-
-=== QUESTION TYPE SELECTION GUIDE ===
-- "video": behavioral (STAR method), situational, motivation, values, self-reflection
-- "text": conceptual, analytical, system design, opinion or reasoning questions
-- "multiple_choice": factual knowledge checks — provide exactly 4 options, only 1 correct
-- "code": ONLY when the answer genuinely requires writing or reading code (algorithm, debug, etc.)
-
+${questionTypeGuide}
+${codeRepetitionGuard}
+${typeConstraint}
 Return ONLY a valid JSON object. No markdown, no extra text:
 {
   "answer_evaluation": {
@@ -165,22 +210,29 @@ Return ONLY a valid JSON object. No markdown, no extra text:
         "score_impact": <integer, positive or negative points e.g., +10 or -5>,
         "type": "strength|weakness"
       }
-    ]
+    ],
+    "strengths": ["<strength 1>", "<strength 2>"],
+    "weaknesses": ["<weakness 1>", "<weakness 2>"]
   } | null,
   "next_question": {
     "text": "<the exact question text, direct and neutral>",
     "type": "video|text|multiple_choice|code",
+    "code_type": "visuals|problem_solving|null",
     "options": ["<A>", "<B>", "<C>", "<D>"] | null,
-    "language": "<javascript|python|java|...>" | null
+    "language": "<javascript|python|java|...>" | null,
+    "max_time": <integer in seconds, based on question complexity. Examples: simple_question=60-120, moderate=180-300, complex=300-600> | null
   } | null,
   "is_final": <boolean>,
   "session_summary": {
     "overall_score": <integer 0-100>,
     "recommendation": "proceed|review|reject",
-    "reasoning": "<3-4 sentence overall session assessment>"
+    "reasoning": "<3-4 sentence overall session assessment>",
+    "strengths": ["<stage strength 1>", "<stage strength 2>"],
+    "weaknesses": ["<stage weakness 1>", "<stage weakness 2>"]
   } | null
 }`;
 }
+
 
 // ─── HuggingFace caller ───────────────────────────────────────────────────────
 
@@ -202,7 +254,7 @@ async function callAI(prompt: string): Promise<AIOutput> {
         { role: "user", content: prompt },
       ],
       max_tokens: 1500,
-      temperature: 0.3,
+      temperature: 0.65,
     }),
   });
 
@@ -260,7 +312,7 @@ serve(async (req) => {
     .select(`
       id, status,
       recruitment_stages!inner (
-        id, name, description, stage_type, pass_score, evaluation_criteria, order_index
+        id, name, description, stage_type, pass_score, evaluation_criteria, order_index, num_questions
       ),
       applications!inner (
         id, cv_score, answers, job_id,
@@ -282,7 +334,7 @@ serve(async (req) => {
   const stage = stageData.recruitment_stages as {
     id: string; name: string; description: string; stage_type: string;
     pass_score: number | null; evaluation_criteria: Record<string, unknown> | null;
-    order_index: number;
+    order_index: number; num_questions: number | null;
   };
   const application = stageData.applications as {
     id: string; cv_score: number | null; answers: Record<string, unknown> | null; job_id: string;
@@ -290,7 +342,8 @@ serve(async (req) => {
   };
   const job = application.job_postings;
 
-  const maxQuestions: number = (stage.evaluation_criteria?.max_questions as number) ?? 8;
+  // Use num_questions from recruitment_stages, fallback to max_questions in evaluation_criteria, then fallback to 8
+  const maxQuestions: number = stage.num_questions ?? ((stage.evaluation_criteria?.max_questions as number) ?? 8);
   const passScore: number = stage.pass_score ?? 60;
 
   // ── 2. Save the incoming answer FIRST so history count is accurate ──────────
@@ -381,6 +434,18 @@ serve(async (req) => {
     previousQuestionText = prevQ?.question_text ?? null;
   }
 
+  const usedTypes = deduped.map(q => q.question_type);
+  const typeCounts = usedTypes.reduce((acc, t) => {
+    acc[t] = (acc[t] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const typeConstraint = `
+  QUESTION TYPE DISTRIBUTION (so far): ${JSON.stringify(typeCounts)}
+  RULE: Do not use the same type more than ${Math.ceil(maxQuestions / 3)} times in one session.
+  If "text" has been used ${typeCounts["text"] >= 2 ? "2+ times" : "already"}, pick a different type.`;
+
+
   // ── 5. Call AI ────────────────────────────────────────────────────────────
   // DEBUG: log deduped history so we can trace question progression cleanly
   console.log("=== generate-question DEBUG ===");
@@ -418,6 +483,7 @@ serve(async (req) => {
         answer_text: q.answer_text,
         score: q.score,
       })),
+      typeConstraint:typeConstraint,
       previousAnswerText: previousAnswer?.answerText ?? null,
       previousQuestionText,
       nextQuestionNumber,
@@ -437,21 +503,33 @@ serve(async (req) => {
 
   // ── 6. Update answer evaluation score + feedback (partial upsert was done earlier) ──
   if (previousAnswer?.questionId && aiResult.answer_evaluation) {
-    const { score } = aiResult.answer_evaluation;
+    const { score, feedback, strengths, weaknesses } = aiResult.answer_evaluation;
     await supabase.from("application_answers").upsert(
       {
         question_id: previousAnswer.questionId,
         answer_text: previousAnswer.answerText,
         score,
-        feedback: JSON.stringify(aiResult.answer_evaluation),
+        feedback: feedback,
+        strengths: strengths || [],
+        weaknesses: weaknesses || [],
       },
       { onConflict: "question_id" }
     );
   }
 
   // ── 7. Session over — finalize stage ──────────────────────────────────────
-  if (aiResult.is_final && aiResult.session_summary) {
-    const { overall_score, recommendation, reasoning } = aiResult.session_summary;
+  const shouldFinalize = isSessionOver || aiResult.is_final;
+
+  if (shouldFinalize) {
+    const summary = aiResult.session_summary || {
+      overall_score: aiResult.answer_evaluation?.score ?? 0,
+      recommendation: "review",
+      reasoning: "Session concluded automatically. AI failed to generate a proper summary.",
+      strengths: [],
+      weaknesses: [],
+    };
+
+    const { overall_score, recommendation, reasoning, strengths, weaknesses } = summary;
     const passed = overall_score >= passScore;
 
     await supabase.from("application_stage_evaluations").upsert(
@@ -460,6 +538,8 @@ serve(async (req) => {
         ai_score: overall_score,
         recommendation,
         reasoning,
+        strengths: strengths || [],
+        weaknesses: weaknesses || [],
         confidence: 0.8,
       },
       { onConflict: "application_stage_id" }
@@ -481,7 +561,7 @@ serve(async (req) => {
         question: null,
         answerEvaluation: aiResult.answer_evaluation,
         isFinal: true,
-        stageSummary: aiResult.session_summary,
+        stageSummary: summary,
       }),
       { headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
@@ -508,6 +588,8 @@ serve(async (req) => {
           type: existingAtIndex.question_type,
           options: existingAtIndex.generation_context?.options ?? null,
           language: existingAtIndex.generation_context?.language ?? null,
+          codeType: existingAtIndex.generation_context?.code_type ?? null,
+          maxTime: existingAtIndex.generation_context?.max_time ?? null,
           orderIndex: existingAtIndex.order_index,
         },
         answerEvaluation: aiResult.answer_evaluation,
@@ -528,6 +610,8 @@ serve(async (req) => {
       generation_context: {
         options: aiResult.next_question.options ?? null,
         language: aiResult.next_question.language ?? null,
+        code_type: aiResult.next_question.code_type ?? null,
+        max_time: aiResult.next_question.max_time ?? null,
       },
       order_index: nextQuestionNumber,
       generation_version: 1,
@@ -557,6 +641,8 @@ serve(async (req) => {
         type: aiResult.next_question.type,
         options: aiResult.next_question.options ?? null,
         language: aiResult.next_question.language ?? null,
+        codeType: aiResult.next_question.code_type ?? null,
+        maxTime: aiResult.next_question.max_time ?? null,
         orderIndex: nextQuestionNumber,
       },
       answerEvaluation: aiResult.answer_evaluation,

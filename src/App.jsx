@@ -1,3 +1,4 @@
+//src\App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";

@@ -310,9 +310,9 @@ export default function ResetPasswordPage() {
         subheading={t("reset_password.waiting.subheading")}
       >
         <div className="flex flex-col items-center gap-6 py-6">
-          <div className="w-12 h-12 rounded-full border-2 border-dark-amethyst-200 border-t-dark-amethyst-600 animate-spin" />
+          <div className="w-12 h-12 rounded-full border-2 border-border border-t-primary animate-spin" />
 
-          <p className="text-dark-amethyst-400 text-sm text-center">
+          <p className="text-muted-foreground text-sm text-center font-medium">
             {t("reset_password.waiting.loading_text")}
           </p>
         </div>
@@ -330,11 +330,12 @@ export default function ResetPasswordPage() {
         subheading={t("reset_password.invalid.subheading")}
       >
         <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-red-50 border border-red-200">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-destructive/10 border border-destructive/20">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-                stroke="#ef4444"
+                stroke="currentColor"
+                className="text-destructive"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -342,20 +343,23 @@ export default function ResetPasswordPage() {
             </svg>
           </div>
 
-          <p className="text-dark-amethyst-700 text-sm leading-7">
+
+          <p className="text-sidebar text-sm leading-7">
             {t("reset_password.invalid.message")}
           </p>
 
+
           <Link
             to="/auth/forgot-password"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
           >
             {t("reset_password.invalid.request_new")}
           </Link>
 
           <Link
             to="/auth/sign-in"
-            className="text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+            className="text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
           >
             {t("reset_password.invalid.back_to_sign_in")}
           </Link>
@@ -374,11 +378,13 @@ export default function ResetPasswordPage() {
         subheading={t("reset_password.success.subheading")}
       >
         <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-dark-amethyst-100 border border-dark-amethyst-200">
+
+          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <path
                 d="M20 6L9 17l-5-5"
-                stroke="#8400ff"
+                stroke="currentColor"
+                className="text-accent"
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -386,13 +392,14 @@ export default function ResetPasswordPage() {
             </svg>
           </div>
 
-          <p className="text-dark-amethyst-700 text-sm leading-7">
+          <p className="text-sidebar text-sm leading-7">
             {t("reset_password.success.message")}
           </p>
 
           <Link
             to="/auth/sign-in"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition-colors flex items-center justify-center"
+            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
           >
             {t("reset_password.success.go_to_sign_in")}
           </Link>
@@ -429,7 +436,7 @@ export default function ResetPasswordPage() {
         />
 
         {(validationError || apiError) && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-red-600 bg-red-50 border border-red-200">
+          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
             <span>⚠</span>
             {validationError || apiError}
           </div>
@@ -438,7 +445,8 @@ export default function ResetPasswordPage() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-dark-amethyst-600 hover:bg-dark-amethyst-700 disabled:opacity-60"
+          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover disabled:opacity-60"
+          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
         >
           {loading
             ? t("reset_password.form.buttons.updating")
@@ -447,7 +455,7 @@ export default function ResetPasswordPage() {
 
         <Link
           to="/auth/sign-in"
-          className="text-center text-xs text-dark-amethyst-400 hover:text-dark-amethyst-600 hover:underline transition-colors"
+          className="text-center text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
         >
           {t("reset_password.form.back_to_sign_in")}
         </Link>

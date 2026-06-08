@@ -16,7 +16,6 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { TextareaField } from "./textArea";
 import { useTranslation } from "react-i18next";
-import InterviewQuestion from "@/features/interview/models/interview-question.model";
 
 export function AddInterviewDialog() {
   const { t } = useTranslation();
@@ -56,74 +55,117 @@ export function AddInterviewDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">{t("add_interview.buttons.open")}</Button>
+        <Button
+          variant="outline"
+          className="text-xs font-medium cursor-pointer"
+        >
+          {t("add_interview.buttons.open")}
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
-        <form onSubmit={submitInterview}>
-          <DialogHeader>
-            <DialogTitle>{t("add_interview.title")}</DialogTitle>
-            <DialogDescription>
-              {t("add_interview.description")}
+      <DialogContent className="sm:max-w-sm border-border/60 bg-background p-5 font-sans">
+        <form onSubmit={submitInterview} className="space-y-4">
+          <DialogHeader className="space-y-1">
+            <DialogTitle className="text-sm font-bold text-foreground tracking-tight uppercase">
+              Send an Interview Invitation
+            </DialogTitle>
+            <DialogDescription className="text-xs text-muted-foreground">
+              Send an automated interview to an applicant.
             </DialogDescription>
           </DialogHeader>
-          <FieldGroup>
-            <Field>
-              <Label htmlFor="application-id">
-                {t("add_interview.labels.application_id")}
+
+          <FieldGroup className="space-y-3">
+            <Field className="space-y-1">
+              <Label
+                htmlFor="application-id"
+                className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider"
+              >
+                Application ID
               </Label>
               <Input
-                id="applicant-id"
-                name="applicant-id"
-                onChange={(e) => {
-                  setApplicationID(e.target.value);
-                }}
+                id="application-id"
+                name="application-id"
+                value={applicationID}
+                onChange={(e) => setApplicationID(e.target.value)}
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring"
+                placeholder="e.g. app_123"
               />
             </Field>
-            <Field>
-              <Label htmlFor="job-id">{t("add_interview.labels.job_id")}</Label>
+
+            <Field className="space-y-1">
+              <Label
+                htmlFor="job-id"
+                className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider"
+              >
+                Job ID
+              </Label>
               <Input
                 id="job-id"
                 name="job-id"
+                value={jobID}
                 onChange={(e) => setJobID(e.target.value)}
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring"
+                placeholder="e.g. job_456"
               />
             </Field>
-            <Field>
-              <Label htmlFor="rerecord-input">
-                {t("add_interview.labels.rerecord_after")}{" "}
+
+            <Field className="space-y-1">
+              <Label
+                htmlFor="rerecord-input"
+                className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider"
+              >
+                Re-record available after (mins)
               </Label>
               <Input
                 id="rerecord-input"
                 name="rerecord-input"
                 type="number"
-                className="no-spinner"
+                className="h-8 text-xs bg-background border-border/60 focus-visible:ring-ring no-spinner"
+                placeholder="0 for instant"
                 onChange={(e) => {
                   const value = Number(e.target.value);
                   if (value < 0) {
-                    setError(t("add_interview.errors.rerecord_positive"));
+                    setError("Re-record minutes must be 0 or more");
                   } else {
                     setError("");
                     setReRecordMins(value);
                   }
                 }}
               />
-              {error && <p className="italic text-red-400 text-sm">{error}</p>}
             </Field>
-            <Field>
+
+            <Field className="space-y-1">
+              <Label className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+                Interview Questions
+              </Label>
               <TextareaField
                 value={questionsText}
-                onChange={(e) => {
-                  setQuestionsText(e.target.value);
-                }}
+                onChange={(e) => setQuestionsText(e.target.value)}
+                placeholder="Enter each question on a new line..."
               />
             </Field>
           </FieldGroup>
-          <DialogFooter>
+
+          {error && (
+            <p className="text-[11px] font-medium text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-2.5 py-1.5 transition-all">
+              {error}
+            </p>
+          )}
+
+          <DialogFooter className="gap-2 pt-2 border-t border-border/40 mt-2 sm:justify-end">
             <DialogClose asChild>
-              <Button type="button" variant="outline">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8 text-xs font-medium cursor-pointer"
+              >
                 {t("avatar_modal.cancel")}
               </Button>
             </DialogClose>
-            <Button type="submit" disabled={loading}>
+            <Button
+              type="submit"
+              disabled={loading || !!error}
+              className="h-8 text-xs font-medium cursor-pointer"
+            >
               {loading
                 ? t("add_interview.buttons.sending")
                 : t("add_interview.buttons.send")}

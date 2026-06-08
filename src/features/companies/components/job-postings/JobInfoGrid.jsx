@@ -42,96 +42,96 @@ export default function JobInfoGrid({
   };
   const { t } = useTranslation();
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 mb-8 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-1 h-full bg-dark-amethyst-400"></div>
+    <div className="bg-background border border-border/60 rounded-xl shadow-xs p-5 mb-5 relative overflow-hidden font-sans">
+      <div className="absolute top-0 left-0 w-1 h-full bg-primary"></div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-3.5 mb-4.5">
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <TrendingUp className="w-3.5 h-3.5 text-dark-amethyst-500" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <TrendingUp className="w-3.5 h-3.5 text-primary" />{" "}
             {t("job_info_grid.seniority_level")}
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.seniority_level || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, seniority_level: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.seniority_level) || "Engineering"}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <MapPin className="w-3.5 h-3.5 text-red-400" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <MapPin className="w-3.5 h-3.5 text-destructive/80" />{" "}
             {t("job_info_grid.location")}
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {clean(company?.location) || t("job_filters.not_applicable")}
           </p>
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Monitor className="w-3.5 h-3.5 text-fuchsia-500" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Monitor className="w-3.5 h-3.5 text-accent" />{" "}
             {t("job_info_grid.work_type")}
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.work_location || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, work_location: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.work_location) || t("job_filters.remote")}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Briefcase className="w-3.5 h-3.5 text-orange-400" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Briefcase className="w-3.5 h-3.5 text-orange-500/80" />{" "}
             {t("job_info_grid.type")}
           </div>
           {isEditing ? (
             <input
-              className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+              className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2.5 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
               value={editForm.job_type || ""}
               onChange={(e) =>
                 setEditForm({ ...editForm, job_type: e.target.value })
               }
             />
           ) : (
-            <p className="text-sm font-medium text-gray-900 capitalize">
+            <p className="text-sm font-semibold text-sidebar capitalize pl-0.5">
               {clean(selectedJob.job_type) || t("job_filters.full_time")}
             </p>
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <BanknoteIcon className="w-3.5 h-3.5 text-green-500" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <BanknoteIcon className="w-3.5 h-3.5 text-emerald-500" />{" "}
             {t("job_info_grid.salary")}
           </div>
           {isEditing ? (
             <div className="flex items-center gap-1">
               <input
                 type="number"
-                className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                 value={editForm.salary_min || ""}
                 placeholder={t("job_filters.min")}
                 onChange={(e) =>
                   setEditForm({ ...editForm, salary_min: e.target.value })
                 }
               />
-              <span>-</span>
+              <span className="text-muted-foreground text-xs">-</span>
               <input
                 type="number"
-                className="w-full text-sm bg-gray-50 border border-gray-200 rounded px-2 py-1"
+                className="w-full h-8 text-sm font-medium bg-background border border-border rounded-md px-2 focus:outline-none focus:ring-2 focus:ring-primary/10 focus:border-primary transition-all"
                 value={editForm.salary_max || ""}
                 placeholder={t("job_filters.max")}
                 onChange={(e) =>
@@ -140,7 +140,7 @@ export default function JobInfoGrid({
               />
             </div>
           ) : (
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-semibold text-sidebar pl-0.5">
               {selectedJob.salary_min
                 ? `$${selectedJob.salary_min.toLocaleString()}`
                 : "N/A"}{" "}
@@ -152,44 +152,44 @@ export default function JobInfoGrid({
           )}
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Calendar className="w-3.5 h-3.5" /> {t("job_info_grid.published")}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Calendar className="w-3.5 h-3.5 text-muted-foreground/70" /> {t("job_info_grid.published")}
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {formatDate(selectedJob.created_at)}
           </p>
         </div>
         <div>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
-            <Wand2 className="w-3.5 h-3.5 text-mauve-magic-500" />{" "}
+          <div className="flex items-center gap-1.5 text-[11px] font-bold text-muted-foreground/80 uppercase tracking-wider mb-1">
+            <Wand2 className="w-3.5 h-3.5 text-primary" />{" "}
             {t("job_info_grid.ai_shortlist")}
           </div>
-          <p className="text-sm font-medium text-gray-900">
+          <p className="text-sm font-semibold text-sidebar pl-0.5">
             {selectedJob.shortlist_entries?.[0]?.count || 0}{" "}
             {t("job_info_grid.strong_fits")}
           </p>
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 pt-5 border-t border-gray-100">
+      <div className="flex flex-wrap items-center gap-2 pt-4 border-t border-border/55">
         <button
           onClick={() =>
             navigate(
               `/recruiter/candidatespipline?jobId=${selectedJob.id}&companyId=${company?.id}`,
             )
           }
-          className="flex items-center gap-2 bg-dark-amethyst-600 hover:bg-dark-amethyst-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors shadow-sm cursor-pointer"
+          className="flex items-center gap-1.5 bg-primary hover:bg-primary-hover text-white px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors shadow-xs cursor-pointer select-none"
         >
-          <User className="w-4 h-4" />
+          <User className="w-3.5 h-3.5" />
           {t("job_info_grid.open_candidate_board")}{" "}
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
         </button>
-        <button className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors">
-          <ExternalLink className="w-4 h-4" />
+        <button className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
+          <ExternalLink className="w-3.5 h-3.5" />
           {t("job_info_grid.view_public_posting")}
         </button>
-        <button className="flex items-center gap-2 border border-gray-200 hover:bg-gray-50 px-4 py-2 rounded-lg text-sm font-medium text-gray-700 transition-colors">
-          <Copy className="w-4 h-4" />
+        <button className="flex items-center gap-1.5 border border-border text-sidebar bg-background hover:bg-secondary/50 px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
+          <Copy className="w-3.5 h-3.5" />
           {t("job_info_grid.copy_link")}
         </button>
       </div>

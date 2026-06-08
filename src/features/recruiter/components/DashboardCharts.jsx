@@ -11,6 +11,16 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+
+const COLORS = {
+  primary: "#4f46e5",
+  primaryLight: "#4f46e51a",
+  bg: "#ffffff",
+  border: "#e2e8f0",
+  muted: "#f8fafc",
+  text: "#334155",
+  mutedText: "#94a3b8",
+};
 import { useTranslation } from "react-i18next";
 export default function DashboardCharts({
   pipelineSummaryData,
@@ -22,29 +32,28 @@ export default function DashboardCharts({
     if (!pipelineSummaryData || pipelineSummaryData.applied === 0) return 0;
     return Math.round((val / pipelineSummaryData.applied) * 100);
   };
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 font-sans">
-      {/* Pipeline Summary Component */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-6 col-span-1 lg:col-span-2 xl:col-span-1">
-        <div className="flex justify-between items-start mb-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 font-sans">
+
+      {/* ── Pipeline Summary Component ────────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200/80 rounded-xl shadow-sm p-5 col-span-1 lg:col-span-2 xl:col-span-1">
+        <div className="flex justify-between items-start mb-4">
           <div>
-            <h3
-              className="text-xl font-bold text-[#0f172a] mb-1"
-              style={{ fontFamily: "'Inter', sans-serif" }}
-            >
-              {t("dashboard_charts.pipeline_summary.title")}
+            <h3 className="text-base font-bold text-slate-900 tracking-tight">
+              Pipeline summary
             </h3>
-            <p className="text-sm text-[#64748b]">
+            <p className="text-xs text-slate-400">
               {t("dashboard_charts.pipeline_summary.subtitle")}
             </p>
           </div>
-          <span className="px-3 py-1 rounded-full text-xs font-medium text-dark-amethyst-600 bg-dark-amethyst-50 border border-dark-amethyst-200">
+          <span className="px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-[#4f46e5] bg-[#4f46e5]/10 border border-[#4f46e5]/20">
             {t("dashboard_charts.pipeline_summary.live")}
           </span>
         </div>
 
         {pipelineSummaryData && (
-          <div className="flex gap-2 mb-8">
+          <div className="flex gap-2 mb-6">
             {[
               {
                 label: t("dashboard_charts.pipeline_summary.stages.applied"),
@@ -76,26 +85,23 @@ export default function DashboardCharts({
                 pct: calcPct(pipelineSummaryData.shortlisted),
               },
             ].map((stage, idx) => (
-              <div key={idx} className="flex flex-col flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-[#64748b]">
+              <div key={idx} className="flex flex-col flex-1 min-w-0">
+                <div className="flex items-center justify-between gap-1 mb-0.5">
+                  <span className="text-[10px] font-medium text-slate-400 truncate">
                     {stage.label}
                   </span>
                   {idx > 0 && (
-                    <span className="text-xs font-semibold text-[#0f172a]">
+                    <span className="text-[10px] font-bold text-slate-900">
                       {stage.pct}%
                     </span>
                   )}
                 </div>
-                <span
-                  className="text-2xl font-bold text-[#0f172a] mb-3"
-                  style={{ fontFamily: "'Inter', sans-serif" }}
-                >
+                <span className="text-lg font-bold text-slate-900 mb-1.5 tracking-tight">
                   {stage.value}
                 </span>
-                <div className="h-1.5 w-full bg-[#f1f5f9] rounded-full overflow-hidden">
+                <div className="h-1 w-full bg-slate-100 rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-dark-amethyst-500 rounded-full transition-all duration-500"
+                    className="h-full bg-[#4f46e5] rounded-full transition-all duration-500"
                     style={{ width: `${stage.pct}%` }}
                   />
                 </div>
@@ -105,47 +111,46 @@ export default function DashboardCharts({
         )}
 
         {/* Trend Area Chart */}
-        <div className="h-[200px] -mx-2">
+        <div className="h-[180px] -mx-2">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={trendData}
-              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+              margin={{ top: 5, right: 10, left: -25, bottom: 0 }}
             >
               <defs>
                 <linearGradient id="colorApps" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#8400ff" stopOpacity={0.2} />
-                  <stop offset="95%" stopColor="#8400ff" stopOpacity={0} />
+                  <stop offset="5%" stopColor={COLORS.primary} stopOpacity={0.15} />
+                  <stop offset="95%" stopColor={COLORS.primary} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke="#f1f5f9"
-              />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={COLORS.border} opacity={0.4} />
               <XAxis
                 dataKey="day"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#64748b", fontSize: 12 }}
-                dy={10}
+                tick={{ fill: COLORS.mutedText, fontSize: 10, fontWeight: 500 }}
+                dy={8}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#64748b", fontSize: 12 }}
-                tickCount={5}
+                tick={{ fill: COLORS.mutedText, fontSize: 10, fontWeight: 500 }}
+                tickCount={4}
               />
               <Tooltip
                 contentStyle={{
-                  borderRadius: "8px",
-                  border: "none",
-                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                  backgroundColor: COLORS.bg,
+                  borderRadius: '8px',
+                  border: `1px solid ${COLORS.border}`,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                  fontSize: '11px',
+                  color: COLORS.text
                 }}
               />
               <Area
                 type="monotone"
                 dataKey="applications"
-                stroke="#8400ff"
+                stroke={COLORS.primary}
                 strokeWidth={2}
                 fillOpacity={1}
                 fill="url(#colorApps)"
@@ -155,54 +160,52 @@ export default function DashboardCharts({
         </div>
       </div>
 
-      {/* Top Jobs Chart */}
-      <div className="bg-white border border-gray-100 rounded-xl shadow-sm p-6">
+      {/* ── Top Jobs Chart ────────────────────────────────────────────────────── */}
+      <div className="bg-white border border-slate-200/80 rounded-xl shadow-sm p-5">
         <div className="mb-4">
-          <h3
-            className="text-lg font-bold text-dark-amethyst-950"
-            style={{ fontFamily: "'Inter', sans-serif" }}
-          >
-            {t("dashboard_charts.top_jobs.title")}
+          <h3 className="text-base font-bold text-slate-900 tracking-tight">
+            Top Jobs by Applicants
           </h3>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs text-slate-400">
             {t("dashboard_charts.top_jobs.subtitle")}
           </p>
         </div>
-        <div className="h-64">
+        <div className="h-[210px] -mx-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={topJobsData}
-              margin={{ top: 5, right: 10, left: -20, bottom: 5 }}
+              margin={{ top: 5, right: 10, left: -25, bottom: 0 }}
             >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                vertical={false}
-                stroke="#f3f4f6"
-              />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={COLORS.border} opacity={0.4} />
               <XAxis
                 dataKey="name"
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#6b7280", fontSize: 11 }}
+                tick={{ fill: COLORS.mutedText, fontSize: 10, fontWeight: 500 }}
+                dy={8}
               />
               <YAxis
                 axisLine={false}
                 tickLine={false}
-                tick={{ fill: "#6b7280", fontSize: 12 }}
+                tick={{ fill: COLORS.mutedText, fontSize: 10, fontWeight: 500 }}
+                tickCount={4}
               />
               <Tooltip
-                cursor={{ fill: "#f9fafb" }}
+                cursor={{ fill: '#f1f5f9', opacity: 0.6 }}
                 contentStyle={{
-                  borderRadius: "8px",
-                  border: "none",
-                  boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                  backgroundColor: COLORS.bg,
+                  borderRadius: '8px',
+                  border: `1px solid ${COLORS.border}`,
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                  fontSize: '11px',
+                  color: COLORS.text
                 }}
               />
               <Bar
                 dataKey="applicants"
-                fill="#ce99ff"
+                fill={COLORS.primary} opacity={0.85}
                 radius={[4, 4, 0, 0]}
-                barSize={32}
+                barSize={24}
               />
             </BarChart>
           </ResponsiveContainer>

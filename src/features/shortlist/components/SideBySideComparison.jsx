@@ -25,22 +25,19 @@ export default function SideBySideComparison({
 
   if (!selectedCandidates || selectedCandidates.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 text-center text-gray-500 font-sans">
+      <div className="bg-background rounded-2xl shadow-[var(--shadow-lift)] border border-border p-8 text-center text-muted-foreground">
         <p className="text-sm">{t("shortlist.compare.emptyState")}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 font-sans">
+    <div className="bg-background rounded-2xl shadow-[var(--shadow-lift)] border border-border p-6">
       <div className="mb-6">
-        <h3
-          className="text-xl font-bold text-[#0f172a] mb-1"
-          style={{ fontFamily: "'Inter', sans-serif" }}
-        >
-          {t("shortlist.compare.title")}
+        <h3 className="text-xl font-bold text-foreground font-display mb-1">
+          Side-by-side comparison
         </h3>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           {t("shortlist.compare.description")}
         </p>
       </div>

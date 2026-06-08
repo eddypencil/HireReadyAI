@@ -265,20 +265,18 @@ export default function PipelineBuilder({
 
       {/* Library drawer overlay */}
       <div
-        className={`fixed inset-0 z-50 transition-all duration-300 ease-out ${
-          libraryOpen
+        className={`fixed inset-0 z-50 transition-all duration-300 ease-out ${libraryOpen
             ? "visible opacity-100"
             : "invisible opacity-0 pointer-events-none"
-        }`}
+          }`}
       >
         <div
           className="absolute inset-0 bg-black/30 backdrop-blur-sm"
           onClick={() => setLibraryOpen(false)}
         />
         <div
-          className={`absolute left-0 top-0 bottom-0 w-72 max-w-[80vw] bg-white shadow-2xl transition-transform duration-300 ease-out ${
-            libraryOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`absolute left-0 top-0 bottom-0 w-72 max-w-[80vw] bg-white shadow-2xl transition-transform duration-300 ease-out ${libraryOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
             <span className="text-[10px] font-semibold text-gray-400 tracking-widest uppercase">
@@ -298,20 +296,18 @@ export default function PipelineBuilder({
 
       {/* Details drawer overlay */}
       <div
-        className={`fixed inset-0 z-50 transition-all duration-300 ease-out ${
-          detailsOpen
+        className={`fixed inset-0 z-50 transition-all duration-300 ease-out ${detailsOpen
             ? "visible opacity-100"
             : "invisible opacity-0 pointer-events-none"
-        }`}
+          }`}
       >
         <div
           className="absolute inset-0 bg-black/30 backdrop-blur-sm"
           onClick={() => setDetailsOpen(false)}
         />
         <div
-          className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl overflow-y-auto transition-transform duration-300 ease-out ${
-            detailsOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+          className={`absolute right-0 top-0 bottom-0 w-80 max-w-[85vw] bg-white shadow-2xl overflow-y-auto transition-transform duration-300 ease-out ${detailsOpen ? "translate-x-0" : "translate-x-full"
+            }`}
         >
           <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100">
             <span className="text-sm font-semibold text-gray-900 truncate">
