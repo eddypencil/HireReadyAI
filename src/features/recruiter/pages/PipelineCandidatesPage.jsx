@@ -1,7 +1,16 @@
 //src\features\recruiter\pages\PipelineCandidatesPage.jsx
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Lock, Search, SlidersHorizontal, Sparkles, X, Loader2, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Lock,
+  Search,
+  SlidersHorizontal,
+  Sparkles,
+  X,
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import {
   getPipelineCandidates,
   getJobStages,
@@ -75,7 +84,6 @@ function getFit(score, isRejected, t) {
   };
 }
 
-
 const stageScore = (as) => {
   if (as.score != null) return Math.round(Number(as.score));
   const evals = as.application_stage_evaluations;
@@ -111,19 +119,31 @@ const statusLabel = (status) => {
   }
 };
 
-const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages }) => {
+const CandidateCard = ({
+  candidate,
+  onDragStart,
+  isDragging,
+  onClick,
+  allStages,
+}) => {
   const [expanded, setExpanded] = useState(false);
   const { t } = useTranslation();
   const fit = getFit(candidate.score, candidate.is_rejected, t);
 
-  const currentStageOrder = allStages?.find((s) => s.id === candidate.currentStageId)?.order_index ?? Infinity;
+  const currentStageOrder =
+    allStages?.find((s) => s.id === candidate.currentStageId)?.order_index ??
+    Infinity;
 
   const previousStages = (candidate.stagesData || [])
     .filter((as) => {
       const order = as.recruitment_stages?.order_index ?? Infinity;
       return order < currentStageOrder;
     })
-    .sort((a, b) => (a.recruitment_stages?.order_index ?? 0) - (b.recruitment_stages?.order_index ?? 0));
+    .sort(
+      (a, b) =>
+        (a.recruitment_stages?.order_index ?? 0) -
+        (b.recruitment_stages?.order_index ?? 0),
+    );
 
   return (
     <div
@@ -131,7 +151,6 @@ const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages 
       onDragStart={() => onDragStart(candidate)}
       className={`bg-background rounded-2xl border border-border p-4 cursor-grab active:cursor-grabbing select-none transition-all duration-200 hover:shadow-[var(--shadow-lift)] hover:-translate-y-0.5 group ${isDragging ? "opacity-40 scale-95" : ""}`}
       onClick={onClick}
-      className={`bg-white rounded-2xl border border-cerulean-900 transition-all duration-200 hover:shadow-lg hover:-translate-y-0.5 group ${isDragging ? "opacity-40 scale-95" : ""}`}
       style={{ boxShadow: "0 1px 4px rgba(1,73,124,0.1)" }}
     >
       <div className="p-4 cursor-grab active:cursor-grabbing select-none">
@@ -160,26 +179,26 @@ const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages 
             </p>
           </div>
         </div>
-      <div className="flex items-start gap-3 mb-3">
-        <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-bold text-white text-sm shrink-0 font-display">
-          {getInitials(candidate.name)}
+        <div className="flex items-start gap-3 mb-3">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center font-bold text-white text-sm shrink-0 font-display">
+            {getInitials(candidate.name)}
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-bold text-foreground truncate font-display">
+              {candidate.name}
+              {candidate.is_rejected && (
+                <span className="ml-1.5 text-[10px] px-2 py-0.5 rounded bg-destructive/10 text-destructive border border-destructive/20 font-sans font-medium">
+                  {t("candidate_pipeline.fit.rejected")}
+                </span>
+              )}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {timeAgo(candidate.applied_at)}
+            </p>
+          </div>
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-foreground truncate font-display">
-            {candidate.name}
-            {candidate.is_rejected && (
-              <span className="ml-1.5 text-[10px] px-2 py-0.5 rounded bg-destructive/10 text-destructive border border-destructive/20 font-sans font-medium">
-                {t("candidate_pipeline.fit.rejected")}
-              </span>
-            )}
-          </p>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {timeAgo(candidate.applied_at)}
-          </p>
-        </div>
-      </div>
 
-          <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center justify-between mb-3">
           {candidate.hasEvaluation ? (
             <span
               className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${fit.cls}`}
@@ -232,7 +251,10 @@ const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages 
       {/* Expand button — only show if there are previous stages */}
       {previousStages.length > 0 && (
         <button
-          onClick={(e) => { e.stopPropagation(); setExpanded((s) => !s); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded((s) => !s);
+          }}
           className="w-full flex items-center justify-center gap-1 py-2 text-xs font-semibold text-cerulean hover:text-rich-cerulean border-t border-cerulean-900 transition"
         >
           {expanded ? (
@@ -243,7 +265,8 @@ const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages 
           ) : (
             <>
               <ChevronDown className="w-3.5 h-3.5" />
-              {previousStages.length} previous stage{previousStages.length > 1 ? "s" : ""}
+              {previousStages.length} previous stage
+              {previousStages.length > 1 ? "s" : ""}
             </>
           )}
         </button>
@@ -259,17 +282,26 @@ const CandidateCard = ({ candidate, onDragStart, isDragging, onClick, allStages 
             const ss = stageScore(as);
             const name = as.recruitment_stages?.name || "Unknown";
             return (
-              <div key={as.id} className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-sky-blue-900/60">
+              <div
+                key={as.id}
+                className="flex items-center justify-between py-1.5 px-2 rounded-lg bg-sky-blue-900/60"
+              >
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="text-xs font-medium text-deep-space-blue truncate">{name}</span>
+                  <span className="text-xs font-medium text-deep-space-blue truncate">
+                    {name}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   {ss != null ? (
-                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${scoreColor(ss)}`}>
+                    <span
+                      className={`text-xs font-bold px-1.5 py-0.5 rounded ${scoreColor(ss)}`}
+                    >
                       {ss}/100
                     </span>
                   ) : null}
-                  <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${statusStyle(as.status)}`}>
+                  <span
+                    className={`text-[10px] font-semibold px-1.5 py-0.5 rounded border ${statusStyle(as.status)}`}
+                  >
                     {statusLabel(as.status)}
                   </span>
                 </div>
@@ -308,9 +340,6 @@ const PipelineColumn = ({
     <div
       className={`flex flex-col min-w-[270px] w-[270px] shrink-0 rounded-2xl transition-all duration-200 ${
         isOver && !isLocked ? "ring-2 ring-air-force-blue ring-offset-2" : ""
-        isOver && !isLocked
-          ? "ring-2 ring-primary ring-offset-2 bg-secondary/20"
-          : ""
       }`}
       onDragOver={(e) => {
         e.preventDefault();
@@ -326,7 +355,6 @@ const PipelineColumn = ({
             className="w-2.5 h-2.5 rounded-full shrink-0"
             style={{
               background: `hsl(${210 - stage.order_index * 10}, 70%, ${55 - stage.order_index * 3}%)`,
-              background: `hsl(${220 - stage.order_index * 15}, 70%, 50%)`,
             }}
           />
           <span className="text-sm font-bold text-foreground font-display truncate">
@@ -454,10 +482,14 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     if (!selectedJobId) return;
     setGeneratingCriteria(true);
     try {
-      const { data, error } = await supabase.functions.invoke("auto-generate-criteria", {
-        body: { jobId: selectedJobId },
-      });
-      if (error) throw new Error(error.message || "Failed to generate criteria");
+      const { data, error } = await supabase.functions.invoke(
+        "auto-generate-criteria",
+        {
+          body: { jobId: selectedJobId },
+        },
+      );
+      if (error)
+        throw new Error(error.message || "Failed to generate criteria");
       if (data.criteria) setCriteria(data.criteria);
       if (data.suggestedMinScore) setMinScore(data.suggestedMinScore);
       if (data.scoreReasoning) setScoreReasoning(data.scoreReasoning);
@@ -472,17 +504,17 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     if (!selectedJobId || !criteria.trim()) return;
     setAdvancingToShortlist(true);
     try {
-      const shortlistStage = stages.find(s => s.stage_type === "shortlist");
+      const shortlistStage = stages.find((s) => s.stage_type === "shortlist");
       if (!shortlistStage) throw new Error("No Shortlist stage found");
 
       const precedingStage = stages
-        .filter(s => s.order_index < shortlistStage.order_index)
+        .filter((s) => s.order_index < shortlistStage.order_index)
         .sort((a, b) => b.order_index - a.order_index)[0];
       if (!precedingStage) throw new Error("No stage before Shortlist found");
 
       const candidateIds = candidates
-        .filter(c => c.currentStageId === precedingStage.id)
-        .map(c => c.id);
+        .filter((c) => c.currentStageId === precedingStage.id)
+        .map((c) => c.id);
 
       if (candidateIds.length === 0) {
         alert("No candidates in the stage before Shortlist");
@@ -490,19 +522,24 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         return;
       }
 
-      const { data, error } = await supabase.functions.invoke("evaluate-shortlist", {
-        body: {
-          applicationIds: candidateIds,
-          evaluationCriteria: criteria.trim(),
-          minScore,
+      const { data, error } = await supabase.functions.invoke(
+        "evaluate-shortlist",
+        {
+          body: {
+            applicationIds: candidateIds,
+            evaluationCriteria: criteria.trim(),
+            minScore,
+          },
         },
-      });
+      );
 
       if (error) throw new Error(error.message || "Evaluation failed");
 
       const results = data?.results || [];
-      const passed = results.filter(r => r.passed).length;
-      alert(`Evaluation complete: ${passed}/${candidateIds.length} candidates advanced to shortlist`);
+      const passed = results.filter((r) => r.passed).length;
+      alert(
+        `Evaluation complete: ${passed}/${candidateIds.length} candidates advanced to shortlist`,
+      );
 
       setShowShortlistModal(false);
       setCriteria("");
@@ -521,7 +558,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
   useEffect(() => {
     if (jobs.length === 0) return;
     const urlJobId = searchParams.get("jobId");
-    if (urlJobId && jobs.some(j => j.id === urlJobId)) {
+    if (urlJobId && jobs.some((j) => j.id === urlJobId)) {
       setSelectedJobId(urlJobId);
     } else if (!selectedJobId) {
       setSelectedJobId(jobs[0].id);
@@ -589,16 +626,15 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           }
 
           const currentStage = currentStageId
-            ? allStages.find(
-                (s) => s.recruitment_stages?.id === currentStageId,
-              )
+            ? allStages.find((s) => s.recruitment_stages?.id === currentStageId)
             : null;
 
           let evaluation = null;
           let score = 0;
 
           if (currentStage) {
-            evaluation = currentStage.application_stage_evaluations?.[0] ?? null;
+            evaluation =
+              currentStage.application_stage_evaluations?.[0] ?? null;
 
             if (evaluation?.ai_score != null) {
               score = Math.round(Number(evaluation.ai_score));
@@ -607,7 +643,8 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
             }
           }
 
-          const hasEvaluation = evaluation !== null || (currentStage?.score != null);
+          const hasEvaluation =
+            evaluation !== null || currentStage?.score != null;
 
           const isRejected =
             app.is_rejected || evaluation?.recommendation === "reject";
@@ -651,12 +688,11 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
     if (filterFit === t("candidate_pipeline.fit.rejected"))
       return c.is_rejected;
-    if (
-      filterFit !== t("candidate_pipeline.filters.all")) {
-      const fitLabel = c.hasEvaluation ?
-      getFit(c.score, c.is_rejected, t).label : "In Progress";
-      if (fitLabel !== filterFit
-    ) return false;
+    if (filterFit !== t("candidate_pipeline.filters.all")) {
+      const fitLabel = c.hasEvaluation
+        ? getFit(c.score, c.is_rejected, t).label
+        : "In Progress";
+      if (fitLabel !== filterFit) return false;
     }
 
     return true;
@@ -826,7 +862,10 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
           <div className="flex gap-2">
             <button
-              onClick={() => { setShowShortlistModal(true); setScoreReasoning(""); }}
+              onClick={() => {
+                setShowShortlistModal(true);
+                setScoreReasoning("");
+              }}
               className="flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition bg-deep-space-blue text-white border-deep-space-blue hover:bg-yale-blue-600"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -969,8 +1008,12 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-4 border-b border-cerulean-900">
               <div>
-                <h2 className="text-lg font-bold text-deep-space-blue">Advance to Shortlist</h2>
-                <p className="text-xs text-cerulean mt-0.5">Set criteria and minimum score for AI evaluation</p>
+                <h2 className="text-lg font-bold text-deep-space-blue">
+                  Advance to Shortlist
+                </h2>
+                <p className="text-xs text-cerulean mt-0.5">
+                  Set criteria and minimum score for AI evaluation
+                </p>
               </div>
               <button
                 onClick={() => setShowShortlistModal(false)}
@@ -985,7 +1028,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               {/* Evaluation Criteria */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs font-semibold text-cerulean uppercase tracking-wide">Evaluation Criteria</label>
+                  <label className="text-xs font-semibold text-cerulean uppercase tracking-wide">
+                    Evaluation Criteria
+                  </label>
                   <button
                     onClick={handleAutoGenerateCriteria}
                     disabled={generatingCriteria}
@@ -1010,21 +1055,32 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
               {/* Min Score */}
               <div>
-                <label className="block text-xs font-semibold text-cerulean uppercase tracking-wide mb-2">Minimum Score</label>
+                <label className="block text-xs font-semibold text-cerulean uppercase tracking-wide mb-2">
+                  Minimum Score
+                </label>
                 <div className="flex items-center gap-3">
                   <input
                     type="range"
                     min={0}
                     max={100}
                     value={minScore}
-                    onChange={(e) => { setMinScore(Number(e.target.value)); setScoreReasoning(""); }}
+                    onChange={(e) => {
+                      setMinScore(Number(e.target.value));
+                      setScoreReasoning("");
+                    }}
                     className="flex-1 accent-rich-cerulean"
                   />
-                  <span className="text-lg font-bold text-deep-space-blue w-10 text-right">{minScore}</span>
+                  <span className="text-lg font-bold text-deep-space-blue w-10 text-right">
+                    {minScore}
+                  </span>
                 </div>
-                <p className="text-xs text-cerulean mt-1">Candidates below this score will be rejected</p>
+                <p className="text-xs text-cerulean mt-1">
+                  Candidates below this score will be rejected
+                </p>
                 {scoreReasoning && (
-                  <p className="text-xs text-rich-cerulean mt-1.5 italic">{scoreReasoning}</p>
+                  <p className="text-xs text-rich-cerulean mt-1.5 italic">
+                    {scoreReasoning}
+                  </p>
                 )}
               </div>
             </div>
