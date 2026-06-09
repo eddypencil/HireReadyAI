@@ -1,4 +1,4 @@
-//src\App.jsx
+// src/App.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
 import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
@@ -20,6 +20,9 @@ import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
 import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
+
+//landing page
+import LandingPage from "@/features/landing/pages/LandingPage";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
@@ -46,14 +49,18 @@ function RootRedirect() {
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<RootRedirect />} />
+
+      <Route path="/" element={<LandingPage />} />
+
+
+
       <Route path="/auth/sign-in" element={<SignInPage />} />
       <Route path="/auth/sign-up" element={<SignUpPage />} />
       <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
       <Route path="/auth/callback" element={<AuthCallback />} />
       <Route path="/auth/select-role" element={<GoogleRoleSelect />} />
-      
+
       <Route
         element={
           <ProtectedRoute>
