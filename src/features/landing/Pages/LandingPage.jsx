@@ -1,6 +1,7 @@
 // src/features/landing-page/pages/LandingPage.jsx
 import HowItWorks from "../components/HowItWorks";
 import Customers from "../components/Customers";
+import ContactUs from "../components/ContactUs";
 import Footer from "../components/Footer";
 
 export default function LandingPage() {
@@ -9,6 +10,7 @@ export default function LandingPage() {
       <main className="flex-1">
         <HowItWorks />
         <Customers />
+        <ContactUs />
       </main>
       <Footer />
     </div>
