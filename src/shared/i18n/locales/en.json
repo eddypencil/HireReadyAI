@@ -999,6 +999,63 @@
     },
     "trusted_by": {
       "heading": "Trusted by 2000+ Companies"
+    },
+    "features": {
+      "heading": "Everything You Need to Hire Better",
+      "1": {
+        "title": "AI Job Description Generator",
+        "description": "Generate tailored, high-quality job descriptions in seconds. Just enter a few keywords and let AI craft the perfect JD for any role.",
+        "details": [
+          "Generate complete JDs from job title or keywords",
+          "Customize tone, seniority, and required skills",
+          "Export in multiple formats or post directly"
+        ]
+      },
+      "2": {
+        "title": "Smart Job Posting & CV Evaluation",
+        "description": "Post jobs instantly and let AI automatically screen and score incoming CVs against your requirements.",
+        "details": [
+          "Auto-parse and extract key candidate data from CVs",
+          "AI match scoring against job requirements",
+          "Instant shortlist generation for top candidates"
+        ]
+      },
+      "3": {
+        "title": "AI Interviews & Assessments",
+        "description": "Conduct comprehensive assessments with video, text, code, and multiple-choice questions powered by AI.",
+        "details": [
+          "Video interview with AI analysis of responses",
+          "Live coding challenges with real-time evaluation",
+          "Auto-graded quizzes and situational questions"
+        ]
+      },
+      "4": {
+        "title": "Visual Candidates Pipeline",
+        "description": "Track every candidate through your hiring stages with a drag-and-drop pipeline that gives you full visibility.",
+        "details": [
+          "Custom pipeline stages for any workflow",
+          "Drag-and-drop candidate movement between stages",
+          "Real-time stage progress and status indicators"
+        ]
+      },
+      "5": {
+        "title": "Detailed Candidate Profiles",
+        "description": "Deep-dive into every candidate with AI-generated feedback showing strengths, weaknesses, gaps, and question-level analysis.",
+        "details": [
+          "Full AI evaluation report with scored dimensions",
+          "Question-by-question breakdown of responses",
+          "Strengths, weaknesses, and skill gap analysis"
+        ]
+      },
+      "6": {
+        "title": "Applicant Feedback Engine",
+        "description": "Help every applicant grow with personalized feedback after rejection or offer, turning every application into a learning experience.",
+        "details": [
+          "Personalized improvement tips based on performance",
+          "Skill gap analysis with actionable recommendations",
+          "Constructive feedback delivered professionally"
+        ]
+      }
     }
   }
 }

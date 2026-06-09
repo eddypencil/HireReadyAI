@@ -1,6 +1,7 @@
 import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import TrustedBySection from "../Components/TrustedBySection";
+import FeaturesSection from "../Components/FeaturesSection";
 import LandingLayout from "../LandingLayout";
 
 const NAV_LINKS = [
@@ -18,6 +19,7 @@ export default function LandingPage() {
       <Navbar links={NAV_LINKS} />
       <HeroSection />
       <TrustedBySection />
+      <FeaturesSection />
     </LandingLayout>
   );
 }

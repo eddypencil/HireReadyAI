@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const COMPANIES = [
@@ -22,13 +22,13 @@ function CompanyCard({ name, file }) {
   const [loaded, setLoaded] = useState(false);
 
   return (
-    <div className="flex flex-col items-center gap-3 mx-5 shrink-0">
+    <div className="flex flex-col items-center gap-4 mx-6 shrink-0">
       {failed ? (
-        <div className="w-20 h-20 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold text-xl shrink-0">
+        <div className="w-40 h-40 rounded-3xl bg-primary/10 flex items-center justify-center text-primary font-bold text-3xl shrink-0">
           {name.charAt(0)}
         </div>
       ) : (
-        <div className="w-20 h-20 rounded-2xl bg-white flex items-center justify-center p-3 shrink-0 shadow-sm">
+        <div className="w-40 h-40 rounded-3xl bg-white flex items-center justify-center p-5 shrink-0 shadow-sm">
           <img
             src={file}
             alt={`${name} logo`}
@@ -40,7 +40,7 @@ function CompanyCard({ name, file }) {
           />
         </div>
       )}
-      <span className="text-sm font-semibold text-foreground text-center whitespace-nowrap">
+      <span className="text-base font-semibold text-foreground text-center whitespace-nowrap">
         {name}
       </span>
     </div>
@@ -49,6 +49,33 @@ function CompanyCard({ name, file }) {
 
 export default function TrustedBySection() {
   const { t } = useTranslation();
+  const trackRef = useRef(null);
+  const animRef = useRef(null);
+  const posRef = useRef(0);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const halfWidth = track.scrollWidth / 2;
+
+    function tick() {
+      posRef.current -= 0.4;
+
+      if (posRef.current <= -halfWidth) {
+        posRef.current += halfWidth;
+      }
+
+      track.style.transform = `translate3d(${Math.round(posRef.current)}px, 0, 0)`;
+      animRef.current = requestAnimationFrame(tick);
+    }
+
+    animRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+    };
+  }, []);
 
   return (
     <section className="py-16 md:py-20 overflow-hidden bg-background">
@@ -58,31 +85,18 @@ export default function TrustedBySection() {
         </h2>
       </div>
 
-      <div className="relative">
-        <div className="flex gap-2 trusted-scroll-track">
-          {[...Array(2)].flatMap((_, setIdx) =>
+      <div className="relative overflow-hidden">
+        <div
+          ref={trackRef}
+          className="flex gap-2 w-max will-change-transform"
+        >
+          {[...Array(4)].flatMap((_, setIdx) =>
             COMPANIES.map((company, cIdx) => (
               <CompanyCard key={`${setIdx}-${cIdx}`} {...company} />
             ))
           )}
         </div>
       </div>
-
-      <style>{`
-        .trusted-scroll-track {
-          animation: scrollRight 50s linear infinite;
-          width: max-content;
-        }
-        @keyframes scrollRight {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .trusted-scroll-track {
-            animation: none;
-          }
-        }
-      `}</style>
     </section>
   );
 }
