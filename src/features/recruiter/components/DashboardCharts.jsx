@@ -160,7 +160,6 @@ export default function DashboardCharts({
         </div>
       </div>
 
-      {/* ── Top Jobs Chart ────────────────────────────────────────────────────── */}
       <div className="bg-surface border border-border rounded-xl shadow-xs p-5">
         <div className="mb-4">
           <h3 className="text-base font-bold text-foreground tracking-tight font-display">

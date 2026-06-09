@@ -111,8 +111,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 font-sans flex flex-col">
-      {/* Topbar */}
+    <div className="min-h-screen bg-background font-sans flex flex-col">      {/* Topbar */}
       <header className="bg-background border-b border-border/60 px-5 py-3 flex items-center justify-between shrink-0 shadow-xs">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
