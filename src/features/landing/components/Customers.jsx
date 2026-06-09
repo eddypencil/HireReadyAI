@@ -52,10 +52,11 @@ export default function Customers() {
                     pointer-events: none;
                 }
                 .testimonial-card {
-                    transition: transform 0.3s ease;
+                    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
                 }
                 .testimonial-card:hover {
                     transform: translateY(-6px);
+                    box-shadow: 0 20px 40px -12px rgba(59, 130, 246, 0.3), 0 10px 20px -8px rgba(6, 182, 212, 0.2);
                 }
             `}</style>
 
