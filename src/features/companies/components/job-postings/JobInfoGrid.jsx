@@ -10,8 +10,6 @@ import {
   Wand2,
   User,
   ChevronRight,
-  ExternalLink,
-  Copy,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -188,14 +186,6 @@ export default function JobInfoGrid({
           <User className="w-3.5 h-3.5" />
           {t("job_info_grid.open_candidate_board")}
           <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
-        </button>
-        <button className="flex items-center gap-1.5 border border-border text-foreground bg-background hover:bg-muted px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
-          <ExternalLink className="w-3.5 h-3.5" />
-          {t("job_info_grid.view_public_posting")}
-        </button>
-        <button className="flex items-center gap-1.5 border border-border text-foreground bg-background hover:bg-muted px-3.5 h-9 rounded-lg text-xs font-semibold transition-colors cursor-pointer select-none">
-          <Copy className="w-3.5 h-3.5" />
-          {t("job_info_grid.copy_link")}
         </button>
       </div>
     </div>

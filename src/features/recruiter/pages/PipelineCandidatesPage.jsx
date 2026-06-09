@@ -1,5 +1,6 @@
 // src/features/pipeline/pages/PipelineCandidatesPage.jsx
 import { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { useSearchParams } from "react-router-dom";
 import {
   Lock,
@@ -385,15 +386,21 @@ const PipelineColumn = ({
             </p>
           </div>
         ) : (
-          candidates.map((c) => (
-            <CandidateCard
+          candidates.map((c, cIdx) => (
+            <motion.div
               key={c.id}
-              candidate={c}
-              onDragStart={onDragStart}
-              isDragging={draggingCandidate?.id === c.id}
-              onClick={() => onCardClick(c)}
-              allStages={allStages}
-            />
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, delay: cIdx * 0.04, ease: "easeOut" }}
+            >
+              <CandidateCard
+                candidate={c}
+                onDragStart={onDragStart}
+                isDragging={draggingCandidate?.id === c.id}
+                onClick={() => onCardClick(c)}
+                allStages={allStages}
+              />
+            </motion.div>
           ))
         )}
       </div>
@@ -696,7 +703,12 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         }
       }}
     >
-      <div className="bg-surface border-b border-border px-6 py-4 sticky top-0 z-30">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="bg-surface border-b border-border px-6 py-4 sticky top-0 z-30"
+      >
         <div className="flex items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold text-foreground font-display">
@@ -758,7 +770,12 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         </div>
 
         {showFilters && (
-          <div className="mt-4 pt-4 border-t border-border flex items-center gap-3 flex-wrap">
+          <motion.div
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="mt-4 pt-4 border-t border-border flex items-center gap-3 flex-wrap"
+          >
             <span className="text-xs font-bold text-muted-foreground uppercase tracking-wide font-display">
               {t("candidate_pipeline.filters.fit")}
             </span>
@@ -782,18 +799,28 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 {f}
               </button>
             ))}
-          </div>
+          </motion.div>
         )}
-      </div>
+      </motion.div>
 
       {loading && (
-        <div className="flex items-center justify-center py-32">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center justify-center py-32"
+        >
           <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-        </div>
+        </motion.div>
       )}
 
       {!loading && candidates.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-32 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="flex flex-col items-center justify-center py-32 text-center"
+        >
           <div className="w-16 h-16 rounded-full bg-muted border border-border flex items-center justify-center mb-4">
             <Search className="w-7 h-7 text-muted-foreground/60" />
           </div>
@@ -803,27 +830,38 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           <p className="text-muted-foreground text-sm max-w-xs">
             {t("candidate_pipeline.empty.subtitle")}
           </p>
-        </div>
+        </motion.div>
       )}
 
       {!loading && candidates.length > 0 && (
-        <div className="px-6 py-6 flex items-start gap-5 overflow-x-auto flex-1 h-full scrollbar-thin">
-          {stages.map((s) => (
-            <PipelineColumn
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          className="px-6 py-6 flex items-start gap-5 overflow-x-auto flex-1 h-full scrollbar-thin"
+        >
+          {stages.map((s, idx) => (
+            <motion.div
               key={s.id}
-              stage={s}
-              candidates={byStage(s.id)}
-              onDragStart={handleDragStart}
-              dragOverStage={dragOverStage}
-              onDragOver={setDragOverStage}
-              onDrop={handleDrop}
-              draggingCandidate={draggingCandidate}
-              handleStageAutoAdvance={handleStageAutoAdvance}
-              allStages={stages}
-              onCardClick={(c) => setSelectedCandidate(c)}
-            />
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4, delay: 0.25 + idx * 0.08, ease: "easeOut" }}
+            >
+              <PipelineColumn
+                stage={s}
+                candidates={byStage(s.id)}
+                onDragStart={handleDragStart}
+                dragOverStage={dragOverStage}
+                onDragOver={setDragOverStage}
+                onDrop={handleDrop}
+                draggingCandidate={draggingCandidate}
+                handleStageAutoAdvance={handleStageAutoAdvance}
+                allStages={stages}
+                onCardClick={(c) => setSelectedCandidate(c)}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {selectedCandidate && (

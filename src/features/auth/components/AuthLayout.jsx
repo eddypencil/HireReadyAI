@@ -1,4 +1,5 @@
 //src\features\auth\components\AuthLayout.jsx
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/shared/ui/LanguageSwitcher";
 import {
@@ -80,7 +81,11 @@ export default function AuthLayout({ children, headline, subheading }) {
         {/* CONTENT */}
 
         <div className="relative z-10 flex flex-col gap-6 my-auto">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, ease: "easeOut" }}
+          >
             <h1
               className="text-white font-black leading-[1.1] mb-4"
               style={{
@@ -94,15 +99,22 @@ export default function AuthLayout({ children, headline, subheading }) {
             <p className="text-white/70 text-sm leading-relaxed max-w-xs mt-3 mb-4">
               {t("auth_layout.subheading")}
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid gap-2 mt-3">
             {features.map((feature, index) => {
               const Icon = feature.icon;
 
               return (
-                <div
+                <motion.div
                   key={index}
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    delay: 0.15 + index * 0.12,
+                    ease: "easeOut",
+                  }}
                   className="
           group
           flex items-center gap-4
@@ -140,7 +152,7 @@ export default function AuthLayout({ children, headline, subheading }) {
                   >
                     {feature.text}
                   </span>
-                </div>
+                </motion.div>
               );
             })}
           </div>
@@ -165,15 +177,21 @@ export default function AuthLayout({ children, headline, subheading }) {
             </span>
           </div>
 
-          <h2
-            className="text-foreground text-3xl font-bold mb-1"
-            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
           >
-            {headline}
-          </h2>
-          <p className="text-muted-foreground text-sm mb-8">{subheading}</p>
+            <h2
+              className="text-foreground text-3xl font-bold mb-1"
+              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+            >
+              {headline}
+            </h2>
+            <p className="text-muted-foreground text-sm mb-8">{subheading}</p>
 
-          {children}
+            {children}
+          </motion.div>
         </div>
       </div>
     </div>

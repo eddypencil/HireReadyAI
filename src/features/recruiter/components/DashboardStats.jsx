@@ -1,5 +1,6 @@
 // src/features/recruiter/components/DashboardStats.jsx
 import React from "react";
+import { motion } from "framer-motion";
 import { Briefcase, Users, CheckCircle, XCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -36,8 +37,12 @@ export default function DashboardStats({ stats }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5 mb-6 font-sans">
       {cards.map((card, idx) => (
-        <div
+        <motion.div
           key={idx}
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, delay: 0.1 + idx * 0.1, ease: "easeOut" }}
           className="bg-surface border border-border rounded-xl p-4 shadow-xs flex items-center justify-between hover:border-border/80 transition-colors duration-200"
         >
           <div className="min-w-0">
@@ -51,7 +56,7 @@ export default function DashboardStats({ stats }) {
           <div className={`w-9 h-9 rounded-xl ${card.iconBg} flex items-center justify-center shrink-0 transition-transform duration-200 hover:scale-105`}>
             {card.icon}
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

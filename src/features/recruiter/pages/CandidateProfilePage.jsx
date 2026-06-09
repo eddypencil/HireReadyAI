@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, FileText, Sparkles, BarChart3, ChevronRight, Check, X, AlertTriangle, Award } from "lucide-react";
 import { getCandidateProfile, getJobScorePercentile, getPercentileTag } from "../services/candidateProfile.service";
@@ -91,16 +92,29 @@ export default function CandidateProfilePage() {
   return (
     <div className="max-w-5xl mx-auto px-6 py-8 font-sans">
       {/* Back button */}
-      <Link
-        to="../candidates"
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary transition-colors mb-6"
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Pipeline
-      </Link>
+        <Link
+          to="../candidates"
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Pipeline
+        </Link>
+      </motion.div>
 
       {/* Candidate Header */}
-      <div className="bg-surface rounded-2xl border border-border p-6 shadow-xs mb-6">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+        className="bg-surface rounded-2xl border border-border p-6 shadow-xs mb-6"
+      >
         <div className="flex items-start gap-5">
           {/* Avatar holding initials */}
           <div className="w-16 h-16 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0">
@@ -144,7 +158,7 @@ export default function CandidateProfilePage() {
             )}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* CV Breakdown */}
@@ -152,7 +166,13 @@ export default function CandidateProfilePage() {
           {cvFeedback && (
             <>
               {/* AI CV Review Banner */}
-              <div className="rounded-2xl bg-accent/5 dark:bg-accent/10 p-8 border border-accent/20 shadow-xs relative overflow-hidden">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-30px" }}
+                transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+                className="rounded-2xl bg-accent/5 dark:bg-accent/10 p-8 border border-accent/20 shadow-xs relative overflow-hidden"
+              >
                 <div className="relative z-10">
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-6 h-6 text-accent" />
@@ -166,11 +186,17 @@ export default function CandidateProfilePage() {
                   </div>
                   <p className="text-sm text-muted-foreground leading-relaxed font-medium">{cvFeedback.feedback}</p>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Dimension Scores */}
               {cvFeedback.dimension_scores && (
-                <div className="bg-surface rounded-2xl border border-border p-6 shadow-xs">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: false, margin: "-30px" }}
+                  transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+                  className="bg-surface rounded-2xl border border-border p-6 shadow-xs"
+                >
                   <div className="flex items-center gap-2 mb-5">
                     <BarChart3 className="w-5 h-5 text-primary" />
                     <h2 className="text-lg font-bold text-foreground">Dimension Scores</h2>
@@ -180,13 +206,19 @@ export default function CandidateProfilePage() {
                       <DimensionBar key={key} label={key.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase())} score={val} />
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Strengths, Weaknesses, Gaps */}
               <div className="flex flex-col gap-4">
                 {cvFeedback.strengths?.length > 0 && (
-                  <div className="bg-success/5 border border-success/20 rounded-2xl p-5 shadow-xs">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+                    className="bg-success/5 border border-success/20 rounded-2xl p-5 shadow-xs"
+                  >
                     <div className="flex items-center gap-1.5 mb-3">
                       <Check className="w-4 h-4 text-success" />
                       <h3 className="text-xs font-bold text-success uppercase tracking-wider">Strengths</h3>
@@ -199,10 +231,16 @@ export default function CandidateProfilePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </motion.div>
                 )}
                 {cvFeedback.weaknesses?.length > 0 && (
-                  <div className="bg-destructive/5 border border-destructive/20 rounded-2xl p-5 shadow-xs">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: 0.25, ease: "easeOut" }}
+                    className="bg-destructive/5 border border-destructive/20 rounded-2xl p-5 shadow-xs"
+                  >
                     <div className="flex items-center gap-1.5 mb-3">
                       <X className="w-4 h-4 text-destructive" />
                       <h3 className="text-xs font-bold text-destructive uppercase tracking-wider">Weaknesses</h3>
@@ -215,10 +253,16 @@ export default function CandidateProfilePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </motion.div>
                 )}
                 {cvFeedback.gaps?.length > 0 && (
-                  <div className="bg-warning/5 border border-warning/20 rounded-2xl p-5 shadow-xs">
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: false, margin: "-30px" }}
+                    transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+                    className="bg-warning/5 border border-warning/20 rounded-2xl p-5 shadow-xs"
+                  >
                     <div className="flex items-center gap-1.5 mb-3">
                       <AlertTriangle className="w-4 h-4 text-warning" />
                       <h3 className="text-xs font-bold text-warning uppercase tracking-wider">Gaps</h3>
@@ -231,25 +275,37 @@ export default function CandidateProfilePage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </motion.div>
                 )}
               </div>
             </>
           )}
 
           {!cvFeedback && (
-            <div className="bg-surface rounded-2xl border border-border p-8 shadow-xs text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+              className="bg-surface rounded-2xl border border-border p-8 shadow-xs text-center"
+            >
               <FileText className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-muted-foreground font-medium">No CV review data available</p>
               <p className="text-xs text-muted-foreground/60 mt-1">CV has not been reviewed yet.</p>
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Right Sidebar */}
         <div className="space-y-6">
           {/* Stage Scores */}
-          <div className="bg-surface rounded-2xl border border-border p-6 shadow-xs">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-30px" }}
+            transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+            className="bg-surface rounded-2xl border border-border p-6 shadow-xs"
+          >
             <div className="flex items-center gap-2 mb-4">
               <Award className="w-4 h-4 text-primary" />
               <h2 className="text-sm font-bold text-foreground">Stage Scores</h2>
@@ -289,22 +345,29 @@ export default function CandidateProfilePage() {
                 <p className="text-sm text-muted-foreground/60 italic">No stages available.</p>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* Interview Results Link */}
           {interviewStages.length > 0 && (
-            <Link
-              to={`/companies/candidates/${id}/assessments`}
-              className="block bg-surface rounded-2xl border border-border p-6 shadow-xs hover:shadow-md hover:border-primary transition-all group"
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
             >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-sm font-bold text-foreground">Assessments & Interviews</h2>
-                  <p className="text-xs text-muted-foreground mt-0.5">{interviewStages.length} stage(s) with results</p>
+              <Link
+                to={`/companies/candidates/${id}/assessments`}
+                className="block bg-surface rounded-2xl border border-border p-6 shadow-xs hover:shadow-md hover:border-primary transition-all group"
+              >
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-sm font-bold text-foreground">Assessments & Interviews</h2>
+                    <p className="text-xs text-muted-foreground mt-0.5">{interviewStages.length} stage(s) with results</p>
+                  </div>
+                  <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>
-                <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-              </div>
-            </Link>
+              </Link>
+            </motion.div>
           )}
         </div>
       </div>

@@ -41,20 +41,7 @@ export default function JobDetailHeader({
           </h1>
         </div>
 
-        <div className="flex items-center flex-wrap gap-2 text-xs font-semibold text-muted-foreground/80 capitalize pl-1">
-          <span className="bg-muted px-2 py-0.5 rounded-md border border-border/40">
-            {selectedJob.seniority_level || "Any Seniority"}
-          </span>
-          <span className="text-muted-foreground/30 font-normal">&middot;</span>
-          <span className="bg-muted px-2 py-0.5 rounded-md border border-border/40">
-            {selectedJob.work_location?.replace("_", " ").trim() ||
-              "Any Location"}
-          </span>
-          <span className="text-muted-foreground/30 font-normal">&middot;</span>
-          <span className="bg-muted px-2 py-0.5 rounded-md border border-border/40">
-            {selectedJob.job_type?.replace("_", "-") || "Full-time"}
-          </span>
-        </div>
+        
       </div>
 
       <div className="flex items-center gap-2 shrink-0 sm:pt-0 pt-1">

@@ -1,5 +1,6 @@
 //src\features\companies\pages\NoCompanyView.jsx
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Building2, Plus, LogOut, ArrowLeft } from "lucide-react";
 import {
   fetchAllCompanies,
@@ -106,7 +107,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
 
   return (
     <div className="min-h-screen bg-background font-sans flex flex-col">      {/* Topbar */}
-      <header className="bg-background border-b border-border/60 px-5 py-3 flex items-center justify-between shrink-0 shadow-xs">
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-background border-b border-border/60 px-5 py-3 flex items-center justify-between shrink-0 shadow-xs"
+      >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
             <Building2 className="w-3.5 h-3.5 text-primary-foreground" />
@@ -122,19 +128,29 @@ export default function NoCompanyView({ onCompanyJoined }) {
           <LogOut className="w-3.5 h-3.5" />
           {t("no_company_view.sign_out")}
         </button>
-      </header>
+      </motion.header>
 
       {/* Main Content */}
       <main className="flex-1 p-6">
         <div className="max-w-4xl mx-auto">
           {error && (
-            <div className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-xs font-medium">
+            <motion.div
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.25 }}
+              className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-xs font-medium"
+            >
               {error}
-            </div>
+            </motion.div>
           )}
 
           {isCreating ? (
-            <div className="bg-background rounded-lg shadow-xs border border-border/60 overflow-hidden max-w-xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35 }}
+              className="bg-background rounded-lg shadow-xs border border-border/60 overflow-hidden max-w-xl mx-auto"
+            >
               <div className="p-4 border-b border-border/60 flex items-center gap-3">
                 <button
                   onClick={() => setIsCreating(false)}
@@ -228,10 +244,15 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   </button>
                 </div>
               </form>
-            </div>
+            </motion.div>
           ) : (
             <>
-              <div className="text-center mb-8">
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35 }}
+                className="text-center mb-8"
+              >
                 <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
                   <Building2 className="w-6 h-6 text-primary" />
                 </div>
@@ -250,10 +271,15 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     {t("no_company_view.join.create_button")}
                   </button>
                 )}
-              </div>
+              </motion.div>
 
               {companies.length === 0 ? (
-                <div className="text-center py-10 bg-background rounded-lg shadow-xs border border-border/60">
+                <motion.div
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.35, delay: 0.1 }}
+                  className="text-center py-10 bg-background rounded-lg shadow-xs border border-border/60"
+                >
                   <p className="text-sm text-muted-foreground mb-4">
                     {t("no_company_view.join.no_companies")}
                   </p>
@@ -264,12 +290,23 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     <Plus className="w-3.5 h-3.5" />
                     {t("no_company_view.join.create_company")}
                   </button>
-                </div>
+                </motion.div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={{
+                    visible: { transition: { staggerChildren: 0.06 } },
+                  }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"
+                >
                   {companies.map((company) => (
-                    <div
+                    <motion.div
                       key={company.id}
+                      variants={{
+                        hidden: { opacity: 0, y: 20 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
                       className="bg-background rounded-lg border border-border/60 p-4 hover:shadow-xs transition-shadow flex flex-col justify-between"
                     >
                       <div>
@@ -305,9 +342,9 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           ? t("no_company_view.join.joining")
                           : t("no_company_view.join.join")}
                       </button>
-                    </div>
+                    </motion.div>
                   ))}
-                </div>
+                </motion.div>
               )}
             </>
           )}

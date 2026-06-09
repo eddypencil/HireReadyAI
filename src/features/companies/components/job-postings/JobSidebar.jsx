@@ -1,5 +1,6 @@
 // src\features\companies\components\job-postings\JobSidebar.jsx
-import { Building2, Plus, X, Briefcase } from "lucide-react";
+import { motion } from "framer-motion";
+import { Plus, X, Briefcase } from "lucide-react";
 import { useTranslation } from "react-i18next";
 export default function JobSidebar({
   jobs,
@@ -13,6 +14,7 @@ export default function JobSidebar({
   onClose,
 }) {
   const getJobStatus = (job) => {
+    // eslint-disable-next-line react-hooks/purity
     let today = Date.now();
     return Date.parse(job.closed_at) < today ? "Closed" : "Published";
   };
@@ -78,14 +80,17 @@ export default function JobSidebar({
               {t("job_sidebar.no_jobs")}
             </div>
           ) : (
-            filteredJobs.map((job) => {
+            filteredJobs.map((job, idx) => {
               const isSelected = job.id === selectedJobId;
               const status = getJobStatus(job);
               const applicantCount = job.applications?.[0]?.count || 0;
 
               return (
-                <button
+                <motion.button
                   key={job.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: idx * 0.05, ease: "easeOut" }}
                   onClick={() => {
                     setSelectedJobId(job.id);
                     setIsEditing(false);
@@ -104,7 +109,9 @@ export default function JobSidebar({
                         : "bg-muted text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary"
                     }`}
                   >
-                    <Briefcase className="w-3.5 h-3.5" />
+                    <Briefcase
+                      className={`w-3.5 h-3.5 ${isSelected ? "text-white" : "text-primary"} `}
+                    />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
@@ -135,7 +142,7 @@ export default function JobSidebar({
                       {t("job_sidebar.applicant", { count: applicantCount })}
                     </p>
                   </div>
-                </button>
+                </motion.button>
               );
             })
           )}

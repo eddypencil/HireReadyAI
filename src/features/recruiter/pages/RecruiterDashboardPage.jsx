@@ -1,5 +1,5 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useDashboardData } from "../hooks/useDashboardData";
 import DashboardStats from "../components/DashboardStats";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
@@ -59,7 +59,13 @@ export default function RecruiterDashboardPage() {
     <div className="min-h-screen bg-muted/20 p-6">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header Section */}
-        <div className="flex items-center justify-between">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="flex items-center justify-between"
+        >
           <div>
             <h1 className="text-2xl font-bold text-foreground tracking-tight font-display">
               {t("recruiter_dashboard.title")}
@@ -73,7 +79,7 @@ export default function RecruiterDashboardPage() {
             {t("sign_in.headline")},{" "}
             <span className="text-primary font-bold">{fullName || "Recruiter"}</span>
           </div>
-        </div>
+        </motion.div>
 
         {/* Stats Grid */}
         <DashboardStats stats={stats} />
@@ -88,9 +94,15 @@ export default function RecruiterDashboardPage() {
         )}
 
         {/* Jobs Table */}
-        <div className="bg-surface rounded-xl border border-border p-1 shadow-xs">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, delay: 0.35, ease: "easeOut" }}
+          className="bg-surface rounded-xl border border-border p-1 shadow-xs"
+        >
           <DashboardJobsTable jobs={jobs} />
-        </div>
+        </motion.div>
       </div>
     </div>
   );

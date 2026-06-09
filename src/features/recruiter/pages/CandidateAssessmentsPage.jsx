@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronRight, Video, FileText, Code, ListChecks, Sparkles, Check, X, MessageSquare, Monitor, Clock, Brain } from "lucide-react";
 import { getCandidateProfile, getCandidateStageQuestions } from "../services/candidateProfile.service";
@@ -313,16 +314,29 @@ export default function CandidateAssessmentsPage() {
   return (
     <div className="max-w-4xl mx-auto px-6 py-8 font-sans">
       {/* Back link */}
-      <Link
-        to={`/companies/candidates/${id}`}
-        className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary transition-colors mb-6"
+      <motion.div
+        initial={{ opacity: 0, x: -10 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Profile
-      </Link>
+        <Link
+          to={`/companies/candidates/${id}`}
+          className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary transition-colors mb-6"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Profile
+        </Link>
+      </motion.div>
 
       {/* Banner */}
-      <div className="rounded-2xl bg-gradient-to-br from-primary via-accent to-neutral-950 p-8 shadow-md relative overflow-hidden mb-8">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
+        className="rounded-2xl bg-gradient-to-br from-primary via-accent to-neutral-950 p-8 shadow-md relative overflow-hidden mb-8"
+      >
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative flex items-center justify-between">
@@ -338,19 +352,38 @@ export default function CandidateAssessmentsPage() {
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {/* Stage Tabs */}
-      <StageSelector stages={stagesWithQuestions} activeStage={activeStage} onSelect={setActiveStage} />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+      >
+        <StageSelector stages={stagesWithQuestions} activeStage={activeStage} onSelect={setActiveStage} />
+      </motion.div>
 
       {isEmpty ? (
-        <div className="bg-surface rounded-2xl border border-border p-12 text-center mt-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+          className="bg-surface rounded-2xl border border-border p-12 text-center mt-6"
+        >
           <Brain className="w-12 h-12 text-muted-foreground/40 mx-auto mb-4" />
           <h2 className="text-lg font-bold text-foreground mb-1">No Assessment Data</h2>
           <p className="text-sm text-muted-foreground/60">This candidate has not completed any interviews or assessments yet.</p>
-        </div>
+        </motion.div>
       ) : activeStage ? (
-        <div className="mt-6 space-y-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+          className="mt-6 space-y-6"
+        >
           {/* Stage Header */}
           <div className="bg-surface rounded-2xl border border-border p-5 shadow-xs">
             <div className="flex items-center justify-between flex-wrap gap-4">
@@ -418,10 +451,18 @@ export default function CandidateAssessmentsPage() {
           {/* Questions */}
           <div className="space-y-3">
             {activeStage.questions.map((q, i) => (
-              <ExpandableQuestion key={q.id} question={q} index={i} />
+              <motion.div
+                key={q.id}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-30px" }}
+                transition={{ duration: 0.35, delay: 0.15 + i * 0.05, ease: "easeOut" }}
+              >
+                <ExpandableQuestion question={q} index={i} />
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       ) : null}
     </div>
   );

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
 
 const FEATURES = [
   {
@@ -228,8 +229,12 @@ export default function FeaturesSection() {
           const num = index + 1;
 
           return (
-            <div
+            <motion.div
               key={feature.id}
+              initial={{ opacity: 0, x: isEven ? -80 : 80 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: false, margin: "-80px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-6 mb-20 md:mb-28 last:mb-0"
             >
               <div className={`flex-1 flex justify-center w-full md:w-auto order-1 ${isEven ? "md:order-1" : "md:order-3"}`}>
@@ -245,7 +250,7 @@ export default function FeaturesSection() {
               <div className={`flex-1 flex justify-center w-full md:w-auto order-3 ${isEven ? "md:order-3" : "md:order-1"}`}>
                 <FeatureMockup mockup={feature.mockup} />
               </div>
-            </div>
+            </motion.div>
           );
         })}
       </div>

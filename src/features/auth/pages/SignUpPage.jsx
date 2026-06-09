@@ -1,5 +1,6 @@
 //src\features\auth\pages\SignUpPage.jsx
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useUser } from "../context/user.context";
 import { USER_ROLE } from "@/shared/constants/enums";
@@ -69,96 +70,166 @@ export default function SignUpPage() {
       headline={t("sign_up.create_account")}
       subheading={t("sign_up.subheading")}
     >
-      <RoleToggle value={role} onChange={setRole} />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.05, ease: "easeOut" }}
+      >
+        <RoleToggle value={role} onChange={setRole} />
+      </motion.div>
 
       <form dir="ltr" onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <FormField
-          label="Full Name"
-          placeholder="Enter Your Full Name"
-          type="text"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          required
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+        >
+          <FormField
+            label="Full Name"
+            placeholder="Enter Your Full Name"
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+          />
+        </motion.div>
 
-        <FormField
-          label="Current title"
-          placeholder="e.g. HR Manager, Frontend Developer"
-          type="text"
-          value={headline}
-          onChange={(e) => setHeadLine(e.target.value)}
-          required
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.15, ease: "easeOut" }}
+        >
+          <FormField
+            label="Current title"
+            placeholder="e.g. HR Manager, Frontend Developer"
+            type="text"
+            value={headline}
+            onChange={(e) => setHeadLine(e.target.value)}
+            required
+          />
+        </motion.div>
 
-        <FormField
-          label="Email"
-          placeholder="you@gmail.com"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+        >
+          <FormField
+            label="Email"
+            placeholder="you@gmail.com"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </motion.div>
 
-        <FormField
-          label="Phone (optional)"
-          placeholder="+20 10 0000 0000"
-          type="tel"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.25, ease: "easeOut" }}
+        >
+          <FormField
+            label="Phone (optional)"
+            placeholder="+20 10 0000 0000"
+            type="tel"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+        </motion.div>
 
-        <FormField
-          label="Password"
-          placeholder="Min. 8 characters"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+        >
+          <FormField
+            label="Password"
+            placeholder="Min. 8 characters"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </motion.div>
 
-        <FormField
-          label="Confirm password"
-          placeholder="Repeat your password"
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
+        >
+          <FormField
+            label="Confirm password"
+            placeholder="Repeat your password"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
+        </motion.div>
 
         {error && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20 dark:border-destructive/30">
-            <span>⚠</span>
-            {error}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20 dark:border-destructive/30">
+              <span>⚠</span>
+              {error}
+            </div>
+          </motion.div>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary
-            ${loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"}`}
-          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
         >
-          {loading ? (
-            <span className="flex items-center justify-center gap-2">
-              <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
-              {t("sign_up.creating")}
-            </span>
-          ) : (
-            t("sign_up.create_account")
-          )}
-        </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className={`w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary
+              ${loading ? "opacity-60 cursor-not-allowed" : "hover:opacity-90"}`}
+            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+          >
+            {loading ? (
+              <span className="flex items-center justify-center gap-2">
+                <span className="inline-block w-3.5 h-3.5 rounded-full border-2 border-white/30 border-t-white animate-spin" />
+                {t("sign_up.creating")}
+              </span>
+            ) : (
+              t("sign_up.create_account")
+            )}
+          </button>
+        </motion.div>
       </form>
 
-      <div className="flex items-center gap-3 my-5">
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
+        className="flex items-center gap-3 my-5"
+      >
         <span className="flex-1 h-px bg-border" />
         <span className="text-xs text-muted-foreground">or</span>
         <span className="flex-1 h-px bg-border" />
-      </div>
+      </motion.div>
 
-      <SocialButton provider="google" onClick={handleGoogleSignIn} />
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
+      >
+        <SocialButton provider="google" onClick={handleGoogleSignIn} />
+      </motion.div>
 
-      <p className="text-center text-xs text-muted-foreground mt-6">
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.4, delay: 0.55, ease: "easeOut" }}
+        className="text-center text-xs text-muted-foreground mt-6"
+      >
         {t("sign_up.already_have")}{" "}
         <Link
           to="/auth/sign-in"
@@ -166,7 +237,7 @@ export default function SignUpPage() {
         >
           {t("sign_up.sign_in")}
         </Link>
-      </p>
+      </motion.p>
     </AuthLayout>
   );
 }

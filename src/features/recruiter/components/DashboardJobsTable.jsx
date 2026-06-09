@@ -1,5 +1,6 @@
 // src/features/recruiter/components/DashboardJobsTable.jsx
 import React from "react";
+import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -23,7 +24,7 @@ export default function DashboardJobsTable({ jobs }) {
         </h3>
       </div>
 
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto overflow-y-hidden">
         <table className="w-full text-left border-collapse min-w-[800px]">
           <thead>
             <tr className="bg-muted/30 border-b border-border">
@@ -54,9 +55,13 @@ export default function DashboardJobsTable({ jobs }) {
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
-            {jobs.map((job) => (
-              <tr
+            {jobs.map((job, idx) => (
+              <motion.tr
                 key={job.id}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-30px" }}
+                transition={{ duration: 0.4, delay: 0.05 + idx * 0.04, ease: "easeOut" }}
                 className="hover:bg-muted/20 transition-colors group"
               >
                 <td className="px-5 py-3">
@@ -91,7 +96,7 @@ export default function DashboardJobsTable({ jobs }) {
                     <ChevronRight className="w-3 h-3 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
                   </Link>
                 </td>
-              </tr>
+              </motion.tr>
             ))}
           </tbody>
         </table>

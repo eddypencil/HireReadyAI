@@ -1,5 +1,6 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 
 export default function CompanyProfile({ company, members, onInvite }) {
@@ -20,7 +21,13 @@ export default function CompanyProfile({ company, members, onInvite }) {
     <div className="p-4 sm:p-6 bg-background min-h-screen font-sans">
       <div className="max-w-4xl mx-auto space-y-4">
         {/* Profile Card */}
-        <div className="bg-background p-5 rounded-xl border border-border/60 shadow-xs hover:border-accent/20 transition-colors duration-200">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="bg-background p-5 rounded-xl border border-border/60 shadow-xs hover:border-accent/20 transition-colors duration-200"
+        >
           <h2 className="text-base font-bold text-foreground mb-0.5">
             {t("company_profile.profile.title")}
           </h2>
@@ -91,10 +98,16 @@ export default function CompanyProfile({ company, members, onInvite }) {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Team Members Card */}
-        <div className="bg-background p-5 rounded-xl border border-border/60 shadow-xs hover:border-accent/20 transition-colors duration-200">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+          className="bg-background p-5 rounded-xl border border-border/60 shadow-xs hover:border-accent/20 transition-colors duration-200"
+        >
           <h2 className="text-base font-bold text-foreground mb-0.5">
             {t("company_profile.team.title")}
           </h2>
@@ -134,8 +147,12 @@ export default function CompanyProfile({ company, members, onInvite }) {
 
           <div className="space-y-3" dir="ltr">
             {members.map((member, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, y: 12 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: false, margin: "-30px" }}
+                transition={{ duration: 0.4, delay: 0.05 + i * 0.05, ease: "easeOut" }}
                 className="flex items-center justify-between pb-3 border-b border-border/40 last:border-0 last:pb-0 gap-2"
               >
                 <div className="flex items-center gap-3 min-w-0">
@@ -163,10 +180,10 @@ export default function CompanyProfile({ company, members, onInvite }) {
                   {member.profiles?.role ||
                     t("company_profile.team.team_member")}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

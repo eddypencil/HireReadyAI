@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   X,
@@ -184,16 +185,32 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
   return (
     <>
       {/* Backdrop overlay */}
-      <div
-        className="fixed inset-0 bg-black/30 backdrop-blur-xs z-40 transition-opacity"
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.25, ease: "easeOut" }}
+        className="fixed inset-0 bg-black/30 backdrop-blur-xs z-40"
         onClick={onClose}
       />
 
       {/* Sliding Panel Wrapper */}
-      <div className="fixed top-0 right-0 h-screen w-full max-w-115 bg-surface border-l border-border shadow-2xl z-50 flex flex-col transform transition-transform duration-300 overflow-hidden font-sans">
+      <motion.div
+        initial={{ x: "100%" }}
+        animate={{ x: 0 }}
+        exit={{ x: "100%" }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="fixed top-0 right-0 h-screen w-full max-w-115 bg-surface border-l border-border shadow-2xl z-50 flex flex-col overflow-hidden font-sans"
+      >
 
         {/* HEADER */}
-        <div className="flex-none bg-surface px-6 py-5 border-b border-border flex items-start justify-between shrink-0">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+          className="flex-none bg-surface px-6 py-5 border-b border-border flex items-start justify-between shrink-0"
+        >
           <div className="flex gap-4 items-center">
             {/* Avatar */}
             <div className="w-12 h-12 rounded-full bg-accent/10 border border-accent/20 flex items-center justify-center shrink-0 overflow-hidden">
@@ -248,15 +265,27 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
           >
             <X className="w-5 h-5" />
           </button>
-        </div>
+        </motion.div>
 
         {/* SCROLLABLE BODY */}
-        <div className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-8 bg-background/40">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.3, delay: 0.15, ease: "easeOut" }}
+          className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-8 bg-background/40"
+        >
 
           {/* Top Section */}
           <div className="flex flex-col gap-6">
             {/* Metric Cards */}
-            <div className="flex gap-3">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
+              className="flex gap-3"
+            >
               <MetricCard
                 title="Resume"
                 score={resumeScore}
@@ -272,12 +301,18 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
               <MetricCard
                 title="Stage"
                 score={candidate.score}
-                colorClass="bg-accent"
-              />
-            </div>
+              colorClass="bg-accent"
+            />
+            </motion.div>
 
             {/* AI Recommendation Card */}
-            <div className="bg-accent/5 dark:bg-accent/10 rounded-2xl border border-accent/20 p-5 shadow-xs">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.4, delay: 0.25, ease: "easeOut" }}
+              className="bg-accent/5 dark:bg-accent/10 rounded-2xl border border-accent/20 p-5 shadow-xs"
+            >
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-accent" />
@@ -342,10 +377,15 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
               {actionError && (
                 <p className="text-xs text-destructive mt-2">{actionError}</p>
               )}
-            </div>
+            </motion.div>
 
             {/* Pipeline Progress */}
-            <div>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.4, delay: 0.3, ease: "easeOut" }}
+            >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider">
                   Pipeline Progress
@@ -386,13 +426,18 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                   );
                 })}
               </div>
-            </div>
+            </motion.div>
           </div>
 
           <div className="w-full h-px bg-border" />
 
           {/* STAGE RESULTS SECTION */}
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: false, margin: "-30px" }}
+            transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
+          >
             <h3 className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-4">
               Stage Results
             </h3>
@@ -501,7 +546,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                 );
               })}
             </div>
-          </div>
+          </motion.div>
 
           {/* View Profile Button */}
           <button
@@ -510,8 +555,8 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
           >
             View Profile <ChevronRight className="w-4 h-4" />
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </>
   );
 }

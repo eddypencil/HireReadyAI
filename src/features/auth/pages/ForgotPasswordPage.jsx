@@ -106,6 +106,7 @@
 //   );
 // }
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import AuthLayout from "../components/AuthLayout";
 import FormField from "@/shared/ui/FormField";
 import { Link } from "react-router-dom";
@@ -136,90 +137,114 @@ export default function ForgotPasswordPage() {
     }
   }
 
-  if (submitted) {
-    return (
-      <AuthLayout
-        headline={t("forgot_password.success.headline")}
-        subheading={t("forgot_password.success.subheading")}
-      >
-        <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                stroke="currentColor"
-                className="text-accent"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </div>
-
-          <div>
-            <p className="text-sidebar text-sm leading-7">
-              {t("forgot_password.success.message")}{" "}
-              <span className="text-accent font-semibold">
-                {email}
-              </span>
-              .
-            </p>
-            <p className="text-muted-foreground/80 text-xs mt-2">
-              {t("forgot_password.success.spam_hint")}
-            </p>
-          </div>
-
-          <Link
-            to="/auth/sign-in"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
-            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
-          >
-            {t("forgot_password.back_to_sign_in")}
-          </Link>
-        </div>
-      </AuthLayout>
-    );
-  }
+  const headlineKey = submitted ? "forgot_password.success.headline" : "forgot_password.headline";
+  const subheadingKey = submitted ? "forgot_password.success.subheading" : "forgot_password.subheading";
 
   return (
     <AuthLayout
-      headline={t("forgot_password.headline")}
-      subheading={t("forgot_password.subheading")}
+      headline={t(headlineKey)}
+      subheading={t(subheadingKey)}
     >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <FormField
-          label={t("forgot_password.labels.email")}
-          type="email"
-          placeholder={t("forgot_password.placeholders.email")}
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
+      <AnimatePresence mode="wait">
+        {submitted ? (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="flex flex-col items-center text-center gap-6 py-4"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.15, ease: "easeOut" }}
+              className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  stroke="currentColor"
+                  className="text-accent"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.div>
 
-        {error && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
-            <span>⚠</span>
-            {error}
-          </div>
+            <div>
+              <p className="text-sidebar text-sm leading-7">
+                {t("forgot_password.success.message")}{" "}
+                <span className="text-accent font-semibold">
+                  {email}
+                </span>
+                .
+              </p>
+              <p className="text-muted-foreground/80 text-xs mt-2">
+                {t("forgot_password.success.spam_hint")}
+              </p>
+            </div>
+
+            <Link
+              to="/auth/sign-in"
+              className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+              style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+            >
+              {t("forgot_password.back_to_sign_in")}
+            </Link>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <FormField
+                label={t("forgot_password.labels.email")}
+                type="email"
+                placeholder={t("forgot_password.placeholders.email")}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
+                    <span>⚠</span>
+                    {error}
+                  </div>
+                </motion.div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover"
+                style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+              >
+                {loading
+                  ? t("forgot_password.loading")
+                  : t("forgot_password.send_link")}
+              </button>
+
+              <Link
+                to="/auth/sign-in"
+                className="text-center text-xs text-muted-foreground/80 hover:text-accent hover:underline"
+              >
+                {t("forgot_password.back_to_sign_in")}
+              </Link>
+            </form>
+          </motion.div>
         )}
-
-        <button
-          type="submit"
-          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover"
-          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
-        >
-          {loading
-            ? t("forgot_password.loading")
-            : t("forgot_password.send_link")}
-        </button>
-
-        <Link
-          to="/auth/sign-in"
-          className="text-center text-xs text-muted-foreground/80 hover:text-accent hover:underline"
-        >
-          {t("forgot_password.back_to_sign_in")}
-        </Link>
-      </form>
+      </AnimatePresence>
     </AuthLayout>
   );
 }

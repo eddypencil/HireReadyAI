@@ -1,5 +1,6 @@
 // src/features/recruiter/components/DashboardCharts.jsx
 import React from "react";
+import { motion } from "framer-motion";
 import {
   BarChart,
   Bar,
@@ -28,7 +29,13 @@ export default function DashboardCharts({
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6 font-sans">
       {/* ── Pipeline Summary Component ────────────────────────────────────────── */}
-      <div className="bg-surface border border-border rounded-xl shadow-xs p-5 col-span-1 lg:col-span-2 xl:col-span-1">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+        className="bg-surface border border-border rounded-xl shadow-xs p-5 col-span-1 lg:col-span-2 xl:col-span-1"
+      >
         <div className="flex justify-between items-start mb-4">
           <div>
             <h3 className="text-base font-bold text-foreground tracking-tight font-display">
@@ -158,9 +165,15 @@ export default function DashboardCharts({
             </AreaChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </motion.div>
 
-      <div className="bg-surface border border-border rounded-xl shadow-xs p-5">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+        className="bg-surface border border-border rounded-xl shadow-xs p-5"
+      >
         <div className="mb-4">
           <h3 className="text-base font-bold text-foreground tracking-tight font-display">
             {t("dashboard_charts.top_jobs.title")}
@@ -215,7 +228,7 @@ export default function DashboardCharts({
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }

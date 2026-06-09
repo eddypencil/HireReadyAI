@@ -215,6 +215,7 @@
 
 //src\features\auth\pages\ResetPasswordPage.jsx
 import { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../context/user.context";
 import { supabase } from "@/shared/services/supabase";
@@ -300,166 +301,205 @@ export default function ResetPasswordPage() {
     }
   };
 
-  // ===========================
-  // LOADING STATE
-  // ===========================
-  if (pageState === "waiting") {
-    return (
-      <AuthLayout
-        headline={t("reset_password.waiting.headline")}
-        subheading={t("reset_password.waiting.subheading")}
-      >
-        <div className="flex flex-col items-center gap-6 py-6">
-          <div className="w-12 h-12 rounded-full border-2 border-border border-t-primary animate-spin" />
+  const stateProps = {
+    waiting: {
+      headline: t("reset_password.waiting.headline"),
+      subheading: t("reset_password.waiting.subheading"),
+    },
+    invalid: {
+      headline: t("reset_password.invalid.headline"),
+      subheading: t("reset_password.invalid.subheading"),
+    },
+    success: {
+      headline: t("reset_password.success.headline"),
+      subheading: t("reset_password.success.subheading"),
+    },
+    ready: {
+      headline: t("reset_password.form.headline"),
+      subheading: t("reset_password.form.subheading"),
+    },
+  };
 
-          <p className="text-muted-foreground text-sm text-center font-medium">
-            {t("reset_password.waiting.loading_text")}
-          </p>
-        </div>
-      </AuthLayout>
-    );
-  }
+  const { headline, subheading } = stateProps[pageState] || stateProps.ready;
 
-  // ===========================
-  // INVALID LINK STATE
-  // ===========================
-  if (pageState === "invalid") {
-    return (
-      <AuthLayout
-        headline={t("reset_password.invalid.headline")}
-        subheading={t("reset_password.invalid.subheading")}
-      >
-        <div className="flex flex-col items-center text-center gap-6 py-4">
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-destructive/10 border border-destructive/20">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
-                stroke="currentColor"
-                className="text-destructive"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+  function renderContent() {
+    switch (pageState) {
+      case "waiting":
+        return (
+          <motion.div
+            key="waiting"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex flex-col items-center gap-6 py-6"
+          >
+            <div className="w-12 h-12 rounded-full border-2 border-border border-t-primary animate-spin" />
+            <p className="text-muted-foreground text-sm text-center font-medium">
+              {t("reset_password.waiting.loading_text")}
+            </p>
+          </motion.div>
+        );
+
+      case "invalid":
+        return (
+          <motion.div
+            key="invalid"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="flex flex-col items-center text-center gap-6 py-4"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+              className="w-16 h-16 rounded-full flex items-center justify-center bg-destructive/10 border border-destructive/20"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"
+                  stroke="currentColor"
+                  className="text-destructive"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.div>
+
+            <p className="text-sidebar text-sm leading-7">
+              {t("reset_password.invalid.message")}
+            </p>
+
+            <Link
+              to="/auth/forgot-password"
+              className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+              style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+            >
+              {t("reset_password.invalid.request_new")}
+            </Link>
+
+            <Link
+              to="/auth/sign-in"
+              className="text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
+            >
+              {t("reset_password.invalid.back_to_sign_in")}
+            </Link>
+          </motion.div>
+        );
+
+      case "success":
+        return (
+          <motion.div
+            key="success"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+            className="flex flex-col items-center text-center gap-6 py-4"
+          >
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 0.3, delay: 0.1, ease: "easeOut" }}
+              className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border"
+            >
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M20 6L9 17l-5-5"
+                  stroke="currentColor"
+                  className="text-accent"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.div>
+
+            <p className="text-sidebar text-sm leading-7">
+              {t("reset_password.success.message")}
+            </p>
+
+            <Link
+              to="/auth/sign-in"
+              className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
+              style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+            >
+              {t("reset_password.success.go_to_sign_in")}
+            </Link>
+          </motion.div>
+        );
+
+      default:
+        return (
+          <motion.div
+            key="form"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            transition={{ duration: 0.35, ease: "easeOut" }}
+          >
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+              <FormField
+                label={t("reset_password.form.labels.new_password")}
+                type="password"
+                placeholder={t("reset_password.form.placeholders.new_password")}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                required
               />
-            </svg>
-          </div>
 
-
-          <p className="text-sidebar text-sm leading-7">
-            {t("reset_password.invalid.message")}
-          </p>
-
-
-          <Link
-            to="/auth/forgot-password"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
-            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
-          >
-            {t("reset_password.invalid.request_new")}
-          </Link>
-
-          <Link
-            to="/auth/sign-in"
-            className="text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
-          >
-            {t("reset_password.invalid.back_to_sign_in")}
-          </Link>
-        </div>
-      </AuthLayout>
-    );
-  }
-
-  // ===========================
-  // SUCCESS STATE
-  // ===========================
-  if (pageState === "success") {
-    return (
-      <AuthLayout
-        headline={t("reset_password.success.headline")}
-        subheading={t("reset_password.success.subheading")}
-      >
-        <div className="flex flex-col items-center text-center gap-6 py-4">
-
-          <div className="w-16 h-16 rounded-full flex items-center justify-center bg-secondary border border-border">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
-              <path
-                d="M20 6L9 17l-5-5"
-                stroke="currentColor"
-                className="text-accent"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <FormField
+                label={t("reset_password.form.labels.confirm_password")}
+                type="password"
+                placeholder={t("reset_password.form.placeholders.confirm_password")}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
               />
-            </svg>
-          </div>
 
-          <p className="text-sidebar text-sm leading-7">
-            {t("reset_password.success.message")}
-          </p>
+              {(validationError || apiError) && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, ease: "easeOut" }}
+                >
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
+                    <span>⚠</span>
+                    {validationError || apiError}
+                  </div>
+                </motion.div>
+              )}
 
-          <Link
-            to="/auth/sign-in"
-            className="w-full h-11 rounded-xl text-white text-sm font-semibold bg-primary hover:bg-primary-hover transition-colors flex items-center justify-center"
-            style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
-          >
-            {t("reset_password.success.go_to_sign_in")}
-          </Link>
-        </div>
-      </AuthLayout>
-    );
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover disabled:opacity-60"
+                style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
+              >
+                {loading
+                  ? t("reset_password.form.buttons.updating")
+                  : t("reset_password.form.buttons.update")}
+              </button>
+
+              <Link
+                to="/auth/sign-in"
+                className="text-center text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
+              >
+                {t("reset_password.form.back_to_sign_in")}
+              </Link>
+            </form>
+          </motion.div>
+        );
+    }
   }
 
-  // ===========================
-  // FORM STATE
-  // ===========================
   return (
-    <AuthLayout
-      headline={t("reset_password.form.headline")}
-      subheading={t("reset_password.form.subheading")}
-    >
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <FormField
-          label={t("reset_password.form.labels.new_password")}
-          type="password"
-          placeholder={t("reset_password.form.placeholders.new_password")}
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          required
-        />
-
-        <FormField
-          label={t("reset_password.form.labels.confirm_password")}
-          type="password"
-          placeholder={t("reset_password.form.placeholders.confirm_password")}
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          required
-        />
-
-        {(validationError || apiError) && (
-          <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
-            <span>⚠</span>
-            {validationError || apiError}
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full h-11 rounded-xl text-white text-sm font-semibold transition-all duration-200 cursor-pointer bg-primary hover:bg-primary-hover disabled:opacity-60"
-          style={{ boxShadow: "0 2px 12px rgba(1,73,124,0.15)" }}
-        >
-          {loading
-            ? t("reset_password.form.buttons.updating")
-            : t("reset_password.form.buttons.update")}
-        </button>
-
-        <Link
-          to="/auth/sign-in"
-          className="text-center text-xs text-muted-foreground hover:text-accent hover:underline transition-colors"
-        >
-          {t("reset_password.form.back_to_sign_in")}
-        </Link>
-      </form>
+    <AuthLayout headline={headline} subheading={subheading}>
+      <AnimatePresence mode="wait">
+        {renderContent()}
+      </AnimatePresence>
     </AuthLayout>
   );
 }

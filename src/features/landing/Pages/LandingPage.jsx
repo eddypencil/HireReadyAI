@@ -2,6 +2,7 @@ import Navbar from "../Components/Navbar";
 import HeroSection from "../Components/HeroSection";
 import TrustedBySection from "../Components/TrustedBySection";
 import FeaturesSection from "../Components/FeaturesSection";
+import AnimatedSection from "../Components/AnimatedSection";
 import LandingLayout from "../LandingLayout";
 
 const NAV_LINKS = [
@@ -17,8 +18,12 @@ export default function LandingPage() {
   return (
     <LandingLayout>
       <Navbar links={NAV_LINKS} />
-      <HeroSection />
-      <TrustedBySection />
+      <AnimatedSection>
+        <HeroSection />
+      </AnimatedSection>
+      <AnimatedSection delay={0.1}>
+        <TrustedBySection />
+      </AnimatedSection>
       <FeaturesSection />
     </LandingLayout>
   );

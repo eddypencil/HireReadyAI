@@ -1,5 +1,6 @@
 //src\features\companies\pages\JDGeneratorPage.jsx
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { SENIORITY_LEVEL } from "@/shared/constants/enums";
 import { useJobs } from "@/features/jobs/hooks/useJobs";
 import { supabase } from "@/shared/services/supabase";
@@ -258,8 +259,18 @@ export default function JDGeneratorPage({ company, profile }) {
 
   if (published) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-6 font-sans">
-        <div className="text-center max-w-sm">
+      <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="min-h-screen bg-background flex items-center justify-center p-6 font-sans"
+    >
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.4, delay: 0.15 }}
+          className="text-center max-w-sm"
+        >
           <div className="w-14 h-14 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-5 shadow-xs">
             <Check className="w-6 h-6 text-primary" strokeWidth={2.5} />
           </div>
@@ -298,15 +309,20 @@ export default function JDGeneratorPage({ company, profile }) {
           >
             {t("jd_generator.published.generate_another")}
           </button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6 font-sans">
       {/* Upper Navigation / Bar */}
-      <div className="max-w-6xl mx-auto mb-4 flex items-center justify-between gap-4">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.35 }}
+        className="max-w-6xl mx-auto mb-4 flex items-center justify-between gap-4"
+      >
         <div>
           <h1 className="text-base font-bold text-foreground">
             {t("jd_generator.header.title")}
@@ -342,11 +358,16 @@ export default function JDGeneratorPage({ company, profile }) {
             )}
           </button>
         </div>
-      </div>
+      </motion.div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-4 items-start">
         {/* Column 1: Role Brief Form */}
-        <div className="bg-background rounded-xl border border-border/60 p-5 shadow-xs">
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="bg-background rounded-xl border border-border/60 p-5 shadow-xs"
+        >
           <h2 className="text-sm font-bold text-foreground mb-0.5">
             {t("jd_generator.form.title")}
           </h2>
@@ -553,9 +574,14 @@ export default function JDGeneratorPage({ company, profile }) {
               )}
             </button>
           </form>
-        </div>
+        </motion.div>
         {/* Column 2: Live Preview Panel */}
-        <div className="bg-background rounded-xl border border-border/60 p-5 shadow-xs min-h-[450px] lg:h-full">
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="bg-background rounded-xl border border-border/60 p-5 shadow-xs min-h-[450px] lg:h-full"
+        >
           {!generated ? (
             <div className="flex flex-col items-center justify-center h-full py-20 text-center">
               <div className="w-12 h-12 rounded-xl bg-secondary/40 border border-border flex items-center justify-center mb-3.5 text-muted-foreground/70">
@@ -628,18 +654,35 @@ export default function JDGeneratorPage({ company, profile }) {
                 </div>
 
                 {aiResult?.description && (
-                  <div className="mt-6 space-y-5">
-                    <div>
+                  <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    variants={{
+                      visible: { transition: { staggerChildren: 0.1 } },
+                    }}
+                    className="mt-6 space-y-5"
+                  >
+                    <motion.div
+                      variants={{
+                        hidden: { opacity: 0, y: 15 },
+                        visible: { opacity: 1, y: 0 },
+                      }}
+                    >
                       <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
                         Description
                       </h3>
                       <p className="text-sm text-muted-foreground leading-relaxed">
                         {aiResult.description}
                       </p>
-                    </div>
+                    </motion.div>
 
                     {aiResult.responsibilities?.length > 0 && (
-                      <div>
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 15 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                      >
                         <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
                           Responsibilities
                         </h3>
@@ -651,11 +694,16 @@ export default function JDGeneratorPage({ company, profile }) {
                             </li>
                           ))}
                         </ul>
-                      </div>
+                      </motion.div>
                     )}
 
                     {aiResult.requirements?.length > 0 && (
-                      <div>
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 15 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                      >
                         <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
                           Requirements
                         </h3>
@@ -667,11 +715,16 @@ export default function JDGeneratorPage({ company, profile }) {
                             </li>
                           ))}
                         </ul>
-                      </div>
+                      </motion.div>
                     )}
 
                     {aiResult.skills?.length > 0 && (
-                      <div>
+                      <motion.div
+                        variants={{
+                          hidden: { opacity: 0, y: 15 },
+                          visible: { opacity: 1, y: 0 },
+                        }}
+                      >
                         <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-2">
                           Skills
                         </h3>
@@ -685,9 +738,9 @@ export default function JDGeneratorPage({ company, profile }) {
                             </span>
                           ))}
                         </div>
-                      </div>
+                      </motion.div>
                     )}
-                  </div>
+                  </motion.div>
                 )}
 
                 {publishError && (
@@ -824,7 +877,7 @@ export default function JDGeneratorPage({ company, profile }) {
               </div>
             </div>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

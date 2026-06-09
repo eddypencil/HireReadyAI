@@ -1,5 +1,6 @@
 //src\features\companies\pages\JobPostings.jsx
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { updateJobPosting } from "../services/companies.service";
 import { getPipeline } from "../../pipeline/services/pipeline.service";
@@ -98,28 +99,47 @@ export default function JobPostings({ jobs, searchQuery, company }) {
   };
 
   return (
-    <div className="flex flex-col md:flex-row h-full font-sans bg-background">
+    <div className="flex flex-col md:flex-row font-sans bg-background min-h-full">
       {/* Left Sidebar - Job List */}
-      <JobSidebar
-        jobs={localJobs}
-        activeTab={activeTab}
-        searchQuery={searchQuery}
-        selectedJobId={selectedJobId}
-        setSelectedJobId={setSelectedJobId}
-        setIsEditing={setIsEditing}
-        navigate={navigate}
-        isOpen={isSidebarOpen}
-        onClose={() => setIsSidebarOpen(false)}
-      />
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: false, margin: "-30px" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <JobSidebar
+          jobs={localJobs}
+          activeTab={activeTab}
+          searchQuery={searchQuery}
+          selectedJobId={selectedJobId}
+          setSelectedJobId={setSelectedJobId}
+          setIsEditing={setIsEditing}
+          navigate={navigate}
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
+      </motion.div>
 
       {/* Main Detail View */}
-      <div className="flex-1 bg-background h-full md:overflow-y-auto border-l border-border/40">
+      <div className="flex-1 bg-background border-l border-border/40">
         {!selectedJob ? (
-          <div className="h-full flex items-center justify-center text-muted-foreground/60 text-xs font-medium">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: false }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="h-full flex items-center justify-center text-muted-foreground/60 text-xs font-medium"
+          >
             {t("job_postings.empty_state")}
-          </div>
+          </motion.div>
         ) : (
           <div className="max-w-4xl mx-auto p-5 lg:p-8 pb-16 space-y-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: false, margin: "-30px" }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
             <JobDetailHeader
               selectedJob={selectedJob}
               isEditing={isEditing}
@@ -156,6 +176,7 @@ export default function JobPostings({ jobs, searchQuery, company }) {
                 navigate={navigate}
               />
             </div>
+          </motion.div>
           </div>
         )}
       </div>
