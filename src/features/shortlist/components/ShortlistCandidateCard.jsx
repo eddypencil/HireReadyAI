@@ -1,5 +1,5 @@
-import React from "react";
 //src\features\shortlist\components\ShortlistCandidateCard.jsx
+import { motion } from "framer-motion";
 import { ThumbsUp, ThumbsDown, Sparkles, Calendar, Send } from "lucide-react";
 import { useTranslation } from "react-i18next";
 const TAG_COLORS = {
@@ -48,7 +48,7 @@ function timeAgo(dateString) {
   return "Just now";
 }
 
-export default function ShortlistCandidateCard({ entry, isSelected, onClick }) {
+export default function ShortlistCandidateCard({ entry, isSelected, onClick, index = 0 }) {
   const { applications: app, tags = [], rank } = entry;
   const {
     profiles: candidate,
@@ -74,7 +74,10 @@ export default function ShortlistCandidateCard({ entry, isSelected, onClick }) {
   const remainingVoters = Math.max(0, votes.length - 4);
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
       onClick={onClick}
       className={`relative px-5 py-4 cursor-pointer border-b border-border transition-all group ${
         isSelected
@@ -188,6 +191,6 @@ export default function ShortlistCandidateCard({ entry, isSelected, onClick }) {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

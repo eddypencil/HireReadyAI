@@ -1,5 +1,6 @@
 // src\features\shortlist\pages\ShortlistsPage.jsx
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { Search, SlidersHorizontal, Sparkles } from "lucide-react";
 import { useShortlistData } from "../hooks/useShortlistData";
 import { useUser } from "@/features/auth/context/user.context";
@@ -41,17 +42,9 @@ export default function ShortlistsPage({ jobs, company }) {
   const [search, setSearch] = useState("");
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
-  // On xl+ screen panel is always visible alongside list; on smaller screens it's overlay
-  const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 1280);
-  useEffect(() => {
-    const handler = () => setIsSmallScreen(window.innerWidth < 1280);
-    window.addEventListener("resize", handler);
-    return () => window.removeEventListener("resize", handler);
-  }, []);
-
   const handleSelectCandidate = (applicationId) => {
     setSelectedCandidateId(applicationId);
-    if (isSmallScreen) setIsPanelOpen(true);
+    setIsPanelOpen(true);
   };
 
   const filteredEntries = sortedEntries.filter((entry) => {
@@ -62,7 +55,12 @@ export default function ShortlistsPage({ jobs, company }) {
   return (
     <div className="flex flex-col h-full bg-secondary/30 overflow-hidden">
       {/* ── Page Header ── */}
-      <div className="bg-background border-b border-border px-6 py-4 shrink-0">
+      <motion.div
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="bg-background border-b border-border px-6 py-4 shrink-0"
+      >
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-xl font-bold text-foreground font-display">
@@ -128,7 +126,7 @@ export default function ShortlistsPage({ jobs, company }) {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* ── Insights Bar ── */}
       <ShortlistInsightsBar
@@ -141,68 +139,56 @@ export default function ShortlistsPage({ jobs, company }) {
         {/* Candidate List */}
         <div className="flex-1 overflow-y-auto">
           {loading ? (
-            <div className="flex items-center justify-center h-48">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.25 }}
+              className="flex items-center justify-center h-48"
+            >
               <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
+            </motion.div>
           ) : filteredEntries.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-48 text-muted-foreground text-sm gap-2">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className="flex flex-col items-center justify-center h-48 text-muted-foreground text-sm gap-2"
+            >
               <Sparkles className="w-8 h-8 opacity-40 text-primary" />
               <p>{t("shortlists.empty")}</p>
-            </div>
+            </motion.div>
           ) : (
-            filteredEntries.map((entry, idx) => (
-              <ShortlistCandidateCard
-                key={entry.id}
-                entry={entry}
-                index={idx}
-                isSelected={entry.applications.id === selectedCandidateId}
-                onClick={() => handleSelectCandidate(entry.applications.id)}
-              />
-            ))
+            <div>
+              {filteredEntries.map((entry, idx) => (
+                <ShortlistCandidateCard
+                  key={entry.id}
+                  entry={entry}
+                  index={idx}
+                  isSelected={entry.applications.id === selectedCandidateId}
+                  onClick={() => handleSelectCandidate(entry.applications.id)}
+                />
+              ))}
+            </div>
           )}
         </div>
 
-        {/* Detail Panel — permanent on xl, overlay on smaller */}
-        {selectedEntry && (
-          <>
-            {/* xl: always visible */}
-            {!isSmallScreen && (
-              <ShortlistDetailPanel
-                entry={selectedEntry}
-                myVote={myVote}
-                notes={notes}
-                notesLoading={notesLoading}
-                onClose={() => { }}
-                onCastVote={castVote}
-                onReject={rejectApplication}
-                onAdvanceToOffer={advanceToOffer}
-                onPostNote={postNote}
-                isOverlay={false}
-                recruiterName={profile?.fullName}
-                recruiterEmail={user?.email}
-                companyName={company?.name}
-              />
-            )}
-
-            {/* small/medium: slide-in overlay */}
-            {isSmallScreen && isPanelOpen && (
-              <ShortlistDetailPanel
-                entry={selectedEntry}
-                myVote={myVote}
-                notes={notes}
-                notesLoading={notesLoading}
-                onClose={() => setIsPanelOpen(false)}
-                onCastVote={castVote}
-                onReject={rejectApplication}
-                onAdvanceToOffer={advanceToOffer}
-                onPostNote={postNote}
-                isOverlay={true}
-                recruiterName={profile?.fullName}
-                recruiterEmail={user?.email}
-                companyName={company?.name}
-              />
-            )}
-          </>
+        {/* Detail Panel — drawer from right */}
+        {selectedEntry && isPanelOpen && (
+          <ShortlistDetailPanel
+            entry={selectedEntry}
+            myVote={myVote}
+            notes={notes}
+            notesLoading={notesLoading}
+            onClose={() => setIsPanelOpen(false)}
+            onCastVote={castVote}
+            onReject={rejectApplication}
+            onAdvanceToOffer={advanceToOffer}
+            onPostNote={postNote}
+            isOverlay={true}
+            recruiterName={profile?.fullName}
+            recruiterEmail={user?.email}
+            companyName={company?.name}
+          />
         )}
       </div>
     </div>

@@ -65,6 +65,15 @@ export async function getJobScorePercentile(jobId, compositeScore) {
   return { percentile, total: scores.length, error: null };
 }
 
+export async function fetchQuestionsByIds(questionIds) {
+  if (!questionIds || questionIds.length === 0) return { data: [], error: null };
+  const { data, error } = await supabase
+    .from("questions")
+    .select("id, question")
+    .in("id", questionIds);
+  return { data, error };
+}
+
 export function getPercentileTag(percentile) {
   if (percentile == null) return null;
   if (percentile >= 99) return { label: "Top 1%", color: "bg-yellow-100 text-yellow-800 border-yellow-300" };

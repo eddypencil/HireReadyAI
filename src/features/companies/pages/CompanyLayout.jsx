@@ -1,6 +1,6 @@
 //src\features\companies\pages\CompanyLayout.jsx
 import { useState, useEffect } from "react";
-import { Routes, Route, Link, Navigate, useNavigate } from "react-router-dom";
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
 import Navbar from "@/shared/ui/Navbar";
 import JobPostings from "./JobPostings";
@@ -25,6 +25,10 @@ import { useTranslation } from "react-i18next";
 function CompanyLayout() {
   const { loading, profile } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isFullscreenRoute =
+    location.pathname.includes("/shortlists") ||
+    /\/companies\/candidates$/.test(location.pathname);
   const [jobs, setJobs] = useState([]);
   const [members, setMembers] = useState([]);
   const [company, setCompany] = useState(null);
@@ -122,13 +126,15 @@ function CompanyLayout() {
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden w-full h-full bg-background font-sans">
-      <Navbar
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        onAddJobClick={() => navigate("/companies/jd-generator")}
-      />
+      {!isFullscreenRoute && (
+        <Navbar
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onAddJobClick={() => navigate("/companies/jd-generator")}
+        />
+      )}
 
-      <div className="flex-1 overflow-y-auto">
+      <div className={isFullscreenRoute ? "flex-1" : "flex-1 overflow-y-auto"}>
         <Routes>
           <Route path="/" element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<RecruiterDashboardPage />} />

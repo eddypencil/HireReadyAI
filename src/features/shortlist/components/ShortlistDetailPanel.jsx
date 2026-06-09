@@ -1,5 +1,6 @@
 //src\features\shortlist\components\ShortlistDetailPanel.jsx
 import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   ThumbsUp,
   ThumbsDown,
@@ -121,7 +122,6 @@ export default function ShortlistDetailPanel({
     subject,
     body,
   }) => {
-    const isOffer = emailModalAction === "offer";
     const { error } = await supabase.functions.invoke("send-offer-email", {
       body: {
         to,
@@ -164,16 +164,23 @@ export default function ShortlistDetailPanel({
     <>
       {/* Backdrop overlay utilizing system muted foreground opacity */}
       {isOverlay && (
-        <div
-          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-[100]"
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-100"
           onClick={onClose}
         />
       )}
 
-      <div
+      <motion.div
+        key={app.id}
+        initial={isOverlay ? { x: "100%" } : { opacity: 0 }}
+        animate={isOverlay ? { x: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
         className={`bg-background flex flex-col overflow-hidden border-l border-border ${isOverlay
-            ? "fixed right-0 top-0 bottom-0 z-[110] w-[380px] shadow-[var(--shadow-lift)]"
-            : "w-[380px] shrink-0 h-full"
+            ? "fixed right-0 top-0 bottom-0 z-110 w-95 shadow-(--shadow-lift)"
+            : "w-95 shrink-0 h-full"
           }`}
       >
         {/* Header */}
@@ -238,9 +245,22 @@ export default function ShortlistDetailPanel({
         </div>
 
         {/* Scrollable body */}
-        <div className="flex-1 overflow-y-auto">
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: { transition: { staggerChildren: 0.08 } },
+          }}
+          className="flex-1 overflow-y-auto"
+        >
           {/* YOUR VOTE */}
-          <div className="px-5 py-4 border-b border-border">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 15 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            className="px-5 py-4 border-b border-border"
+          >
             <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground mb-3 font-display">
               {t("shortlist.yourVote")}
             </p>
@@ -276,10 +296,16 @@ export default function ShortlistDetailPanel({
                 ),
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* TEAM VOTES */}
-          <div className="px-5 py-4 border-b border-border">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 15 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            className="px-5 py-4 border-b border-border"
+          >
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground font-display">
                 {t("shortlist.teamVotes")}
@@ -341,10 +367,16 @@ export default function ShortlistDetailPanel({
                 </p>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* AI RATIONALE - Uses Accent Tokens */}
-          <div className="px-5 py-4 border-b border-border">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 15 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            className="px-5 py-4 border-b border-border"
+          >
             <div className="bg-accent/5 border border-accent/20 rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center gap-1.5">
@@ -371,10 +403,16 @@ export default function ShortlistDetailPanel({
                 </button>
               )}
             </div>
-          </div>
+          </motion.div>
 
           {/* TEAM NOTES */}
-          <div className="px-5 py-4 border-b border-border">
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 15 },
+              visible: { opacity: 1, y: 0 },
+            }}
+            className="px-5 py-4 border-b border-border"
+          >
             <p className="text-[10px] font-bold tracking-widest uppercase text-muted-foreground mb-3 font-display">
               {t("shortlist.teamNotes")}
             </p>
@@ -448,8 +486,8 @@ export default function ShortlistDetailPanel({
                 </button>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* ACTION BUTTONS */}
         {!is_rejected ? (
@@ -527,7 +565,7 @@ export default function ShortlistDetailPanel({
             )}
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* ── Email Modal ── */}
       {emailModalAction && (

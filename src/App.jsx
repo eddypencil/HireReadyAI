@@ -22,6 +22,7 @@ import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
+// eslint-disable-next-line no-unused-vars
 function RootRedirect() {
   const { user, profile, loading } = useUser();
 

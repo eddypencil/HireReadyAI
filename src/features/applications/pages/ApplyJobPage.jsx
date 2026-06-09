@@ -7,7 +7,6 @@ import { createApplication } from "../services/application.service";
 import { triggerCvReview } from "../services/cv-review.service";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.js?url";
-import { CheckCircle2, XCircle } from "lucide-react";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 import { supabase } from "@/shared/services/supabase";
 import { useTranslation } from "react-i18next";

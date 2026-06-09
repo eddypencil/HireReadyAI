@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 export default function JobPostings({ jobs, searchQuery, company }) {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("Open");
+  const [activeTab] = useState("Open");
   const [localJobs, setLocalJobs] = useState(jobs);
   const [selectedJobId, setSelectedJobId] = useState(jobs[0]?.id || null);
   const [isEditing, setIsEditing] = useState(false);
@@ -25,6 +25,7 @@ export default function JobPostings({ jobs, searchQuery, company }) {
   const { t } = useTranslation();
   // Sync local jobs with props
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLocalJobs(jobs);
     if (!selectedJobId && jobs.length > 0) {
       setSelectedJobId(jobs[0].id);
@@ -50,7 +51,7 @@ export default function JobPostings({ jobs, searchQuery, company }) {
       }
     };
     fetchStages();
-  }, [selectedJobId]);
+  }, [selectedJobId,t]);
 
   // Handle Edit Initialization
   const handleEditClick = () => {

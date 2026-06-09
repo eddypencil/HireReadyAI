@@ -216,8 +216,8 @@ export default function JDGeneratorPage({ company, profile }) {
         responsibilities: aiResult.responsibilities,
         requirements: aiResult.requirements,
         skills: aiResult.skills,
-        salaryMin: salaryMin ? Number(salaryMin) : null,
-        salaryMax: salaryMax ? Number(salaryMax) : null,
+        salary_min: salaryMin ? Number(salaryMin) : null,
+        salary_max: salaryMax ? Number(salaryMax) : null,
       });
 
       // Step 2: Save application questions (only if withQuestions is true)

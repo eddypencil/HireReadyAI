@@ -1,4 +1,5 @@
 // src\features\shortlist\components\ShortlistReportTable.jsx
+import { motion } from "framer-motion";
 import { ThumbsUp, ThumbsDown, Minus } from "lucide-react";
 import { useTranslation } from "react-i18next";
 export default function ShortlistReportTable({
@@ -10,21 +11,20 @@ export default function ShortlistReportTable({
 
   if (!entries || entries.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
+      <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="text-center py-8 text-muted-foreground"
+    >
         {" "}
         {t("shortlist.noCandidates")}
-      </div>
+      </motion.div>
     );
   }
 
   const getInitials = (name) => {
     if (!name) return "NA";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .substring(0, 2)
-      .toUpperCase();
     return name
       .split(" ")
       .map((n) => n[0])
@@ -106,8 +106,13 @@ export default function ShortlistReportTable({
   };
 
   return (
-    <div className="bg-background rounded-xl shadow-sm border border-border overflow-x-auto font-sans mb-8">
-      <table className="w-full text-left border-collapse min-w-[1000px]">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.35 }}
+      className="bg-background rounded-xl shadow-sm border border-border overflow-x-auto font-sans mb-8"
+    >
+      <table className="w-full text-left border-collapse min-w-250">
         <thead>
           <tr className="bg-muted text-xs font-semibold text-muted-foreground tracking-wider">
             <th className="px-6 py-4 text-center">{t("shortlist.rank")}</th>
@@ -124,7 +129,14 @@ export default function ShortlistReportTable({
           </tr>
         </thead>
 
-        <tbody className="divide-y divide-border">
+        <motion.tbody
+          initial="hidden"
+          animate="visible"
+          variants={{
+            visible: { transition: { staggerChildren: 0.04 } },
+          }}
+          className="divide-y divide-border"
+        >
           {entries.map((entry) => {
             const app = entry.applications;
             const profile = app.profiles;
@@ -132,8 +144,12 @@ export default function ShortlistReportTable({
             const votes = calculateVotes(app.shortlist_votes);
 
             return (
-              <tr
+              <motion.tr
                 key={entry.id}
+                variants={{
+                  hidden: { opacity: 0, y: 10 },
+                  visible: { opacity: 1, y: 0 },
+                }}
                 onClick={() => onToggleSelect(app.id)}
                 className={`cursor-pointer transition-colors duration-200 ${
                   isSelected ? "bg-primary/5" : "hover:bg-muted/50"
@@ -233,11 +249,11 @@ export default function ShortlistReportTable({
                     </button>
                   </div>
                 </td>
-              </tr>
+              </motion.tr>
             );
           })}
-        </tbody>
+        </motion.tbody>
       </table>
-    </div>
+    </motion.div>
   );
 }

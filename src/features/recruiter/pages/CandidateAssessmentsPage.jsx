@@ -56,7 +56,7 @@ function StageSelector({ stages, activeStage, onSelect }) {
   );
 }
 
-function ExpandableQuestion({ question, index }) {
+function ExpandableQuestion({ question }) {
   const [expanded, setExpanded] = useState(false);
   const answer = question.application_answers;
   const answerData = Array.isArray(answer) ? answer[0] : answer;
@@ -261,6 +261,7 @@ export default function CandidateAssessmentsPage() {
 
   useEffect(() => {
     if (!id) return;
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setLoading(true);
     getCandidateProfile(id).then(async ({ data, error: err }) => {
       if (err) {
@@ -335,7 +336,7 @@ export default function CandidateAssessmentsPage() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, margin: "-30px" }}
         transition={{ duration: 0.5, delay: 0.05, ease: "easeOut" }}
-        className="rounded-2xl bg-gradient-to-br from-primary via-accent to-neutral-950 p-8 shadow-md relative overflow-hidden mb-8"
+        className="rounded-2xl bg-linear-to-br from-primary via-accent to-neutral-950 p-8 shadow-md relative overflow-hidden mb-8"
       >
         <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/2" />
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
@@ -388,7 +389,7 @@ export default function CandidateAssessmentsPage() {
           <div className="bg-surface rounded-2xl border border-border p-5 shadow-xs">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-gradient-to-br from-primary to-accent text-primary-foreground">
+                <div className="p-2.5 rounded-xl bg-linear-to-br from-primary to-accent text-primary-foreground">
                   {(() => {
                     const StageIcon = STAGE_ICONS[activeStage.recruitment_stages?.stage_type] || Brain;
                     return <StageIcon className="w-5 h-5" />;

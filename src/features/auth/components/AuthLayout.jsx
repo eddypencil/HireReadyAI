@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/shared/ui/LanguageSwitcher";
 import {
-  Brain,
   Video,
   BarChart3,
   MessageSquare,
@@ -15,7 +14,6 @@ import { useTheme } from "@/shared/context/theme";
 export default function AuthLayout({ children, headline, subheading }) {
   const { t } = useTranslation();
 
-  const featureKeys = ["match", "interviews", "feedback"];
   const features = [
     {
       icon: Wand2,

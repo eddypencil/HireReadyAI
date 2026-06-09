@@ -1,4 +1,5 @@
 //src\features\shortlist\components\ShortlistInsightsBar.jsx
+import { motion } from "framer-motion";
 import { ThumbsUp, ThumbsDown, Minus, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -8,7 +9,12 @@ export default function ShortlistInsightsBar({ insightsSummary }) {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-background border-b border-border px-6 py-3 flex flex-wrap items-center justify-between gap-4">
+    <motion.div
+      initial={{ opacity: 0, y: -6 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: 0.1 }}
+      className="bg-background border-b border-border px-6 py-3 flex flex-wrap items-center justify-between gap-4"
+    >
       <div className="flex items-center gap-5 text-sm">
         {/* Up Votes - Success State */}
         <div className="flex items-center gap-1.5 text-success font-medium">
@@ -59,6 +65,6 @@ export default function ShortlistInsightsBar({ insightsSummary }) {
         <Sparkles className="w-3.5 h-3.5" />
         {t("shortlistInsights.aiSuggestion", { count: topAdvanceCount })}
       </div>
-    </div>
+    </motion.div>
   );
 }

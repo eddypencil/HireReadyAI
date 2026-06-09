@@ -1,5 +1,5 @@
 //src\features\applications\context\application.context.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useCallback } from "react";
 import { fetchApplicationsByApplicantId } from "../services/application.service";
 
 const ApplicationContext = createContext(null);
@@ -9,7 +9,7 @@ export function ApplicationProvider({ children }) {
   const [applications, setApplications] = useState([]);
   const [error, setError] = useState(null);
 
-  async function getAllApplications(applicantID) {
+  const getAllApplications = useCallback(async (applicantID) => {
     setLoading(true);
     setError(null);
     try {
@@ -20,7 +20,7 @@ export function ApplicationProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   return (
     <ApplicationContext.Provider value={{ loading, applications, error, getAllApplications }}>
