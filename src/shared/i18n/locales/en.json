@@ -128,9 +128,9 @@
 
   "apply_job": {
     "title": "Apply for Job",
-    "empty_state":{
-      "no_applications":"You have zero applications",
-      "start_exploring":"Start exploring jobs and apply to kick off your journey"
+    "empty_state": {
+      "no_applications": "You have zero applications",
+      "start_exploring": "Start exploring jobs and apply to kick off your journey"
     },
 
     "steps": {
@@ -1055,6 +1055,232 @@
           "Skill gap analysis with actionable recommendations",
           "Constructive feedback delivered professionally"
         ]
+      }
+    }
+  },
+  "builtForJobs": {
+    "eyebrow": "Built For Job Seekers",
+    "title": "Built for Job Seekers & Employers",
+    "subtitle": "Every tool in HireReadyAI is designed around one goal: getting you from application to offer faster.",
+
+    "features": {
+      "0": {
+        "title": "AI-Powered Resume Review",
+        "description": "Get instant feedback on your resume, identify missing skills, and improve your chances before applying.",
+        "visualTitle": "Resume Analysis Complete",
+        "visualSubtitle": "Frontend Developer CV",
+
+        "positives": {
+          "0": "Strong React Skills",
+          "1": "Good Project Experience"
+        },
+
+        "negatives": {
+          "0": "Add More Keywords"
+        }
+      },
+
+      "1": {
+        "title": "ATS Match Scoring",
+        "description": "See how well your resume matches each job posting and discover what recruiters are looking for.",
+        "visualTitle": "Match Score",
+        "visualBadge": "92% Match",
+        "visualSubtitle": "Frontend Developer",
+
+        "skillsFoundLabel": "Skills Found",
+        "skillsFound": {
+          "0": "React",
+          "1": "JavaScript",
+          "2": "Git"
+        },
+
+        "missingLabel": "Missing",
+        "missing": {
+          "0": "TypeScript"
+        }
+      }
+    },
+
+    "heroFeature": {
+      "title": "AI Interview Assistant",
+      "description": "Practice interview questions generated specifically for the role you're applying for — get scored, get feedback, get confident.",
+      "mockTitle": "Mock Interview Ready",
+      "mockBadge": "Ready",
+      "roleLabel": "Role",
+      "roleValue": "Frontend Developer",
+      "questionsLabel": "Questions Generated",
+      "questionsValue": "12",
+      "timeLabel": "Estimated Time",
+      "timeValue": "15 min",
+      "tailoredNote": "Questions tailored to your resume & job description"
+    },
+
+    "screeningFeature": {
+      "title": "AI Screening Assistant",
+      "description": "Pass recruiter screening rounds with confidence. HireReadyAI coaches you on the exact criteria companies use to filter candidates at each stage.",
+      "scoreLabel": "Screening Score",
+      "scoreRole": "Senior Frontend Engineer",
+      "scoreValue": "94%"
+    }
+  },
+
+  "topFeaturedJobs": {
+    "eyebrow": "Featured Jobs",
+    "title": "Top Featured Jobs",
+    "subtitle": "Hand-picked roles from companies actively hiring on HireReadyAI — vetted for quality, clarity, and career growth.",
+    "browseAll": "Browse All Jobs",
+    "applyLabel": "Apply",
+    "applicantsLabel": "applicants",
+
+    "jobs": {
+      "0": {
+        "company": "Google",
+        "office": "Remote · Full Time",
+        "role": "Senior Product Designer",
+        "salary": "$90K–$110K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "1": {
+        "company": "Stripe",
+        "office": "New York Office",
+        "role": "Frontend Engineer",
+        "salary": "$110K–$140K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "2": {
+        "company": "Figma",
+        "office": "San Francisco Office",
+        "role": "Design Systems Lead",
+        "salary": "$100K–$130K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "3": {
+        "company": "Anthropic",
+        "office": "Remote · Contract",
+        "role": "AI Product Manager",
+        "salary": "$120K–$160K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Contract"
+        }
+      },
+
+      "4": {
+        "company": "Notion",
+        "office": "Remote · Part Time",
+        "role": "UX Researcher",
+        "salary": "$70K–$90K",
+
+        "tags": {
+          "0": "Part Time",
+          "1": "Remote"
+        }
+      },
+
+      "5": {
+        "company": "Linear",
+        "office": "Berlin Office",
+        "role": "Lead UI/UX Designer",
+        "salary": "$80K–$100K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "On-site"
+        }
+      }
+    },
+
+    "tags": {
+      "fullTime": "Full Time",
+      "remote": "Remote",
+      "partTime": "Part Time",
+      "onSite": "On-site",
+      "contract": "Contract"
+    }
+  },
+
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have questions about how HireReadyAI works? Here are the ones we hear most.",
+
+    "phone": {
+      "welcomeBack": "Welcome back!",
+      "myApplications": "My Applications",
+
+      "navItems": {
+        "0": "Home",
+        "1": "Jobs",
+        "2": "Track",
+        "3": "Profile"
+      },
+
+      "pipeline": {
+        "0": {
+          "role": "Product Designer",
+          "company": "Google",
+          "stage": "Interview"
+        },
+        "1": {
+          "role": "UX Researcher",
+          "company": "Stripe",
+          "stage": "Screening"
+        },
+        "2": {
+          "role": "Design Lead",
+          "company": "Figma",
+          "stage": "Applied"
+        }
+      },
+
+      "floatingTitle": "Interview Request",
+      "floatingSubtitle": "Google · 2 min ago"
+    },
+
+    "items": {
+      "0": {
+        "q": "How can I find jobs on HireReadyAI?",
+        "a": "Use the Jobs page to search by title, skill, or company. You can filter by job type, location, and salary range. Your dashboard also surfaces recommended roles based on your profile — the more complete your profile, the better the suggestions."
+      },
+      "1": {
+        "q": "Is my resume and profile data kept private?",
+        "a": "Yes. Your profile is only shared with employers when you explicitly apply. We never sell your data or surface your profile to recruiters without your consent."
+      },
+      "2": {
+        "q": "How do I track my applications?",
+        "a": "The My Applications dashboard gives you a real-time pipeline view — from Applied through Screening, Interview, Assessment, and Final Stage. Each card updates automatically when a recruiter takes action."
+      },
+      "3": {
+        "q": "Can I prepare for interviews inside the platform?",
+        "a": "Yes. HireReadyAI includes an AI Interview Coach that simulates common and role-specific questions, scores your responses, and gives actionable feedback on clarity, structure, and confidence."
+      },
+      "4": {
+        "q": "What types of roles and industries does HireReadyAI cover?",
+        "a": "We cover tech, design, product, marketing, finance, and operations roles across startups, scale-ups, and enterprise companies. New listings are added daily, and you can set alerts for any keyword or company."
+      },
+      "5": {
+        "q": "How do I upload or update my profile picture?",
+        "a": "Go to your Profile page, click on your avatar, and select a new image from your device. Supported formats are JPG and PNG. Your picture is visible to employers when they review your application."
       }
     }
   }
