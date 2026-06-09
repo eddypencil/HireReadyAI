@@ -458,48 +458,6 @@ export default function InterviewPage() {
               </div>
 
               {/* Score */}
-              {sessionSummary && (
-                <div className="rounded-xl border bg-secondary/50 p-6 space-y-4 text-left">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-foreground">
-                      {t("interview_page.finished.overall_score")}
-                    </span>
-                    <span
-                      className={`font-display text-3xl font-semibold tracking-tight ${scoreColor}`}
-                    >
-                      {sessionSummary.overall_score}
-                      <span className="text-base font-normal text-muted-foreground">
-                        /100
-                      </span>
-                    </span>
-                  </div>
-
-                  {sessionSummary.recommendation && (
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-muted-foreground">
-                        {t("interview_page.finished.recommendation")}
-                      </span>
-                      <span
-                        className={`rounded-full px-2.5 py-0.5 text-xs font-medium border capitalize ${
-                          sessionSummary.recommendation === "proceed"
-                            ? "bg-success/10 text-success border-success/20"
-                            : sessionSummary.recommendation === "reject"
-                              ? "bg-destructive/10 text-destructive border-destructive/20"
-                              : "bg-warning/15 text-[#8a5a00] border-warning/30"
-                        }`}
-                      >
-                        {sessionSummary.recommendation}
-                      </span>
-                    </div>
-                  )}
-
-                  {sessionSummary.reasoning && (
-                    <p className="text-sm text-muted-foreground leading-relaxed border-t border-border pt-4">
-                      {sessionSummary.reasoning}
-                    </p>
-                  )}
-                </div>
-              )}
 
               <button
                 onClick={() => navigate(`/applications/${applicationId}`)}

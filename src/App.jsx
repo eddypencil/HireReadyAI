@@ -19,17 +19,13 @@ import InterviewPage from "./features/interview/pages/interviewPage";
 import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
 import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 function RootRedirect() {
   const { user, profile, loading } = useUser();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center text-slate-900">
-        <div className="w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-2 text-slate-500 text-sm">Loading...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {
@@ -78,7 +74,7 @@ function App() {
           path="/interview/:applicationId"
           element={
             <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
-              <InterviewPage></InterviewPage>
+              <InterviewPage />
             </ProtectedRoute>
           }
         />
@@ -91,32 +87,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-      </Route>
 
-      <Route
-        path="/recruiter"
-        element={
-          <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>
-            <Recruiterscreen />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/recruiter/candidatespipline"
-        element={
-          <ProtectedRoute>
-            <PipelineCandidatesPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        element={
-          <ProtectedRoute>
-            <MainLayout />
-          </ProtectedRoute>
-        }
-      >
         <Route path="/jobs" element={<JobsPage />} />
 
         <Route path="/jobs/:id" element={<JobDetailsPage />} />
@@ -130,6 +101,24 @@ function App() {
               allowedRoles={[USER_ROLE.recruiter, USER_ROLE.hrManager]}
             >
               <CompanyLayout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>
+              <Recruiterscreen />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/candidatespipline"
+          element={
+            <ProtectedRoute>
+              <PipelineCandidatesPage />
             </ProtectedRoute>
           }
         />

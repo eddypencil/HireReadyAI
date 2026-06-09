@@ -8,6 +8,7 @@ import CompanyProfile from "./CompanyProfile";
 import JDGeneratorPage from "./JDGeneratorPage";
 import NoCompanyView from "./NoCompanyView";
 import RecruiterDashboardPage from "../../recruiter/pages/RecruiterDashboardPage";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import PipelineCandidatesPage from "../../recruiter/pages/PipelineCandidatesPage";
 import CandidateProfilePage from "../../recruiter/pages/CandidateProfilePage";
 import CandidateAssessmentsPage from "../../recruiter/pages/CandidateAssessmentsPage";
@@ -89,14 +90,7 @@ function CompanyLayout() {
   };
 
   if (loading || dataLoading)
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-sidebar font-sans select-none">
-        <div className="w-7 h-7 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-2.5 text-muted-foreground text-xs font-semibold tracking-wide">
-          {t("company_layout.loading")}
-        </p>
-      </div>
-    );
+    return <LoadingSpinner message={t("company_layout.loading")} />;
 
   if (error) {
     return (

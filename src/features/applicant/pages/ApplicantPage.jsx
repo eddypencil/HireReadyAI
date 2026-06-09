@@ -1,17 +1,21 @@
 // src/features/applicant/pages/ApplicantPage.jsx
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { useUser } from "@/features/auth/context/user.context";
 import { useApplications } from "@/features/applications/context/application.context";
 import ApplicantHeader from "../components/ApplicantHeader";
 import StatsCards from "../components/StatsCards";
+import ChartsSection from "../components/ChartsSection";
 import ApplicationsList from "../components/ApplicationsList";
 import InterviewsList from "../components/InterviewList";
-import { Loader2 } from "lucide-react";
+import WelcomeOverlay from "../components/WelcomeOverlay";
 import { useTranslation } from "react-i18next";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 export default function ApplicantPage() {
   const { profile, user } = useUser();
   const [localProfile, setLocalProfile] = useState(profile);
+  const [showWelcome, setShowWelcome] = useState(() => !sessionStorage.getItem("welcomeShown"));
   const { t } = useTranslation();
   const {
     loading,
@@ -34,85 +38,36 @@ export default function ApplicantPage() {
   }, [user?.id]);
 
   if (loading) {
-    return (
-      <div
-        style={{
-          minHeight: "100vh",
-          background: "#eef7fa",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "12px",
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}
-      >
-        <div
-          style={{
-            width: "44px",
-            height: "44px",
-            borderRadius: "12px",
-            background: "linear-gradient(135deg, #01497c, #468faf)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow: "0 8px 24px rgba(1,73,124,0.25)",
-          }}
-        >
-          <Loader2
-            size={22}
-            color="white"
-            style={{ animation: "spin 1s linear infinite" }}
-          />
-        </div>
-        <p
-          style={{
-            fontSize: "13px",
-            color: "#2a6f97",
-            fontWeight: "500",
-            margin: 0,
-          }}
-        >
-          {t("applicant_dashboard.loading")}
-        </p>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
-    );
+    return <LoadingSpinner message={t("applicant_dashboard.loading")} />;
   }
 
   if (error) {
     return (
-      <div
-        style={{
-          margin: "24px",
-          padding: "16px 20px",
-          background: "rgba(185,28,28,0.07)",
-          border: "1px solid rgba(185,28,28,0.2)",
-          borderRadius: "12px",
-          color: "#b91c1c",
-          fontSize: "13px",
-          fontFamily: "'Plus Jakarta Sans', sans-serif",
-        }}
-      >
+      <div className="m-6 px-5 py-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive text-xs font-sans">
         {error}
       </div>
     );
   }
 
   return (
-    <div
-      style={{
-        minHeight: "100vh",
-        background: "#eef7fa",
-        fontFamily: "'Plus Jakarta Sans', sans-serif",
-        color: "#012a4a",
-        padding: "24px",
-      }}
-    >
+    <div className="relative min-h-screen bg-surface-muted font-sans text-foreground">
+      {showWelcome && (
+        <WelcomeOverlay
+          profile={localProfile}
+          applications={applications}
+          onContinue={() => { sessionStorage.setItem("welcomeShown", "1"); setShowWelcome(false); }}
+        />
+      )}
+      <div className="p-4">
       {/* Inner max-width container */}
-      <div style={{ maxWidth: "1280px", margin: "0 auto" }}>
+      <div className="max-w-7xl mx-auto">
         {/* ── HEADER ─────────────────────────────── */}
-        <div style={{ marginBottom: "24px" }}>
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
           <ApplicantHeader
             fullName={localProfile?.fullName}
             profile_pic={localProfile?.profile_pic}
@@ -124,32 +79,37 @@ export default function ApplicantPage() {
               setLocalProfile((prev) => ({ ...prev, profile_pic: url }))
             }
           />
-        </div>
+        </motion.div>
 
         {/* ── STATS ──────────────────────────────── */}
-        <div style={{ marginBottom: "24px" }}>
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15, ease: "easeOut" }}
+        >
           <StatsCards applications={applications} />
-        </div>
+        </motion.div>
+
+        {/* ── CHARTS ──────────────────────────────── */}
+        <motion.div
+          className="mb-4"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3, ease: "easeOut" }}
+        >
+          <ChartsSection applications={applications} />
+        </motion.div>
 
         {/* ── MAIN GRID ──────────────────────────── */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr",
-            gap: "24px",
-          }}
-          className="applicant-grid"
+        <motion.div
+          className="grid grid-cols-1 gap-4 applicant-grid"
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.45, ease: "easeOut" }}
         >
           {/* LEFT: main column */}
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "24px",
-              gridColumn: "1 / -1",
-            }}
-            className="applicant-main"
-          >
+          <div className="flex flex-col gap-4 col-span-full applicant-main">
             <ApplicationsList applications={applications} />
 
             <InterviewsList
@@ -159,8 +119,9 @@ export default function ApplicantPage() {
               }}
             />
           </div>
-        </div>
+        </motion.div>
       </div>
+    </div>
     </div>
   );
 }

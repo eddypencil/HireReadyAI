@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/shared/services/supabase";
 import { getProfile, makeProfile } from "../services/auth.service";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 export default function AuthCallback() {
   const navigate = useNavigate();
@@ -29,12 +30,5 @@ export default function AuthCallback() {
     handleCallback();
   }, [navigate]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-dark-amethyst-50">
-      <div className="text-center">
-        <span className="inline-block w-6 h-6 rounded-full border-2 border-dark-amethyst-300 border-t-dark-amethyst-600 animate-spin mb-4" />
-        <p className="text-dark-amethyst-500 text-sm">Signing you in...</p>
-      </div>
-    </div>
-  );
+  return <LoadingSpinner message="Signing you in..." />;
 }

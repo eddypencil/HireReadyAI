@@ -5,7 +5,7 @@ export default function JobSearch({ search, setSearch }) {
   const { t } = useTranslation();
 
   return (
-    <div className="bg-background rounded-2xl border border-border shadow-sm p-4 flex items-center gap-3">
+    <div className="bg-card rounded-2xl border border-border shadow-sm p-4 flex items-center gap-3">
       <div className="flex items-center gap-2 flex-1">
         <svg
           width="18"
@@ -34,11 +34,11 @@ export default function JobSearch({ search, setSearch }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder={t("job_search.placeholder")}
-          className="w-full text-sm text-foreground placeholder:text-muted-foreground/60 outline-none bg-transparent"
+          className="w-full text-sm text-foreground placeholder:text-accent outline-none bg-transparent"
         />
       </div>
 
-      <button className="px-5 py-2.5 rounded-xl bg-primary !text-white text-sm font-semibold hover:bg-primary/90 transition shrink-0 shadow-sm cursor-pointer">
+      <button className="px-5 py-2.5 rounded-xl bg-primary text-white! text-sm font-semibold hover:bg-primary/90 transition shrink-0 shadow-sm cursor-pointer">
         {t("job_search.button")}
       </button>
     </div>

@@ -3,6 +3,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import { useDashboardData } from "../hooks/useDashboardData";
 import DashboardStats from "../components/DashboardStats";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import DashboardCharts from "../components/DashboardCharts";
 import DashboardJobsTable from "../components/DashboardJobsTable";
 import { fetchCurrentUserName } from "../services/dashboard.service";
@@ -40,16 +41,7 @@ export default function RecruiterDashboardPage() {
   }, [profile?.id]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <div className="bg-white border border-slate-200/80 rounded-xl px-8 py-6 shadow-sm flex flex-col items-center gap-3">
-          <div className="w-8 h-8 border-3 border-slate-100 border-t-[#0f294a] rounded-full animate-spin"></div>
-          <p className="text-xs text-slate-500 font-medium">
-            {t("recruiter_dashboard.loading")}
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message={t("recruiter_dashboard.loading")} />;
   }
 
   if (error) {

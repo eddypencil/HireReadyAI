@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, ChevronDown, ChevronRight, Video, FileText, Code, ListChecks, Sparkles, Check, X, MessageSquare, Monitor, Clock, Brain } from "lucide-react";
 import { getCandidateProfile, getCandidateStageQuestions } from "../services/candidateProfile.service";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 const QUESTION_TYPE_ICONS = {
   video: Video,
@@ -300,11 +301,7 @@ export default function CandidateAssessmentsPage() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-2 border-yale-blue-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error) {

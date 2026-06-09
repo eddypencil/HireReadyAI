@@ -10,8 +10,14 @@ import pdfWorker from "pdfjs-dist/build/pdf.worker.min.js?url";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 import { supabase } from "@/shared/services/supabase";
-import QuestionCard from "../components/apply/QuestionCard";
 import { useTranslation } from "react-i18next";
+
+import ToastNotification from "../components/apply/ToastNotification";
+import FormHeader from "../components/apply/FormHeader";
+import PersonalInfoStep from "../components/apply/PersonalInfoStep";
+import ResumeUploadStep from "../components/apply/ResumeUploadStep";
+import QuestionsStep from "../components/apply/QuestionsStep";
+import FormFooter from "../components/apply/FormFooter";
 
 export default function ApplyJobPage() {
   const { id: jobId } = useParams();
@@ -54,6 +60,10 @@ export default function ApplyJobPage() {
       delete copy[field];
       return copy;
     });
+  };
+
+  const handleFormChange = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const validateStep = () => {
@@ -258,234 +268,64 @@ export default function ApplyJobPage() {
 
   return (
     <>
-      {toast && (
-        <div className="fixed top-4 right-4 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div
-            className={`px-3.5 py-2 rounded-xl shadow-xs text-sm font-semibold border flex items-center gap-2
-            ${toast.type === "success"
-                ? "bg-green-500/10 text-green-600 border-green-500/20"
-                : "bg-destructive/10 text-destructive border-destructive/20"
-              }
-          `}
-          >
-            <span>{toast.type === "success" ? "✅" : "❌"}</span>
-            <span>{toast.message}</span>
-          </div>
-        </div>
-      )}
+      <ToastNotification toast={toast} />
 
-      <div className="min-h-screen bg-secondary/20 flex items-center justify-center px-4 py-8 font-sans">
-        <div className="w-full max-w-2xl bg-background rounded-xl border border-border/70 shadow-xs overflow-hidden">
-          {/* HEADER */}
-          <div className="p-5 border-b border-border/60 bg-background">
-            <h1 className="text-xl font-bold text-sidebar">
-              {t("apply_job.title")}
-            </h1>
+      <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
+        <div className="w-full max-w-2xl bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+          <FormHeader
+            title={t("apply_job.title")}
+            steps={steps}
+            currentStep={step}
+            progress={progress}
+          />
 
-            {/* STEPS */}
-            <div className="mt-4 flex justify-between text-[11px]">
-              {steps.map((s, i) => (
-                <span
-                  key={i}
-                  className={`font-bold transition-colors duration-200 uppercase tracking-wider ${i <= step
-                      ? "text-accent font-extrabold"
-                      : "text-muted-foreground/40"
-                    }`}
-                >
-                  {s}
-                </span>
-              ))}
-            </div>
-
-            {/* PROGRESS BAR */}
-            <div className="w-full h-1.5 bg-secondary rounded-full mt-2.5 overflow-hidden border border-border/20">
-              <div
-                className="h-full bg-accent rounded-full transition-all duration-300"
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-          </div>
-
-          {/* BODY */}
-          <div dir="ltr" className="p-5 space-y-4">
+          <div className="p-5 space-y-4">
             {step === 0 && (
-              <div className="space-y-4">
-                {/* FULL NAME */}
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    value={form.fullName || ""}
-                    className={`w-full h-10 rounded-lg px-3 text-sm bg-background font-medium border outline-none transition-all focus:ring-2 focus:ring-primary/10 focus:border-primary
-                    ${errors.fullName
-                        ? "border-destructive focus:ring-destructive/10 focus:border-destructive"
-                        : "border-border"
-                      }`}
-                    onChange={(e) => {
-                      setForm((prev) => ({
-                        ...prev,
-                        fullName: e.target.value,
-                      }));
-                      if (errors.fullName) clearFieldError("fullName");
-                    }}
-                  />
-                  {errors.fullName && (
-                    <p className="text-xs text-destructive font-medium mt-1 pl-0.5">{errors.fullName}</p>
-                  )}
-                </div>
-
-                {/* EMAIL */}
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    value={form.email || ""}
-                    className={`w-full h-10 rounded-lg px-3 text-sm bg-background font-medium border outline-none transition-all focus:ring-2 focus:ring-primary/10 focus:border-primary
-                    ${errors.email
-                        ? "border-destructive focus:ring-destructive/10 focus:border-destructive"
-                        : "border-border"
-                      }`}
-                    onChange={(e) => {
-                      setForm((prev) => ({
-                        ...prev,
-                        email: e.target.value,
-                      }));
-                      if (errors.email) clearFieldError("email");
-                    }}
-                  />
-                  {errors.email && (
-                    <p className="text-xs text-destructive font-medium mt-1 pl-0.5">{errors.email}</p>
-                  )}
-                </div>
-
-                {/* PHONE */}
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-1.5">
-                   Phone *
-                  </label>
-                  <input
-                    type="tel"
-                    value={form.phone || ""}
-                    className={`w-full h-10 rounded-lg px-3 text-sm bg-background font-medium border outline-none transition-all focus:ring-2 focus:ring-primary/10 focus:border-primary
-                    ${errors.phone
-                        ? "border-destructive focus:ring-destructive/10 focus:border-destructive"
-                        : "border-border"
-                      }`}
-                    onChange={(e) => {
-                      setForm((prev) => ({
-                        ...prev,
-                        phone: e.target.value,
-                      }));
-                      if (errors.phone) clearFieldError("phone");
-                    }}
-                  />
-                  {errors.phone && (
-                    <p className="text-xs text-destructive font-medium mt-1 pl-0.5">{errors.phone}</p>
-                  )}
-                </div>
-              </div>
+              <PersonalInfoStep
+                form={form}
+                errors={errors}
+                onChange={handleFormChange}
+                clearFieldError={clearFieldError}
+              />
             )}
 
             {step === 1 && (
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
-                  {t("apply_job.labels.resume")} *
-                </label>
-                <label
-                  className={`block border border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200
-                  ${errors.resume
-                      ? "border-destructive/60 bg-destructive/5"
-                      : "border-border bg-secondary/10 hover:border-accent/40 hover:bg-secondary/30"
-                    }`}
-                >
-                  <input
-                    type="file"
-                    accept=".pdf"
-                    hidden
-                    onChange={(e) => {
-                      setForm((prev) => ({
-                        ...prev,
-                        resume: e.target.files[0],
-                      }));
-                      if (errors.resume) clearFieldError("resume");
-                    }}
-                  />
-                  <p className="text-sm text-sidebar font-semibold">
-                    {form.resume
-                      ? form.resume.name
-                      : t("apply_job.placeholders.upload_resume")}
-                  </p>
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {t("apply_job.placeholders.drag_drop")}
-                  </p>
-                </label>
-                {errors.resume && (
-                  <p className="text-xs text-destructive font-medium mt-1.5 pl-0.5">{errors.resume}</p>
-                )}
-              </div>
+              <ResumeUploadStep
+                form={form}
+                errors={errors}
+                onChange={handleFormChange}
+                clearFieldError={clearFieldError}
+              />
             )}
 
             {step === 2 && (
-              <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1 bg-secondary/10 p-4 rounded-xl border border-border/50">
-                {questions.map((q) => (
-                  <QuestionCard
-                    key={q.id}
-                    question={q}
-                    value={form.answers[q.id]}
-                    error={errors[`question_${q.id}`]}
-                    onChange={(val) => handleAnswer(q.id, val)}
-                  />
-                ))}
-              </div>
+              <QuestionsStep
+                questions={questions}
+                answers={form.answers}
+                errors={errors}
+                onAnswer={handleAnswer}
+              />
             )}
           </div>
 
-          {/* FOOTER */}
-          <div className="p-4 border-t border-border/60 flex justify-between bg-background">
-            {step > 0 ? (
-              <button
-                className="px-3.5 py-1.5 rounded-lg border border-border text-sidebar font-semibold bg-background hover:bg-secondary/50 transition-colors text-sm cursor-pointer select-none"
-                onClick={() => setStep(step - 1)}
-              >
-                {t("apply_job.buttons.back")}
-              </button>
-            ) : (
-              <div />
-            )}
-
-            {step < 2 ? (
-              <button
-                className="px-4 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors cursor-pointer select-none"
-                onClick={() => {
-                  const isValid = validateStep();
-                  if (!isValid) {
-                    setToast({
-                      type: "error",
-                      message: "Please fix errors before continuing",
-                    });
-                    return;
-                  }
-                  setStep(step + 1);
-                }}
-              >
-                {t("apply_job.buttons.next")}
-              </button>
-            ) : (
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="px-4 py-1.5 rounded-lg bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors disabled:opacity-50 cursor-pointer select-none"
-              >
-                {loading
-                  ? t("apply_job.buttons.submitting")
-                  : t("apply_job.buttons.submit")}
-              </button>
-            )}
-          </div>
+          <FormFooter
+            currentStep={step}
+            totalSteps={steps.length}
+            onBack={() => setStep(step - 1)}
+            onNext={() => {
+              const isValid = validateStep();
+              if (!isValid) {
+                setToast({
+                  type: "error",
+                  message: "Please fix errors before continuing",
+                });
+                return;
+              }
+              setStep(step + 1);
+            }}
+            onSubmit={handleSubmit}
+            loading={loading}
+          />
         </div>
       </div>
     </>

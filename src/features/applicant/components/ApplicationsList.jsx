@@ -153,29 +153,16 @@ function formatDate(dateStr) {
 function StagePill({ label, config }) {
   return (
     <span
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold tracking-wide whitespace-nowrap"
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "5px",
         background: config.bg,
         color: config.text,
         border: `1px solid ${config.border}`,
-        borderRadius: "999px",
-        padding: "3px 10px",
-        fontSize: "11px",
-        fontWeight: "600",
-        letterSpacing: "0.01em",
-        whiteSpace: "nowrap",
       }}
     >
       <span
-        style={{
-          width: "6px",
-          height: "6px",
-          borderRadius: "50%",
-          background: config.dot,
-          flexShrink: 0,
-        }}
+        className="size-1.5 rounded-full shrink-0"
+        style={{ background: config.dot }}
       />
       {label}
     </span>
@@ -203,101 +190,33 @@ export default function ApplicationsList({ applications }) {
   const showViewAll = applications && applications.length > 3;
 
   return (
-    <div
-      style={{
-        background: "#ffffff",
-        borderRadius: "1rem",
-        border: "1px solid #cfe7f2",
-        boxShadow: "0 1px 2px rgba(1,42,74,.04), 0 1px 3px rgba(1,42,74,.06)",
-        overflow: "hidden",
-      }}
-    >
+    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
       {/* Card Header */}
-      <div
-        style={{
-          padding: "20px 24px 16px",
-          borderBottom: "1px solid #cfe7f2",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-          <div
-            style={{
-              width: "34px",
-              height: "34px",
-              borderRadius: "8px",
-              background: "#eef7fa",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#01497c",
-            }}
-          >
-            <Layers size={16} />
+      <div className="px-5 py-4 pb-3 border-b border-border flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="size-7 rounded-lg bg-surface-muted flex items-center justify-center text-primary">
+            <Layers size={14} />
           </div>
           <div>
-            <h2
-              style={{
-                fontFamily: "'Plus Jakarta Sans', sans-serif",
-                fontSize: "15px",
-                fontWeight: "700",
-                color: "#012a4a",
-                margin: 0,
-                letterSpacing: "-0.01em",
-              }}
-            >
+            <h2 className="font-sans text-sm font-bold text-foreground m-0 tracking-tight">
               {t("applications.title")}
             </h2>
-            <p
-              style={{
-                fontSize: "12px",
-                color: "#2a6f97",
-                margin: 0,
-                marginTop: "1px",
-              }}
-            >
+            <p className="text-xs text-accent m-0 mt-0.5">
               {t("applications.subtitle")}
             </p>
           </div>
         </div>
 
-        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+        <div className="flex items-center gap-2.5">
           {applications && applications.length > 0 && (
-            <span
-              style={{
-                background: "#01497c",
-                color: "white",
-                borderRadius: "999px",
-                width: "22px",
-                height: "22px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "11px",
-                fontWeight: "700",
-              }}
-            >
+            <span className="bg-primary text-white rounded-full size-[22px] flex items-center justify-center text-[11px] font-bold">
               {applications.length}
             </span>
           )}
           {showViewAll && (
             <button
               onClick={() => navigate("/applications")}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                fontSize: "12px",
-                fontWeight: "600",
-                color: "#01497c",
-                background: "transparent",
-                border: "1px solid #cfe7f2",
-                borderRadius: "8px",
-                padding: "5px 12px",
-                cursor: "pointer",
-              }}
+              className="flex items-center gap-1 text-xs font-semibold text-primary bg-transparent border border-border rounded-lg px-3 py-1.5 cursor-pointer"
             >
               {t("applications.view_all")}
               <ArrowUpRight size={12} />
@@ -307,31 +226,16 @@ export default function ApplicationsList({ applications }) {
       </div>
 
       {/* Body */}
-      <div style={{ padding: "16px 24px 20px" }}>
+      <div className="px-5 py-3 pb-4">
         {!applications || applications.length === 0 ? (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "36px 0",
-              color: "#2a6f97",
-            }}
-          >
-            <Briefcase
-              size={32}
-              style={{ margin: "0 auto 10px", opacity: 0.4 }}
-            />
-            <p style={{ fontSize: "13px", margin: 0 }}>
+          <div className="text-center py-7 text-accent">
+            <Briefcase size={32} className="mx-auto mb-2.5 opacity-40" />
+            <p className="text-[13px] m-0">
               {t("applications.empty")}
             </p>
           </div>
         ) : (
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "12px",
-            }}
-          >
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
             {applications
               .slice(0, showViewAll ? 4 : applications.length)
               .map((app) => {
@@ -354,115 +258,34 @@ export default function ApplicationsList({ applications }) {
                 return (
                   <div
                     key={app.id}
-                    style={{
-                      background: "#ffffff",
-                      border: "1px solid #cfe7f2",
-                      borderRadius: "12px",
-                      padding: "14px 16px",
-                      cursor: "pointer",
-                      transition: "all 0.18s ease",
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#eef7fa";
-                      e.currentTarget.style.borderColor = "#89c2d9";
-                      e.currentTarget.style.transform = "translateY(-2px)";
-                      e.currentTarget.style.boxShadow =
-                        "0 10px 30px -12px rgba(1,42,74,.18)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "#ffffff";
-                      e.currentTarget.style.borderColor = "#cfe7f2";
-                      e.currentTarget.style.transform = "translateY(0)";
-                      e.currentTarget.style.boxShadow = "none";
-                    }}
+                    className="bg-card border border-border rounded-xl p-3 cursor-pointer transition-all duration-[180ms] relative overflow-hidden hover:bg-surface-muted hover:border-stage-applied hover:-translate-y-0.5 hover:shadow-[0_10px_30px_-12px_rgba(1,42,74,.18)]"
                   >
                     {/* Stage pill top-right */}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <h3
-                        style={{
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
-                          fontSize: "13px",
-                          fontWeight: "700",
-                          color: "#012a4a",
-                          margin: 0,
-                          letterSpacing: "-0.01em",
-                          lineHeight: "1.3",
-                          flex: 1,
-                          paddingRight: "8px",
-                        }}
-                      >
+                    <div className="flex justify-between items-start mb-2.5">
+                      <h3 className="font-sans text-[13px] font-bold text-foreground m-0 tracking-tight leading-tight flex-1 pr-2">
                         {job?.title || t("applications.unknown_position")}
                       </h3>
                       <StagePill label={displayLabel} config={stageStyle} />
                     </div>
 
                     {/* Company */}
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "5px",
-                        marginBottom: "10px",
-                      }}
-                    >
-                      <Briefcase
-                        size={12}
-                        style={{ color: "#2a6f97", flexShrink: 0 }}
-                      />
-                      <span
-                        style={{
-                          fontSize: "12px",
-                          color: "#2a6f97",
-                          fontWeight: "500",
-                        }}
-                      >
+                    <div className="flex items-center gap-1.5 mb-2.5">
+                      <Briefcase size={12} className="text-accent shrink-0" />
+                      <span className="text-xs text-accent font-medium">
                         {company?.name || t("applications.unknown_company")}
                       </span>
                     </div>
 
                     {/* Meta row */}
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "12px",
-                        flexWrap: "wrap",
-                        borderTop: "1px solid #eef7fa",
-                        paddingTop: "8px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "4px",
-                          fontSize: "11px",
-                          color: "#2a6f97",
-                        }}
-                      >
+                    <div className="flex gap-3 flex-wrap border-t border-surface-muted pt-2">
+                      <span className="flex items-center gap-1 text-[11px] text-accent">
                         <Clock size={10} />
                         {t("applications.applied", {
                           date: formatDate(app.applied_at),
                         })}
                       </span>
                       {job?.closed_at && (
-                        <span
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "4px",
-                            fontSize: "11px",
-                            color: "#2a6f97",
-                          }}
-                        >
+                        <span className="flex items-center gap-1 text-[11px] text-accent">
                           <Calendar size={10} />
                           {t("applications.closes", {
                             date: formatDate(job.closed_at),
@@ -477,33 +300,7 @@ export default function ApplicationsList({ applications }) {
                         e.stopPropagation();
                         navigate(`/jobs/${job?.id}`);
                       }}
-                      style={{
-                        marginTop: "10px",
-                        width: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "5px",
-                        background: "transparent",
-                        border: "1px solid #cfe7f2",
-                        borderRadius: "8px",
-                        padding: "6px 0",
-                        fontSize: "12px",
-                        fontWeight: "600",
-                        color: "#01497c",
-                        cursor: "pointer",
-                        transition: "all 0.15s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = "#01497c";
-                        e.currentTarget.style.color = "white";
-                        e.currentTarget.style.borderColor = "#01497c";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = "transparent";
-                        e.currentTarget.style.color = "#01497c";
-                        e.currentTarget.style.borderColor = "#cfe7f2";
-                      }}
+                      className="mt-2.5 w-full flex items-center justify-center gap-1.5 bg-transparent border border-border rounded-lg py-1.5 text-xs font-semibold text-primary cursor-pointer transition-all duration-150 hover:bg-primary hover:text-white hover:border-primary"
                     >
                       {t("applications.view_job")}
                       <ArrowUpRight size={12} />

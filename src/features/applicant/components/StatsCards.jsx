@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { APPLICATION_STAGE } from "@/shared/constants/enums";
 import { useTranslation } from "react-i18next";
@@ -18,77 +18,77 @@ export default function StatsCards({ applications }) {
     a => a.current_stage === APPLICATION_STAGE.rejected || a.is_rejected === true,
   );
 
+  const interviewCount = useMemo(() => {
+    if (!applications) return 0;
+    const excluded = ["cv_review", "shortlist", "offer"];
+    let count = 0;
+    applications.forEach((app) => {
+      (app.application_stages || []).forEach((s) => {
+        const type = s.recruitment_stages?.stage_type;
+        if (s.score != null && type && !excluded.includes(type)) {
+          count++;
+        }
+      });
+    });
+    return count;
+  }, [applications]);
+
+  const offerCount = useMemo(() => {
+    if (!applications) return 0;
+    return applications.filter((app) => {
+      if (app.current_recruitment_stage?.stage_type === "offer") return true;
+      if (app.current_stage_id && (app.application_stages || []).some(
+        (s) => s.stage_id === app.current_stage_id && s.recruitment_stages?.stage_type === "offer",
+      )) return true;
+      if (app.current_stage === APPLICATION_STAGE.offer) return true;
+      return false;
+    }).length;
+  }, [applications]);
+
   const stats = [
     {
       label: t("applicant_dashboard.stats.applications"),
       value: applications?.length || 0,
-      color: "#01497c",
-      bg: "#eef7fa",
     },
     {
       label: t("applicant_dashboard.stats.interviews"),
-      value: applications?.filter(a => a.current_stage === APPLICATION_STAGE.interview).length || 0,
-      color: "#01497c",
-      bg: "#eef7fa",
+      value: interviewCount,
     },
     {
       label: t("applicant_dashboard.stats.offers"),
-      value: applications?.filter(a => a.current_stage === APPLICATION_STAGE.hired).length || 0,
-      color: "#15803d",
-      bg: "rgba(22,163,74,0.08)",
+      value: offerCount,
     },
     {
       label: "Rejected",
       value: rejectedApps.length,
-      color: "#b91c1c",
-      bg: "rgba(185,28,28,0.06)",
       isRejected: true,
     },
   ];
 
   return (
     <>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: showRejected ? "12px" : 0,
-        }}
-      >
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          {stats.map((s) => (
+      <div className={`flex flex-col ${showRejected ? "gap-3" : "gap-0"}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          {stats.map((s, idx) => (
             <div
               key={s.label}
               onClick={s.isRejected ? () => setShowRejected(!showRejected) : undefined}
-              style={{
-                background: "#fff",
-                border: `1px solid ${s.isRejected && showRejected ? "#b91c1c" : "#cfe7f2"}`,
-                borderRadius: "12px",
-                padding: "16px 20px",
-                boxShadow: "0 1px 2px rgba(1,42,74,.04), 0 1px 3px rgba(1,42,74,.06)",
-                cursor: s.isRejected ? "pointer" : "default",
-                transition: "all 0.2s ease",
-                position: "relative",
-                overflow: "hidden",
-              }}
-              onMouseEnter={e => {
-                if (s.isRejected) {
-                  e.currentTarget.style.boxShadow = "0 4px 12px rgba(185,28,28,0.12)";
-                }
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.boxShadow = "0 1px 2px rgba(1,42,74,.04), 0 1px 3px rgba(1,42,74,.06)";
-              }}
+              className={`bg-card rounded-xl px-4 py-3 shadow-sm relative overflow-hidden transition-all duration-200 ${
+                s.isRejected
+                  ? "cursor-pointer hover:shadow-[0_4px_12px_rgba(185,28,28,0.12)]"
+                  : "cursor-default"
+              } ${s.isRejected && showRejected ? "border border-destructive" : "border border-border"}`}
             >
-              <p style={{ fontSize: "12px", fontWeight: "600", color: s.isRejected ? "#b91c1c" : "#2a6f97", margin: "0 0 4px", letterSpacing: "0.02em" }}>
+              <p className={`text-xs font-semibold m-0 mb-0.5 tracking-wide ${s.isRejected ? "text-destructive" : "text-accent"}`}>
                 {s.label}
               </p>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <h2 style={{ fontSize: "28px", fontWeight: "700", color: s.color, margin: 0, lineHeight: 1 }}>
-                  {s.value}
-                </h2>
+              <div className="flex items-center gap-2">
+                <h2 className={`text-2xl font-bold m-0 leading-none ${idx === 2 ? "text-success" : idx === 3 ? "text-destructive" : "text-primary"}`}>{s.value}</h2>
                 {s.isRejected && s.value > 0 && (
-                  <span style={{ color: "#b91c1c", transition: "transform 0.2s", transform: showRejected ? "rotate(180deg)" : "none" }}>
+                  <span
+                    className="text-destructive transition-transform duration-200"
+                    style={{ transform: showRejected ? "rotate(180deg)" : "none" }}
+                  >
                     {showRejected ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
                   </span>
                 )}
@@ -99,26 +99,10 @@ export default function StatsCards({ applications }) {
 
         {/* Rejected applications list */}
         {showRejected && rejectedApps.length > 0 && (
-          <div
-            style={{
-              background: "#fff",
-              border: "1px solid #cfe7f2",
-              borderRadius: "12px",
-              overflow: "hidden",
-              boxShadow: "0 1px 2px rgba(1,42,74,.04), 0 1px 3px rgba(1,42,74,.06)",
-            }}
-          >
-            <div
-              style={{
-                padding: "14px 20px",
-                borderBottom: "1px solid #eef7fa",
-                display: "flex",
-                alignItems: "center",
-                gap: "8px",
-              }}
-            >
-              <AlertCircle size={14} color="#b91c1c" />
-              <span style={{ fontSize: "13px", fontWeight: "600", color: "#b91c1c" }}>
+          <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+            <div className="px-5 py-3.5 border-b border-surface-muted flex items-center gap-2">
+              <AlertCircle size={14} className="text-destructive" />
+              <span className="text-[13px] font-semibold text-destructive">
                 Rejected Applications
               </span>
             </div>
@@ -128,45 +112,19 @@ export default function StatsCards({ applications }) {
               return (
                 <div
                   key={app.id}
-                  style={{
-                    padding: "12px 20px",
-                    borderBottom: "1px solid #eef7fa",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "12px",
-                  }}
+                  className="px-5 py-3 border-b border-surface-muted last:border-b-0 flex items-center justify-between gap-3"
                 >
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <p style={{ margin: 0, fontSize: "13px", fontWeight: "600", color: "#012a4a" }}>
+                  <div className="flex-1 min-w-0">
+                    <p className="m-0 text-[13px] font-semibold text-foreground">
                       {job?.title || "Unknown Position"}
                     </p>
-                    <p style={{ margin: "2px 0 0", fontSize: "11px", color: "#2a6f97" }}>
+                    <p className="m-0 mt-0.5 text-[11px] text-accent">
                       {company?.name}{app.applied_at ? ` · Applied ${formatDate(app.applied_at)}` : ""}
                     </p>
                   </div>
                   <button
                     onClick={() => navigate(`/applicant/feedback?appId=${app.id}`)}
-                    style={{
-                      flexShrink: 0,
-                      padding: "6px 14px",
-                      background: "transparent",
-                      border: "1px solid #b91c1c",
-                      borderRadius: "8px",
-                      color: "#b91c1c",
-                      fontSize: "12px",
-                      fontWeight: "600",
-                      cursor: "pointer",
-                      transition: "all 0.15s",
-                    }}
-                    onMouseEnter={e => {
-                      e.currentTarget.style.background = "#b91c1c";
-                      e.currentTarget.style.color = "#fff";
-                    }}
-                    onMouseLeave={e => {
-                      e.currentTarget.style.background = "transparent";
-                      e.currentTarget.style.color = "#b91c1c";
-                    }}
+                    className="shrink-0 px-3.5 py-1.5 bg-transparent border border-destructive rounded-lg text-destructive text-xs font-semibold cursor-pointer transition-all duration-150 hover:bg-destructive hover:text-white"
                   >
                     Show Feedback
                   </button>

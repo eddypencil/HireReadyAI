@@ -9,6 +9,7 @@ import { addMembership } from "../services/memberships.service";
 import { logOut } from "@/features/auth/services/auth.service";
 import { useUser } from "@/features/auth/context/user.context";
 import { useTranslation } from "react-i18next";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import { t } from "i18next";
 
 export default function NoCompanyView({ onCompanyJoined }) {
@@ -100,14 +101,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-foreground font-sans">
-        <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-2 text-muted-foreground text-xs font-medium">
-          {t("no_company_view.loading")}
-        </p>
-      </div>
-    );
+    return <LoadingSpinner message={t("no_company_view.loading")} />;
   }
 
   return (

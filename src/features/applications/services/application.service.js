@@ -36,7 +36,9 @@ export const fetchApplicationsByApplicantId = async (applicantId) => {
           id,
           name,
           stage_type,
-          order_index
+          order_index,
+          min_score,
+          pass_score
         ),
         application_stage_evaluations (
           ai_score,

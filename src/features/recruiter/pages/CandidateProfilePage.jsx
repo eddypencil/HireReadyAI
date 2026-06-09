@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, FileText, Sparkles, BarChart3, ChevronRight, Check, X, AlertTriangle, Award } from "lucide-react";
 import { getCandidateProfile, getJobScorePercentile, getPercentileTag } from "../services/candidateProfile.service";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 function getInitials(name = "") {
   return (name || "").split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase() || "?";
@@ -58,11 +59,7 @@ export default function CandidateProfilePage() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="w-8 h-8 border-2 border-yale-blue-600 border-t-transparent rounded-full animate-spin" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (error || !profile) {

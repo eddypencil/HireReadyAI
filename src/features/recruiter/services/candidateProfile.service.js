@@ -6,7 +6,7 @@ export async function getCandidateProfile(applicationId) {
     .select(`
       *,
       profiles ( full_name, headline, phone, profile_pic ),
-      job_postings ( id, title, company_id ),
+      job_postings ( id, title, company_id, seniority_level, job_type ),
       application_stages (
         id,
         status,

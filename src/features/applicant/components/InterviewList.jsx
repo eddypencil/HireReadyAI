@@ -350,29 +350,16 @@ function formatDate(dateStr) {
 function StagePill({ label, cfg }) {
   return (
     <span
+      className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[11px] font-semibold whitespace-nowrap tracking-wide"
       style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: "5px",
         background: cfg.bg,
         color: cfg.text,
         border: `1px solid ${cfg.border}`,
-        borderRadius: "999px",
-        padding: "3px 10px",
-        fontSize: "11px",
-        fontWeight: "600",
-        whiteSpace: "nowrap",
-        letterSpacing: "0.01em",
       }}
     >
       <span
-        style={{
-          width: "6px",
-          height: "6px",
-          borderRadius: "50%",
-          background: cfg.dot,
-          flexShrink: 0,
-        }}
+        className="size-1.5 rounded-full shrink-0"
+        style={{ background: cfg.dot }}
       />
       {label}
     </span>
@@ -380,28 +367,9 @@ function StagePill({ label, cfg }) {
 }
 
 const CardHeader = () => (
-  <div style={{ padding: "16px 20px 0" }}>
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        marginBottom: "14px",
-      }}
-    >
-      <div
-        style={{
-          width: "32px",
-          height: "32px",
-          borderRadius: "8px",
-          background: "#eef7fa",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#01497c",
-          flexShrink: 0,
-        }}
-      >
+  <div className="px-4 pt-3">
+    <div className="flex items-center gap-2 mb-3">
+      <div className="size-7 rounded-lg bg-surface-muted flex items-center justify-center text-primary shrink-0">
         <svg
           width="16"
           height="16"
@@ -416,19 +384,12 @@ const CardHeader = () => (
         </svg>
       </div>
       <div>
-        <div
-          style={{
-            fontSize: "14px",
-            fontWeight: "700",
-            color: "#012a4a",
-            letterSpacing: "-0.01em",
-          }}
-        >
-          {t("interview_list.title")}
-        </div>
-        <div style={{ fontSize: "11px", color: "#2a6f97", marginTop: "1px" }}>
-          {t("interview_list.subtitle")}
-        </div>
+            <div className="text-sm font-bold text-foreground tracking-tight">
+              {t("interview_list.title")}
+            </div>
+            <div className="text-[11px] text-accent mt-0.5">
+              {t("interview_list.subtitle")}
+            </div>
       </div>
     </div>
   </div>
@@ -496,32 +457,12 @@ export default function InterviewList({ applications }) {
         return stageStatus !== null;
     }) || [];
 
-  // ── Shared card shell ──
-  const cardShell = {
-    background: "#ffffff",
-    border: "1px solid #cfe7f2",
-    borderRadius: "14px",
-    overflow: "hidden",
-    boxShadow: "0 1px 2px rgba(1,42,74,.04), 0 1px 3px rgba(1,42,74,.06)",
-    fontFamily: "'Plus Jakarta Sans', sans-serif",
-  };
-
-  // ── Card header row ──
-
   // ── Empty state ──
   if (interviewProcesses.length === 0) {
     return (
-      <div style={cardShell}>
+      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm font-sans">
         <CardHeader />
-        <div
-          style={{
-            borderTop: "1px solid #cfe7f2",
-            padding: "36px 20px",
-            textAlign: "center",
-            color: "#2a6f97",
-            fontSize: "13px",
-          }}
-        >
+        <div className="border-t border-border py-9 px-5 text-center text-accent text-[13px]">
           {t("interview_list.empty_state")}
         </div>
       </div>
@@ -557,31 +498,12 @@ export default function InterviewList({ applications }) {
   ];
 
   return (
-    <div style={cardShell}>
+    <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm font-sans">
       {/* Header + tabs */}
-      <div style={{ padding: "16px 20px 0" }}>
+      <div className="px-4 pt-3">
         {/* Title row */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "10px",
-            marginBottom: "14px",
-          }}
-        >
-          <div
-            style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "8px",
-              background: "#eef7fa",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "#01497c",
-              flexShrink: 0,
-            }}
-          >
+        <div className="flex items-center gap-2 mb-3">
+          <div className="size-7 rounded-lg bg-surface-muted flex items-center justify-center text-primary shrink-0">
             <svg
               width="16"
               height="16"
@@ -596,73 +518,34 @@ export default function InterviewList({ applications }) {
             </svg>
           </div>
           <div>
-            <div
-              style={{
-                fontSize: "14px",
-                fontWeight: "700",
-                color: "#012a4a",
-                letterSpacing: "-0.01em",
-              }}
-            >
+        <div className="text-sm font-bold text-foreground tracking-tight">
               {t("interview_list.title")}
             </div>
-            <div
-              style={{ fontSize: "11px", color: "#2a6f97", marginTop: "1px" }}
-            >
+            <div className="text-[11px] text-accent mt-0.5">
               {t("interview_list.subtitle")}
             </div>
           </div>
         </div>
 
         {/* Underline tabs */}
-        <div
-          style={{
-            display: "flex",
-            gap: 0,
-            borderBottom: "1px solid #cfe7f2",
-            overflowX: "auto",
-            marginLeft: "-20px",
-            marginRight: "-20px",
-            paddingLeft: "20px",
-          }}
-        >
+        <div className="flex border-b border-border overflow-x-auto -mx-5 px-5">
           {tabs.map((tab) => {
             const isActive = activeTab === tab.key;
             return (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "6px",
-                  padding: "8px 14px",
-                  fontSize: "11px",
-                  fontWeight: "700",
-                  color: isActive ? "#01497c" : "#2a6f97",
-                  background: "transparent",
-                  border: "none",
-                  borderBottom: isActive
-                    ? "2px solid #01497c"
-                    : "2px solid transparent",
-                  borderRadius: 0,
-                  cursor: "pointer",
-                  transition: "all 0.15s ease",
-                  whiteSpace: "nowrap",
-                  marginBottom: "-1px",
-                  fontFamily: "'Plus Jakarta Sans', sans-serif",
-                }}
+                className={`flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-bold bg-transparent border-none cursor-pointer whitespace-nowrap font-sans transition-all duration-150 ${
+                  isActive
+                    ? "text-primary border-b-2 border-primary"
+                    : "text-accent border-b-2 border-transparent"
+                }`}
               >
                 {tab.label}
                 <span
-                  style={{
-                    background: isActive ? "#01497c" : "#eef7fa",
-                    color: isActive ? "white" : "#2a6f97",
-                    borderRadius: "999px",
-                    padding: "1px 7px",
-                    fontSize: "9px",
-                    fontWeight: "800",
-                  }}
+                  className={`rounded-full px-[7px] py-[1px] text-[9px] font-extrabold ${
+                    isActive ? "bg-primary text-white" : "bg-surface-muted text-accent"
+                  }`}
                 >
                   {tab.count}
                 </span>
@@ -673,23 +556,13 @@ export default function InterviewList({ applications }) {
       </div>
 
       {/* Body */}
-      <div style={{ padding: "14px 20px 18px" }}>
+      <div className="px-4 pt-3 pb-3">
         {filteredInterviews.length === 0 ? (
-          <div
-            style={{
-              textAlign: "center",
-              padding: "28px 0",
-              color: "#2a6f97",
-              fontSize: "12px",
-              background: "#eef7fa",
-              borderRadius: "10px",
-              border: "1px dashed #89c2d9",
-            }}
-          >
+          <div className="text-center py-6 text-accent text-xs bg-surface-muted rounded-xl border border-dashed border-stage-applied">
             {t("interview_list.no_records")}
           </div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "9px" }}>
+          <div className="flex flex-col gap-2">
             {filteredInterviews.map((app) => {
               const job = app.job_postings;
               const company = job?.companies;
@@ -712,101 +585,34 @@ export default function InterviewList({ applications }) {
               return (
                 <div
                   key={app.id}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap",
-                    gap: "12px",
-                    background: isInterviewActive ? "#eef7fa" : "#ffffff",
-                    border: isInterviewActive
-                      ? "1px solid #89c2d9"
-                      : "1px solid #cfe7f2",
-                    borderRadius: "10px",
-                    padding: "13px 15px",
-                    transition: "all 0.18s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-1px)";
-                    e.currentTarget.style.boxShadow =
-                      "0 4px 14px rgba(1,42,74,.09)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
+                  className={`flex items-center justify-between flex-wrap gap-3 rounded-xl px-3.5 py-2.5 transition-all duration-[180ms] hover:-translate-y-0.5 hover:shadow-[0_4px_14px_rgba(1,42,74,.09)] ${
+                    isInterviewActive
+                      ? "bg-surface-muted border border-stage-applied"
+                      : "bg-card border border-border"
+                  }`}
                 >
                   {/* Info */}
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        flexWrap: "wrap",
-                        marginBottom: "4px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "13px",
-                          fontWeight: "700",
-                          color: "#012a4a",
-                          letterSpacing: "-0.01em",
-                        }}
-                      >
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <span className="text-[13px] font-bold text-foreground tracking-tight">
                         {job?.title ||
                           t("interview_list.fields.unknown_position")}
                       </span>
                       <StagePill label={displayLabel} cfg={stageCfg} />
                     </div>
 
-                    <p
-                      style={{
-                        fontSize: "12px",
-                        color: "#2a6f97",
-                        fontWeight: "500",
-                        margin: 0,
-                        marginBottom: "5px",
-                      }}
-                    >
+                    <p className="text-xs text-accent font-medium m-0 mb-1.5">
                       {company?.name ||
                         t("interview_list.fields.unknown_company")}
                     </p>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <span
-                        style={{
-                          background: "#eef7fa",
-                          border: "1px solid #cfe7f2",
-                          borderRadius: "6px",
-                          padding: "2px 8px",
-                          fontSize: "10px",
-                          fontWeight: "600",
-                          color: "#2a6f97",
-                          fontFamily: "monospace",
-                        }}
-                      >
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="bg-surface-muted border border-border rounded-md px-2 py-0.5 text-[10px] font-semibold text-accent font-mono">
                         {t("interview_list.fields.id")}:{" "}
                         {app.candidate_profile_id?.substring(0, 8)}
                       </span>
-                      <span
-                        style={{
-                          width: "4px",
-                          height: "4px",
-                          borderRadius: "50%",
-                          background: "#89c2d9",
-                          flexShrink: 0,
-                        }}
-                      />
-                      <span style={{ fontSize: "11px", color: "#2a6f97" }}>
+                      <span className="size-1 rounded-full bg-stage-applied shrink-0" />
+                      <span className="text-[11px] text-accent">
                         {t("interview_list.fields.applied")}{" "}
                         {formatDate(app.applied_at)}
                       </span>
@@ -814,39 +620,11 @@ export default function InterviewList({ applications }) {
                   </div>
 
                   {/* Buttons */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      flexShrink: 0,
-                    }}
-                  >
+                  <div className="flex items-center gap-2 shrink-0">
                     {isInterviewActive && (
                       <button
                         onClick={() => navigate(`/interview/${app.id}`)}
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          background: "#01497c",
-                          color: "white",
-                          border: "none",
-                          borderRadius: "8px",
-                          padding: "7px 14px",
-                          fontSize: "11px",
-                          fontWeight: "700",
-                          cursor: "pointer",
-                          whiteSpace: "nowrap",
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
-                          transition: "opacity 0.15s ease",
-                        }}
-                        onMouseEnter={(e) =>
-                          (e.currentTarget.style.opacity = "0.88")
-                        }
-                        onMouseLeave={(e) =>
-                          (e.currentTarget.style.opacity = "1")
-                        }
+                        className="flex items-center gap-1.5 bg-primary text-white border-none rounded-lg px-3.5 py-[7px] text-[11px] font-bold cursor-pointer whitespace-nowrap font-sans transition-opacity duration-150 hover:opacity-[0.88]"
                       >
                         <svg
                           width="10"
@@ -867,31 +645,7 @@ export default function InterviewList({ applications }) {
                         href={app.cv_file_url}
                         target="_blank"
                         rel="noreferrer"
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: "5px",
-                          background: "transparent",
-                          color: "#01497c",
-                          border: "1px solid #cfe7f2",
-                          borderRadius: "8px",
-                          padding: "7px 13px",
-                          fontSize: "11px",
-                          fontWeight: "700",
-                          cursor: "pointer",
-                          whiteSpace: "nowrap",
-                          textDecoration: "none",
-                          fontFamily: "'Plus Jakarta Sans', sans-serif",
-                          transition: "all 0.15s ease",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = "#eef7fa";
-                          e.currentTarget.style.borderColor = "#89c2d9";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = "transparent";
-                          e.currentTarget.style.borderColor = "#cfe7f2";
-                        }}
+                        className="flex items-center gap-1.5 bg-transparent text-primary border border-border rounded-lg px-[13px] py-[7px] text-[11px] font-bold cursor-pointer whitespace-nowrap no-underline font-sans transition-all duration-150 hover:bg-surface-muted hover:border-stage-applied"
                       >
                         <svg
                           width="10"

@@ -1,17 +1,13 @@
 import { Navigate } from "react-router-dom";
 import { useUser } from "../context/user.context";
 import { USER_ROLE } from "@/shared/constants/enums";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 export function ProtectedRoute({ children, allowedRoles }) {
   const { user, profile, loading } = useUser();
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex flex-col items-center justify-center text-sidebar">
-        <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
-        <p className="mt-2 text-muted-foreground text-sm font-medium">Loading...</p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!user) {

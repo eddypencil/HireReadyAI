@@ -23,6 +23,7 @@ import {
   Moon,
 } from "lucide-react";
 
+
 export default function MainLayout() {
   const { profile, signOutUser } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -177,7 +178,9 @@ export default function MainLayout() {
         </div>
 
         <div className="flex-1 overflow-y-auto">
-          <Outlet />
+          <div className="h-full">
+            <Outlet />
+          </div>
         </div>
       </div>
     </div>

@@ -20,7 +20,7 @@ export default function JobFilters({
   const { t } = useTranslation();
 
   return (
-    <div className="bg-background rounded-xl border border-border p-4 space-y-4 sticky top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto">
+    <div className="bg-card rounded-xl border border-border p-4 space-y-4 sticky top-4 h-fit max-h-[calc(100vh-2rem)] overflow-y-auto">
 
       {/* Header */}
       <div className="flex items-center justify-between pb-1 border-b border-border">
@@ -97,7 +97,7 @@ export default function JobFilters({
                 type="checkbox"
                 checked={jobType === value}
                 onChange={() => setJobType(jobType === value ? "" : value)}
-                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-muted-foreground/30 accent-primary cursor-pointer"
               />
               <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                 {label}
@@ -128,7 +128,7 @@ export default function JobFilters({
                 onChange={() =>
                   setWorkLocation(workLocation === value ? "" : value)
                 }
-                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-muted-foreground/30 accent-primary cursor-pointer"
               />
               <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
                 {label}
@@ -153,7 +153,7 @@ export default function JobFilters({
                 type="checkbox"
                 checked={level === lvl}
                 onChange={() => setLevel(level === lvl ? "" : lvl)}
-                className="w-3.5 h-3.5 rounded border-border accent-primary cursor-pointer"
+                className="w-3.5 h-3.5 rounded border-muted-foreground/30 accent-primary cursor-pointer"
               />
               <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors capitalize">
                 {lvl}
