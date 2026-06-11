@@ -9,6 +9,10 @@ import Customers from "../Components/Customers";
 import ContactUs from "../Components/ContactUs";
 import Footer from "../Components/Footer";
 
+import BuiltForJobs from "../Components/Builtforjobs";
+import TopFeaturedJobs from "../Components/Topfeaturedjobs";
+import FAQ from "../Components/Faq";
+
 const NAV_LINKS = [
   { label: "Features", href: "#features" },
   { label: "How It Works", href: "#how-it-works" },
@@ -32,6 +36,9 @@ export default function LandingPage() {
       <HowItWorks />
       <Customers />
       <ContactUs />
+      <BuiltForJobs />
+      <TopFeaturedJobs />
+      <FAQ />
       <Footer />
     </LandingLayout>
   );
