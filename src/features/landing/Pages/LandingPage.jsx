@@ -4,10 +4,10 @@ import TrustedBySection from "../Components/TrustedBySection";
 import FeaturesSection from "../Components/FeaturesSection";
 import AnimatedSection from "../Components/AnimatedSection";
 import LandingLayout from "../LandingLayout";
-import HowItWorks from "../Components/HowItWorks";
-import Customers from "../Components/Customers";
-import ContactUs from "../Components/ContactUs";
-import Footer from "../Components/Footer";
+import HowItWorks from "../components/HowItWorks";
+import Customers from "../components/Customers";
+import ContactUs from "../components/ContactUs";
+import Footer from "../components/Footer";
 
 import BuiltForJobs from "../Components/Builtforjobs";
 import TopFeaturedJobs from "../Components/Topfeaturedjobs";

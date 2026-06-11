@@ -30,6 +30,7 @@ export const UserProvider = ({ children }) => {
       bio: data.bio,
       location: data.location,
       linkedin_url: data.linkedin_url,
+      isPremium: data.is_premium ?? false,
       created_at: new Date().toISOString(),
     };
   };
@@ -132,6 +133,13 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  const refreshProfile = async () => {
+    const currentUser = (await supabase.auth.getUser()).data.user;
+    if (currentUser) {
+      await fetchAndSetProfile(currentUser.id);
+    }
+  };
+
   return (
     <UserContext.Provider
       value={{
@@ -143,6 +151,7 @@ export const UserProvider = ({ children }) => {
         signOutUser,
         resetUserPassword,
         updateUserPassword,
+        refreshProfile,
       }}
     >
       {children}

@@ -11,6 +11,7 @@ import { useUser } from "@/features/auth/context/user.context";
 import { t } from "i18next";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import { MEMBERSHIP_PERMISSION } from "@/shared/constants/enums";
+import { createCheckoutSession } from "@/features/premium/services/premium.service";
 
 export default function NoCompanyView({ onCompanyJoined }) {
   const { profile } = useUser();
@@ -235,8 +236,8 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   whileHover={{ scale: 1.02 }}
                   className="bg-gradient-to-b from-primary/5 to-background rounded-xl border border-primary/30 p-6 shadow-xs flex flex-col relative overflow-hidden"
                 >
-                  <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    Coming Soon
+                  <div className="absolute top-3 right-3 bg-warning text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    One-time
                   </div>
                   <div className="mb-4">
                     <div className="w-10 h-10 bg-warning/20 rounded-lg flex items-center justify-center mb-3">
@@ -248,7 +249,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     <p className="text-2xl font-bold text-foreground mt-1">
                       $29
                       <span className="text-xs font-normal text-muted-foreground">
-                        /month
+                        /one-time
                       </span>
                     </p>
                   </div>
@@ -275,10 +276,17 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     </li>
                   </ul>
                   <button
-                    disabled
-                    className="w-full py-2 bg-muted text-muted-foreground rounded-md text-xs font-medium cursor-not-allowed"
+                    onClick={async () => {
+                      try {
+                        const { url } = await createCheckoutSession();
+                        window.location.href = url;
+                      } catch (err) {
+                        console.error("Failed to start checkout:", err);
+                      }
+                    }}
+                    className="w-full py-2 bg-warning text-white rounded-md text-xs font-medium hover:bg-warning/90 transition-colors cursor-pointer"
                   >
-                    Coming Soon
+                    Buy Premium
                   </button>
                 </motion.div>
               </div>
