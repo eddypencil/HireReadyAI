@@ -148,9 +148,10 @@ const CandidateCard = ({
       onClick={onClick}
     >
       <div className="flex flex-col flex-1 justify-between">
-
         <div className="flex items-start gap-3 mb-3 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0 font-display shadow-xs">            {getInitials(candidate.name)}
+          <div className="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-xs shrink-0 font-display shadow-xs">
+            {" "}
+            {getInitials(candidate.name)}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-xs font-bold text-foreground truncate font-display leading-snug group-hover:text-primary transition-colors">
@@ -164,7 +165,9 @@ const CandidateCard = ({
 
         <div className="flex items-center justify-between gap-2 mb-3">
           {candidate.hasEvaluation ? (
-            <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border tracking-wide uppercase ${fit.cls}`}>
+            <span
+              className={`inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold border tracking-wide uppercase ${fit.cls}`}
+            >
               {fit.label}
             </span>
           ) : (
@@ -179,7 +182,9 @@ const CandidateCard = ({
             </span>
           )}
 
-          <span className={`px-2 py-0.5 rounded-lg text-[11px] font-bold font-display tracking-tight shrink-0 ${candidate.hasEvaluation ? scoreColor(candidate.score) : "bg-muted text-muted-foreground border border-border"}`}>
+          <span
+            className={`px-2 py-0.5 rounded-lg text-[11px] font-bold font-display tracking-tight shrink-0 ${candidate.hasEvaluation ? scoreColor(candidate.score) : "bg-muted text-muted-foreground border border-border"}`}
+          >
             {candidate.hasEvaluation ? candidate.score : "-/100"}
           </span>
         </div>
@@ -193,14 +198,15 @@ const CandidateCard = ({
           </div>
           <div className="w-full h-1.5 rounded-full bg-muted border border-border/30 overflow-hidden">
             <div
-              className={`h-full rounded-full transition-all duration-500 ${candidate.score >= 85
-                ? "bg-success"
-                : candidate.score >= 70
-                  ? "bg-primary"
-                  : candidate.score >= 55
-                    ? "bg-warning"
-                    : "bg-destructive"
-                }`}
+              className={`h-full rounded-full transition-all duration-500 ${
+                candidate.score >= 85
+                  ? "bg-success"
+                  : candidate.score >= 70
+                    ? "bg-primary"
+                    : candidate.score >= 55
+                      ? "bg-warning"
+                      : "bg-destructive"
+              }`}
               style={{ width: `${candidate.score || 0}%` }}
             />
           </div>
@@ -223,12 +229,16 @@ const CandidateCard = ({
           ) : (
             <>
               <ChevronDown className="w-3 h-3" />
-              {previousStages.length} previous stage{previousStages.length > 1 ? "s" : ""}
+              {previousStages.length} previous stage
+              {previousStages.length > 1 ? "s" : ""}
             </>
           )}
         </button>
       ) : (
-        <div className="h-6 w-full invisible border-t border-transparent mt-2" aria-hidden="true" />
+        <div
+          className="h-6 w-full invisible border-t border-transparent mt-2"
+          aria-hidden="true"
+        />
       )}
 
       {expanded && previousStages.length > 0 && (
@@ -249,11 +259,15 @@ const CandidateCard = ({
                 </span>
                 <div className="flex items-center gap-1.5 shrink-0">
                   {ss != null && (
-                    <span className={`text-[10px] font-bold px-1 py-0.2 rounded ${scoreColor(ss)}`}>
+                    <span
+                      className={`text-[10px] font-bold px-1 py-0.2 rounded ${scoreColor(ss)}`}
+                    >
                       {ss}
                     </span>
                   )}
-                  <span className={`text-[9px] font-bold px-1 py-0.2 rounded border uppercase tracking-tight ${statusStyle(as.status)}`}>
+                  <span
+                    className={`text-[9px] font-bold px-1 py-0.2 rounded border uppercase tracking-tight ${statusStyle(as.status)}`}
+                  >
                     {statusLabel(as.status)}
                   </span>
                 </div>
@@ -275,6 +289,8 @@ const PipelineColumn = ({
   onDrop,
   draggingCandidate,
   handleStageAutoAdvance,
+  handleAdvanceAll,
+  loadingDrop,
   onCardClick,
   allStages,
 }) => {
@@ -290,8 +306,11 @@ const PipelineColumn = ({
 
   return (
     <div
-      className={`flex flex-col min-w-[280px] w-[280px] shrink-0 rounded-2xl transition-all duration-200 ${isOver && !isLocked ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-black" : ""
-        }`}
+      className={`flex flex-col min-w-[280px] w-[280px] shrink-0 rounded-2xl transition-all duration-200 ${
+        isOver && !isLocked
+          ? "ring-2 ring-primary ring-offset-2 dark:ring-offset-black"
+          : ""
+      }`}
       onDragOver={(e) => {
         e.preventDefault();
         if (!isLocked) onDragOver(stage.id);
@@ -320,8 +339,17 @@ const PipelineColumn = ({
               title={t("candidate_pipeline.locked_stage")}
             />
           )}
-
           {!isLocked && (
+            <button
+              onClick={() => handleAdvanceAll(stage.id)}
+              disabled={loadingDrop}
+              className="ml-auto shrink-0 text-[10px] font-bold text-primary bg-primary/10 border border-primary/20 hover:bg-primary/15 px-2 py-1 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
+            >
+              Advance All
+            </button>
+          )}
+
+          {/* {!isLocked && (
             <div className="relative ml-auto shrink-0">
               <button
                 onClick={() => setOpenMenu((s) => !s)}
@@ -361,23 +389,25 @@ const PipelineColumn = ({
                 </div>
               )}
             </div>
-          )}
+          )} */}
         </div>
       </div>
 
       <div
-        className={`flex-1 overflow-y-auto space-y-3 px-1.5 pb-4 transition-all duration-200 scrollbar-thin ${isOver && !isLocked ? "bg-muted/40 rounded-xl" : ""
-          }`}
+        className={`flex-1 overflow-y-auto space-y-3 px-1.5 pb-4 transition-all duration-200 scrollbar-thin ${
+          isOver && !isLocked ? "bg-muted/40 rounded-xl" : ""
+        }`}
         style={{ maxHeight: "calc(100vh - 240px)", minHeight: 150 }}
       >
         {candidates.length === 0 ? (
           <div
-            className={`rounded-xl border-2 border-dashed h-28 flex items-center justify-center transition-all ${isLocked
-              ? "border-border/60 bg-muted/10 text-muted-foreground/30"
-              : isOver
-                ? "border-primary bg-primary/5 text-primary"
-                : "border-border text-muted-foreground/20"
-              }`}
+            className={`rounded-xl border-2 border-dashed h-28 flex items-center justify-center transition-all ${
+              isLocked
+                ? "border-border/60 bg-muted/10 text-muted-foreground/30"
+                : isOver
+                  ? "border-primary bg-primary/5 text-primary"
+                  : "border-border text-muted-foreground/20"
+            }`}
           >
             <p className="text-[11px] font-medium tracking-wide">
               {isLocked
@@ -391,7 +421,11 @@ const PipelineColumn = ({
               key={c.id}
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.35, delay: cIdx * 0.04, ease: "easeOut" }}
+              transition={{
+                duration: 0.35,
+                delay: cIdx * 0.04,
+                ease: "easeOut",
+              }}
             >
               <CandidateCard
                 candidate={c}
@@ -440,7 +474,8 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
         "auto-generate-criteria",
         { body: { jobId: selectedJobId } },
       );
-      if (error) throw new Error(error.message || "Failed to generate criteria");
+      if (error)
+        throw new Error(error.message || "Failed to generate criteria");
       if (data.criteria) setCriteria(data.criteria);
       if (data.suggestedMinScore) setMinScore(data.suggestedMinScore);
       if (data.scoreReasoning) setScoreReasoning(data.scoreReasoning);
@@ -488,7 +523,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
       const results = data?.results || [];
       const passed = results.filter((r) => r.passed).length;
-      alert(`Evaluation complete: ${passed}/${candidateIds.length} candidates advanced to shortlist`);
+      alert(
+        `Evaluation complete: ${passed}/${candidateIds.length} candidates advanced to shortlist`,
+      );
 
       setShowShortlistModal(false);
       setCriteria("");
@@ -576,7 +613,8 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           let score = 0;
 
           if (currentStage) {
-            evaluation = currentStage.application_stage_evaluations?.[0] ?? null;
+            evaluation =
+              currentStage.application_stage_evaluations?.[0] ?? null;
             if (evaluation?.ai_score != null) {
               score = Math.round(Number(evaluation.ai_score));
             } else if (currentStage.score != null) {
@@ -584,13 +622,17 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
             }
           }
 
-          const hasEvaluation = evaluation !== null || currentStage?.score != null;
-          const isRejected = app.is_rejected || evaluation?.recommendation === "reject";
+          const hasEvaluation =
+            evaluation !== null || currentStage?.score != null;
+          const isRejected =
+            app.is_rejected || evaluation?.recommendation === "reject";
 
           return {
             id: app.id,
             jobId: app.job_postings?.id,
-            name: app.profiles?.full_name || t("candidate_pipeline.unknown_candidate"),
+            name:
+              app.profiles?.full_name ||
+              t("candidate_pipeline.unknown_candidate"),
             applied_at: app.applied_at,
             score,
             hasEvaluation,
@@ -618,10 +660,14 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
   const filtered = candidates.filter((c) => {
     if (selectedJobId && c.jobId !== selectedJobId) return false;
-    if (search && !c.name.toLowerCase().includes(search.toLowerCase())) return false;
-    if (filterFit === t("candidate_pipeline.fit.rejected")) return c.is_rejected;
+    if (search && !c.name.toLowerCase().includes(search.toLowerCase()))
+      return false;
+    if (filterFit === t("candidate_pipeline.fit.rejected"))
+      return c.is_rejected;
     if (filterFit !== t("candidate_pipeline.filters.all")) {
-      const fitLabel = c.hasEvaluation ? getFit(c.score, c.is_rejected, t).label : "In Progress";
+      const fitLabel = c.hasEvaluation
+        ? getFit(c.score, c.is_rejected, t).label
+        : "In Progress";
       if (fitLabel !== filterFit) return false;
     }
     return true;
@@ -660,7 +706,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     const prevState = [...candidates];
 
     setCandidates((prev) =>
-      prev.map((c) => (c.id === candidateId ? { ...c, currentStageId: targetStageId } : c)),
+      prev.map((c) =>
+        c.id === candidateId ? { ...c, currentStageId: targetStageId } : c,
+      ),
     );
 
     try {
@@ -680,10 +728,19 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     if (!selectedJobId) return;
     try {
       const minScore =
-        stageSettings[stageId]?.min_score ?? stages.find((s) => s.id === stageId)?.min_score ?? 70;
-      const { advancedCount } = await autoAdvanceToShortlist(selectedJobId, minScore);
+        stageSettings[stageId]?.min_score ??
+        stages.find((s) => s.id === stageId)?.min_score ??
+        70;
+      const { advancedCount } = await autoAdvanceToShortlist(
+        selectedJobId,
+        minScore,
+      );
       if (advancedCount > 0) {
-        alert(t("candidate_pipeline.alerts.advanced_success", { count: advancedCount }));
+        alert(
+          t("candidate_pipeline.alerts.advanced_success", {
+            count: advancedCount,
+          }),
+        );
       } else {
         alert(t("candidate_pipeline.alerts.no_match"));
       }
@@ -693,6 +750,41 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     }
   };
 
+  const handleAdvanceAll = async (stageId) => {
+    const currentStage = stages.find((s) => s.id === stageId);
+    if (!currentStage) return;
+
+    const sorted = [...stages].sort((a, b) => a.order_index - b.order_index);
+    const currentIndex = sorted.findIndex((s) => s.id === stageId);
+    const nextStage = sorted[currentIndex + 1];
+
+    if (!nextStage || nextStage.is_locked) return;
+
+    const stageCandidates = byStage(stageId);
+    if (stageCandidates.length === 0) return;
+
+    setLoadingDrop(true);
+    const prevState = [...candidates];
+
+    setCandidates((prev) =>
+      prev.map((c) =>
+        stageCandidates.find((sc) => sc.id === c.id)
+          ? { ...c, currentStageId: nextStage.id }
+          : c,
+      ),
+    );
+
+    try {
+      await Promise.all(
+        stageCandidates.map((c) => moveToStage(c.id, nextStage.id)),
+      );
+    } catch (err) {
+      console.error("Advance all failed:", err);
+      setCandidates(prevState);
+    } finally {
+      setLoadingDrop(false);
+    }
+  };
   return (
     <div
       className="flex flex-col h-[calc(100vh-64px)] bg-muted/20 text-foreground overflow-hidden"
@@ -720,7 +812,9 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 onChange={(e) => setSelectedJobId(e.target.value)}
                 className="text-xs font-bold text-primary bg-muted border border-border rounded-lg px-2.5 py-1.5 outline-none cursor-pointer focus:ring-2 focus:ring-primary/20"
               >
-                {jobs.length === 0 && <option value="">{t("candidate_pipeline.no_jobs")}</option>}
+                {jobs.length === 0 && (
+                  <option value="">{t("candidate_pipeline.no_jobs")}</option>
+                )}
                 {jobs.map((j) => (
                   <option key={j.id} value={j.id}>
                     {j.title}
@@ -728,7 +822,10 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 ))}
               </select>
               <span className="text-xs text-muted-foreground">
-                · <span className="font-bold text-primary font-display">{totalInFlight}</span>{" "}
+                ·{" "}
+                <span className="font-bold text-primary font-display">
+                  {totalInFlight}
+                </span>{" "}
                 {t("candidate_pipeline.candidates_in_flight")}
               </span>
             </div>
@@ -758,10 +855,11 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
             </button>
             <button
               onClick={() => setShowFilters((s) => !s)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${showFilters
-                ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                : "border-border text-foreground bg-surface hover:bg-muted"
-                }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
+                showFilters
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "border-border text-foreground bg-surface hover:bg-muted"
+              }`}
             >
               <SlidersHorizontal className="w-3.5 h-3.5" />
               {t("candidate_pipeline.filters.title")}
@@ -791,10 +889,11 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               <button
                 key={f}
                 onClick={() => setFilterFit(f)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${filterFit === f
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
-                  : "bg-surface text-foreground border-border hover:bg-muted"
-                  }`}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                  filterFit === f
+                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    : "bg-surface text-foreground border-border hover:bg-muted"
+                }`}
               >
                 {f}
               </button>
@@ -845,7 +944,11 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               key={s.id}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.25 + idx * 0.08, ease: "easeOut" }}
+              transition={{
+                duration: 0.4,
+                delay: 0.25 + idx * 0.08,
+                ease: "easeOut",
+              }}
             >
               <PipelineColumn
                 stage={s}
@@ -856,6 +959,8 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 onDrop={handleDrop}
                 draggingCandidate={draggingCandidate}
                 handleStageAutoAdvance={handleStageAutoAdvance}
+                handleAdvanceAll={handleAdvanceAll}
+                loadingDrop={loadingDrop}
                 allStages={stages}
                 onCardClick={(c) => setSelectedCandidate(c)}
               />
@@ -875,7 +980,6 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
       {showShortlistModal && (
         <div className="fixed inset-0 bg-black/60 dark:bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-surface border border-border rounded-2xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-
             {/* Header */}
             <div className="px-6 py-4 border-b border-border flex items-center justify-between bg-muted/40">
               <div className="flex items-center gap-2">
@@ -894,7 +998,6 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
 
             {/* Body */}
             <div className="p-6 overflow-y-auto space-y-5 flex-1">
-
               {/* Evaluation Criteria Section */}
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -944,14 +1047,14 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 />
               </div>
 
-
               {scoreReasoning && (
                 <div className="p-3 bg-primary/5 border border-primary/10 rounded-xl text-xs text-muted-foreground animate-fade-in">
-                  <span className="font-bold text-primary block mb-0.5">AI Suggestion Note:</span>
+                  <span className="font-bold text-primary block mb-0.5">
+                    AI Suggestion Note:
+                  </span>
                   {scoreReasoning}
                 </div>
               )}
-
             </div>
 
             {/* Footer */}
@@ -967,11 +1070,12 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 disabled={!criteria.trim() || advancingToShortlist}
                 className="px-5 py-2 text-sm font-bold text-white bg-primary hover:bg-primary/90 rounded-xl shadow-xs transition-all disabled:opacity-50 flex items-center gap-2 cursor-pointer"
               >
-                {advancingToShortlist && <Loader2 className="w-4 h-4 animate-spin" />}
+                {advancingToShortlist && (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                )}
                 Run Evaluation
               </button>
             </div>
-
           </div>
         </div>
       )}

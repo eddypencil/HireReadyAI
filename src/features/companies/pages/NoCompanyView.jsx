@@ -305,13 +305,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   <ArrowLeft className="w-4 h-4" />
                 </button>
                 <h2 className="text-base font-bold text-foreground">
-                  {t("no_company_view.create.title")}
+                  Create a New Company
                 </h2>
               </div>
               <form onSubmit={handleCreateCompany} className="p-5 space-y-3.5">
                 <div>
                   <label className="block text-xs font-medium text-muted-foreground mb-1">
-                    {t("no_company_view.create.company_name")}
+                    Company Name
                   </label>
                   <input
                     type="text"
@@ -321,12 +321,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       setNewCompany({ ...newCompany, name: e.target.value })
                     }
                     className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                    placeholder={t("no_company_view.placeholders.name")}
+                    placeholder="Acme Corp"
                   />
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-muted-foreground mb-1">
-                    {t("no_company_view.create.industry")}
+                    Industry
                   </label>
                   <input
                     type="text"
@@ -335,13 +335,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       setNewCompany({ ...newCompany, industry: e.target.value })
                     }
                     className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                    placeholder={t("no_company_view.placeholders.industry")}
+                    placeholder="e.g. Technology, Healthcare"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-muted-foreground mb-1">
-                      {t("no_company_view.create.company_size")}
+                      Company Size
                     </label>
                     <input
                       type="number"
@@ -350,12 +350,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         setNewCompany({ ...newCompany, size: e.target.value })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                      placeholder={t("no_company_view.placeholders.size")}
+                      placeholder="Number of employees"
                     />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-muted-foreground mb-1">
-                      {t("no_company_view.create.location")}
+                      Location
                     </label>
                     <input
                       type="text"
@@ -367,7 +367,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                      placeholder={t("no_company_view.placeholders.location")}
+                      placeholder="City, Country"
                     />
                   </div>
                 </div>
@@ -380,7 +380,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       type="date"
                       value={newCompany.founding_date}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, founding_date: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          founding_date: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
                     />
@@ -393,7 +396,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       type="url"
                       value={newCompany.website_url}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, website_url: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          website_url: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
                       placeholder="https://example.com"
@@ -407,7 +413,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   <textarea
                     value={newCompany.description}
                     onChange={(e) =>
-                      setNewCompany({ ...newCompany, description: e.target.value })
+                      setNewCompany({
+                        ...newCompany,
+                        description: e.target.value,
+                      })
                     }
                     rows={3}
                     className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
@@ -422,7 +431,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     <textarea
                       value={newCompany.culture}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, culture: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          culture: e.target.value,
+                        })
                       }
                       rows={2}
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
@@ -436,7 +448,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     <textarea
                       value={newCompany.benefits}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, benefits: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          benefits: e.target.value,
+                        })
                       }
                       rows={2}
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
@@ -453,7 +468,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       type="url"
                       value={newCompany.linkedin_url}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, linkedin_url: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          linkedin_url: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
                       placeholder="https://linkedin.com/company/..."
@@ -467,7 +485,10 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       type="url"
                       value={newCompany.twitter_url}
                       onChange={(e) =>
-                        setNewCompany({ ...newCompany, twitter_url: e.target.value })
+                        setNewCompany({
+                          ...newCompany,
+                          twitter_url: e.target.value,
+                        })
                       }
                       className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
                       placeholder="https://twitter.com/..."
@@ -484,16 +505,14 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     }}
                     className="px-3 py-1.5 text-xs font-medium text-muted-foreground bg-background border border-border rounded-md hover:bg-muted transition-colors cursor-pointer"
                   >
-                    {t("no_company_view.create.buttons.cancel")}
+                    Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
                     className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
                   >
-                    {isSubmitting
-                      ? t("no_company_view.create.buttons.creating")
-                      : t("no_company_view.create.buttons.create")}
+                    {isSubmitting ? "Creating..." : "Create Company"}
                   </button>
                 </div>
               </form>
@@ -525,7 +544,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    {t("no_company_view.join.create_button")}
+                    Create a New Company
                   </button>
                 )}
               </motion.div>
@@ -538,14 +557,14 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   className="text-center py-10 bg-background rounded-lg shadow-xs border border-border/60"
                 >
                   <p className="text-sm text-muted-foreground mb-4">
-                    {t("no_company_view.join.no_companies")}
+                    No companies available to join.
                   </p>
                   <button
                     onClick={() => setShowingPricing(true)}
                     className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    {t("no_company_view.join.create_company")}
+                    Create a Company
                   </button>
                 </motion.div>
               ) : (
@@ -595,9 +614,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         disabled={joining === company.id}
                         className="w-full mt-2 px-3 py-1.5 bg-secondary text-secondary-foreground rounded-md text-xs font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       >
-                        {joining === company.id
-                          ? t("no_company_view.join.joining")
-                          : t("no_company_view.join.join")}
+                        {joining === company.id ? "Joining..." : "Join"}
                       </button>
                     </motion.div>
                   ))}
