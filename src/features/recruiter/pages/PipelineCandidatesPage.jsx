@@ -296,7 +296,7 @@ const PipelineColumn = ({
 }) => {
   const { t } = useTranslation();
   const isOver = dragOverStage === stage.id;
-  const isLocked = stage.is_locked;
+  const isLocked = stage.is_locked && stage.name !== "CV Review";
   const [openMenu, setOpenMenu] = useState(false);
   const [localMinScore, setLocalMinScore] = useState(stage.min_score ?? 70);
 
@@ -339,6 +339,7 @@ const PipelineColumn = ({
               title={t("candidate_pipeline.locked_stage")}
             />
           )}
+
           {!isLocked && (
             <button
               onClick={() => handleAdvanceAll(stage.id)}
@@ -348,48 +349,6 @@ const PipelineColumn = ({
               Advance All
             </button>
           )}
-
-          {/* {!isLocked && (
-            <div className="relative ml-auto shrink-0">
-              <button
-                onClick={() => setOpenMenu((s) => !s)}
-                className="text-muted-foreground hover:text-foreground font-bold transition-colors px-1 cursor-pointer"
-              >
-                ⋯
-              </button>
-
-              {openMenu && (
-                <div className="absolute right-0 mt-2 w-44 bg-surface border border-border rounded-xl shadow-lg p-2 z-50 animate-fade-in">
-                  <div className="p-2 border-b border-border/60">
-                    <p className="text-[11px] mb-1 text-muted-foreground font-medium">
-                      {t("candidate_pipeline.min_score")}
-                    </p>
-                    <input
-                      type="number"
-                      value={localMinScore}
-                      onChange={(e) => setLocalMinScore(Number(e.target.value))}
-                      className="w-full px-2 py-1 text-xs border border-border rounded bg-muted text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                    />
-                    <button
-                      onClick={async () => {
-                        await updateStageMinScore(stage.id, localMinScore);
-                        setOpenMenu(false);
-                      }}
-                      className="w-full text-center text-xs mt-2 bg-primary text-primary-foreground px-2 py-1 rounded font-medium hover:opacity-95 transition-opacity cursor-pointer"
-                    >
-                      {t("candidate_pipeline.save")}
-                    </button>
-                  </div>
-                  <button
-                    className="w-full text-left text-xs p-2 mt-1 hover:bg-muted text-foreground font-medium rounded-lg transition-colors cursor-pointer"
-                    onClick={() => handleStageAutoAdvance(stage.id)}
-                  >
-                    {t("candidate_pipeline.auto_advance")}
-                  </button>
-                </div>
-              )}
-            </div>
-          )} */}
         </div>
       </div>
 
@@ -755,29 +714,69 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
     if (!currentStage) return;
 
     const sorted = [...stages].sort((a, b) => a.order_index - b.order_index);
+
     const currentIndex = sorted.findIndex((s) => s.id === stageId);
     const nextStage = sorted[currentIndex + 1];
 
-    if (!nextStage || nextStage.is_locked) return;
+    if (!nextStage) return;
+
+    const shortlistStage = stages.find((s) => s.stage_type === "shortlist");
+
+    const isBeforeShortlist =
+      shortlistStage && nextStage.id === shortlistStage.id;
+
+    if (isBeforeShortlist) {
+      setShowShortlistModal(true);
+      return;
+    }
+
+    if (nextStage.is_locked) return;
 
     const stageCandidates = byStage(stageId);
     if (stageCandidates.length === 0) return;
 
+    console.log("ADVANCE ALL TRIGGERED");
+    console.log("stageId:", stageId);
+    console.log("stageCandidates:", stageCandidates);
+    console.log("stages:", stages);
+
+    const eligible = stageCandidates.filter((c) => {
+      const stageData = c.stagesData?.find(
+        (as) =>
+          as.recruitment_stages?.id === stageId ||
+          as.recruitment_stages?.id === currentStage.id,
+      );
+
+      const score =
+        stageData?.score ??
+        stageData?.application_stage_evaluations?.[0]?.ai_score ??
+        null;
+
+      const hasScore = score != null;
+      const minScore = currentStage?.min_score ?? 0;
+
+      return hasScore && Number(score) >= minScore;
+    });
+
+    console.log("eligible:", eligible);
+    console.log("minScore:", currentStage?.min_score);
+    if (eligible.length === 0) return;
+
     setLoadingDrop(true);
+
     const prevState = [...candidates];
 
+    // optimistic UI update
     setCandidates((prev) =>
       prev.map((c) =>
-        stageCandidates.find((sc) => sc.id === c.id)
+        eligible.find((ec) => ec.id === c.id)
           ? { ...c, currentStageId: nextStage.id }
           : c,
       ),
     );
 
     try {
-      await Promise.all(
-        stageCandidates.map((c) => moveToStage(c.id, nextStage.id)),
-      );
+      await Promise.all(eligible.map((c) => moveToStage(c.id, nextStage.id)));
     } catch (err) {
       console.error("Advance all failed:", err);
       setCandidates(prevState);
