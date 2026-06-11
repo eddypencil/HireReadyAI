@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
+import { createClient } from "npm:@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -40,27 +39,63 @@ serve(async (req) => {
     );
   }
 
-  const { price_id } = await req.json();
-  if (!price_id) {
+  const { price_id, company_id } = await req.json();
+  if (!price_id || !company_id) {
     return new Response(
-      JSON.stringify({ error: "price_id is required" }),
+      JSON.stringify({ error: "price_id and company_id are required" }),
       { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } },
     );
   }
 
-  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "");
+  const { data: membership, error: membershipError } = await supabase
+    .from("company_memberships")
+    .select("id")
+    .eq("company_id", company_id)
+    .eq("profile_id", user.id)
+    .maybeSingle();
+
+  if (membershipError || !membership) {
+    return new Response(
+      JSON.stringify({ error: "Not a member of this company" }),
+      { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } },
+    );
+  }
+
+  const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!stripeSecretKey) {
+    return new Response(
+      JSON.stringify({ error: "Stripe not configured" }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } },
+    );
+  }
+
+  const appUrl = Deno.env.get("PUBLIC_APP_URL") ?? "http://localhost:5173";
+  const auth = btoa(`${stripeSecretKey}:`);
 
   try {
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      client_reference_id: user.id,
-      payment_intent_data: {
-        metadata: { user_id: user.id },
+    const params = new URLSearchParams();
+    params.set("mode", "payment");
+    params.set("client_reference_id", company_id);
+    params.set("line_items[0][price]", price_id);
+    params.set("line_items[0][quantity]", "1");
+    params.set("payment_intent_data[metadata][user_id]", user.id);
+    params.set("payment_intent_data[metadata][company_id]", company_id);
+    params.set("success_url", `${appUrl}/premium/success?session_id={CHECKOUT_SESSION_ID}`);
+    params.set("cancel_url", `${appUrl}/premium/cancel`);
+
+    const stripeRes = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
-      line_items: [{ price: price_id, quantity: 1 }],
-      success_url: `${Deno.env.get("PUBLIC_APP_URL") ?? "http://localhost:5173"}/premium/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${Deno.env.get("PUBLIC_APP_URL") ?? "http://localhost:5173"}/premium/cancel`,
+      body: params,
     });
+
+    const session = await stripeRes.json();
+    if (!stripeRes.ok) {
+      throw new Error(session.error?.message ?? "Stripe API error");
+    }
 
     return new Response(
       JSON.stringify({ url: session.url }),

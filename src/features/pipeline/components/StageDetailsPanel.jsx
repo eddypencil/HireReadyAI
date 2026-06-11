@@ -1,20 +1,17 @@
 // src\features\pipeline\components\StageDetailsPanel.jsx
 import React, { useState, useEffect } from "react";
 import { STAGE_TYPE_OPTIONS, STAGE_LIBRARY } from "../constants/stageLibrary";
-import { useUser } from "@/features/auth/context/user.context";
 import { useTranslation } from "react-i18next";
 import { Save, Settings, Crown } from "lucide-react";
 
-export default function StageDetailsPanel({ stage, stages, onUpdate }) {
-  const { profile } = useUser();
+export default function StageDetailsPanel({ stage, stages, onUpdate, isCompanyPremium }) {
   const { t } = useTranslation();
-  const isPremium = profile?.isPremium ?? false;
 
   const premiumKeys = new Set(
     STAGE_LIBRARY.filter((s) => s.isPremium).map((s) => s.key),
   );
   const filteredOptions = STAGE_TYPE_OPTIONS.filter(
-    (opt) => isPremium || !premiumKeys.has(opt.value),
+    (opt) => isCompanyPremium || !premiumKeys.has(opt.value),
   );
   const [form, setForm] = useState({
     name: "",

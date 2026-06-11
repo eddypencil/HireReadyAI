@@ -142,7 +142,14 @@ function App() {
 
       <Route path="/company/:id" element={<PublicCompanyProfile />} />
 
-      <Route path="/premium/success" element={<PremiumSuccessPage />} />
+      <Route
+        path="/premium/success"
+        element={
+          <ProtectedRoute>
+            <PremiumSuccessPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/premium/cancel" element={<PremiumCancelPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />

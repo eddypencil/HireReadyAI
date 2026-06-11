@@ -32,7 +32,7 @@ export const STAGE_LIBRARY = [
     label: "Video Interview",
     subtitle: "Async video questions",
     icon: "Video",
-    isPremium: true,
+    isPremium: false,
   },
   {
     key: "technical_interview",

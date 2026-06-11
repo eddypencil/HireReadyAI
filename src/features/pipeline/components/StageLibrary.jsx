@@ -14,7 +14,6 @@ import {
   Crown,
 } from "lucide-react";
 import { STAGE_LIBRARY } from "../constants/stageLibrary";
-import { useUser } from "@/features/auth/context/user.context";
 import { useTranslation } from "react-i18next";
 
 const ICON_MAP = {
@@ -30,10 +29,8 @@ const ICON_MAP = {
   Award,
 };
 
-export default function StageLibrary({ onAddStage }) {
-  const { profile } = useUser();
+export default function StageLibrary({ onAddStage, isCompanyPremium }) {
   const { t } = useTranslation();
-  const isPremium = profile?.isPremium ?? false;
 
   return (
     <div className="flex flex-col h-full bg-surface">
@@ -57,7 +54,7 @@ export default function StageLibrary({ onAddStage }) {
       >
         {STAGE_LIBRARY.map((item) => {
           const Icon = ICON_MAP[item.icon] || FileText;
-          const locked = item.isPremium && !isPremium;
+          const locked = item.isPremium && !isCompanyPremium;
 
           return (
             <button
@@ -78,7 +75,7 @@ export default function StageLibrary({ onAddStage }) {
                 <p className="text-sm font-bold text-foreground leading-tight transition-colors flex items-center gap-1.5">
                   {item.label}
                   {locked && <Lock className="w-3 h-3 text-muted-foreground" />}
-                  {item.isPremium && isPremium && (
+                  {item.isPremium && isCompanyPremium && (
                     <Crown className="w-3 h-3 text-warning" />
                   )}
                 </p>

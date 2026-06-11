@@ -7,7 +7,7 @@ import { CheckCircle, XCircle, Loader2 } from "lucide-react";
 export default function PremiumSuccessPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { refreshProfile } = useUser();
+  const { refreshProfile, loading } = useUser();
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
@@ -28,6 +28,15 @@ export default function PremiumSuccessPage() {
     })();
   }, []);
 
+  useEffect(() => {
+    if (status === "success" && !loading) {
+      const timer = setTimeout(() => {
+        navigate("/companies", { replace: true });
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [status, loading, navigate]);
+
   return (
     <div className="fixed inset-0 z-50 bg-background flex items-center justify-center">
       <div className="text-center max-w-sm mx-auto px-6">
@@ -43,15 +52,9 @@ export default function PremiumSuccessPage() {
           <>
             <CheckCircle className="w-12 h-12 text-success mx-auto mb-4" />
             <h1 className="text-lg font-bold text-foreground mb-1">Premium Activated!</h1>
-            <p className="text-sm text-muted-foreground mb-6">
-              Your account has been upgraded. Premium features are now unlocked.
+            <p className="text-sm text-muted-foreground">
+              Redirecting you back...
             </p>
-            <button
-              onClick={() => navigate("/")}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors cursor-pointer"
-            >
-              Go to Dashboard
-            </button>
           </>
         )}
 
@@ -63,10 +66,10 @@ export default function PremiumSuccessPage() {
               We couldn't confirm your payment. Please contact support.
             </p>
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/companies", { replace: true })}
               className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors cursor-pointer"
             >
-              Go Home
+              Back to Dashboard
             </button>
           </>
         )}

@@ -13,10 +13,10 @@ export default function PremiumCancelPage() {
           You cancelled the payment. No charges were made.
         </p>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/companies", { replace: true })}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors cursor-pointer"
         >
-          Go Home
+          Back to Dashboard
         </button>
       </div>
     </div>
