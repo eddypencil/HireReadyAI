@@ -52,14 +52,12 @@ export default function Navbar({ links = [] }) {
       <div className="h-20" />
 
       <nav
-        className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full transition-all duration-300 ${
-          scrolled ? "pt-2" : "pt-4"
-        }`}
+        className={`fixed top-0 left-1/2 -translate-x-1/2 z-50 w-full transition-all duration-300 ${scrolled ? "pt-2" : "pt-4"
+          }`}
       >
         <div
-          className={`mx-auto flex items-center justify-between transition-all duration-300 ${
-            scrolled ? "w-[92%] max-w-5xl px-5 py-2.5" : "w-[90%] max-w-5xl px-6 py-3.5"
-          } rounded-full bg-white/80 dark:bg-[#0b2336]/80 backdrop-blur-xl border border-border/50 dark:border-white/10 shadow-lg shadow-black/5`}
+          className={`mx-auto flex items-center justify-between transition-all duration-300 ${scrolled ? "w-[92%] max-w-5xl px-5 py-2.5" : "w-[90%] max-w-5xl px-6 py-3.5"
+            } rounded-full bg-white/80 dark:bg-[#0b2336]/80 backdrop-blur-xl border border-border/50 dark:border-white/10 shadow-lg shadow-black/5`}
         >
           <LinkLogo />
 
@@ -87,21 +85,19 @@ export default function Navbar({ links = [] }) {
             <div className="hidden md:flex items-center gap-1 text-xs font-medium">
               <button
                 onClick={() => changeLang("en")}
-                className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${
-                  i18n.language === "en"
-                    ? "bg-primary text-white"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+                className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${i18n.language === "en"
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
               >
                 EN
               </button>
               <button
                 onClick={() => changeLang("ar")}
-                className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${
-                  i18n.language === "ar"
-                    ? "bg-primary text-white"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                }`}
+                className={`px-2 py-1 rounded-md transition-colors cursor-pointer ${i18n.language === "ar"
+                  ? "bg-primary text-white"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                  }`}
               >
                 AR
               </button>
@@ -133,9 +129,8 @@ export default function Navbar({ links = [] }) {
           />
 
           <div
-            className={`absolute top-0 bottom-0 w-72 bg-background dark:bg-[#0b2336] border-l border-border shadow-2xl flex flex-col ${
-              isRTL ? "left-0 border-r" : "right-0 border-l"
-            }`}
+            className={`absolute top-0 bottom-0 w-72 bg-background dark:bg-[#0b2336] border-l border-border shadow-2xl flex flex-col ${isRTL ? "left-0 border-r" : "right-0 border-l"
+              }`}
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <span className="text-lg font-bold text-foreground">
@@ -179,21 +174,19 @@ export default function Navbar({ links = [] }) {
                 <div className="flex items-center gap-1 text-xs font-medium">
                   <button
                     onClick={() => changeLang("en")}
-                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                      i18n.language === "en"
-                        ? "bg-primary text-white"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
+                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${i18n.language === "en"
+                      ? "bg-primary text-white"
+                      : "text-muted-foreground hover:text-foreground"
+                      }`}
                   >
                     EN
                   </button>
                   <button
                     onClick={() => changeLang("ar")}
-                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${
-                      i18n.language === "ar"
-                        ? "bg-primary text-white"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
+                    className={`px-3 py-1.5 rounded-md transition-colors cursor-pointer ${i18n.language === "ar"
+                      ? "bg-primary text-white"
+                      : "text-muted-foreground hover:text-foreground"
+                      }`}
                   >
                     AR
                   </button>

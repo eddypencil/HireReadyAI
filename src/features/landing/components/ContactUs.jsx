@@ -111,10 +111,7 @@ export default function ContactUs() {
                                 />
                             </div>
 
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-                                <p className="text-[9px] text-muted-foreground max-w-xs">
-                                    By submitting, you agree to our <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
-                                </p>
+                            <div className="flex justify-end pt-2">
                                 <button
                                     type="submit"
                                     disabled={isSubmitting}

@@ -1,3 +1,4 @@
+// src/features/landing/sections/FeaturesSection.jsx
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 
@@ -215,8 +216,11 @@ export default function FeaturesSection() {
 
   return (
     <section id="features" className="py-20 md:py-28 bg-background overflow-hidden">
-      <div className="text-center mb-16 md:mb-20 px-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground">
+      <div className="text-center space-y-3 max-w-2xl mx-auto mb-16 md:mb-20 px-4">
+        <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
+          Features
+        </span>
+        <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
           {t("landing.features.heading")}
         </h2>
       </div>

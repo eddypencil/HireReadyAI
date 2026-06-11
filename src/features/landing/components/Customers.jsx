@@ -63,7 +63,7 @@ export default function Customers() {
             <div className="max-w-6xl mx-auto space-y-12 relative z-10">
                 <div className="text-center space-y-3 max-w-2xl mx-auto">
                     <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
-                        Customers
+                        Testimonials
                     </span>
                     <h2 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
                         Loved by hiring teams

@@ -94,9 +94,8 @@ export default function HeroSection() {
         </p>
 
         <div
-          className={`flex flex-col sm:flex-row gap-4 w-full sm:w-auto ${
-            isRTL ? "sm:flex-row-reverse" : ""
-          }`}
+          className={`flex flex-col sm:flex-row gap-4 w-full sm:w-auto ${isRTL ? "sm:flex-row-reverse" : ""
+            }`}
         >
           <button
             onClick={() => navigate("/jobs")}
@@ -142,9 +141,8 @@ export default function HeroSection() {
       </div>
 
       <div
-        className={`absolute top-[15%] hidden lg:block ${
-          isRTL ? "right-[5%]" : "left-[5%]"
-        }`}
+        className={`absolute top-[15%] hidden lg:block ${isRTL ? "right-[5%]" : "left-[5%]"
+          }`}
       >
         <div className="w-64 bg-card dark:bg-[#0b2336] rounded-2xl border border-border/50 shadow-xl p-4 hero-float-card hero-float-slow">
           <div className="flex items-center gap-3 mb-3">
@@ -168,9 +166,8 @@ export default function HeroSection() {
       </div>
 
       <div
-        className={`absolute top-[20%] hidden lg:block ${
-          isRTL ? "left-[5%]" : "right-[5%]"
-        }`}
+        className={`absolute top-[20%] hidden lg:block ${isRTL ? "left-[5%]" : "right-[5%]"
+          }`}
       >
         <div className="w-64 bg-surface rounded-2xl border border-border/80 shadow-xl p-4 hero-float-card hero-float-fast flex flex-col justify-between min-h-[165px]">
           <div className="flex flex-col flex-1 justify-between">

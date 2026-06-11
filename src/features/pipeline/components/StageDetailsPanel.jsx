@@ -1,11 +1,18 @@
 // src\features\pipeline\components\StageDetailsPanel.jsx
 import React, { useState, useEffect } from "react";
-import { STAGE_TYPE_OPTIONS } from "../constants/stageLibrary";
+import { STAGE_TYPE_OPTIONS, STAGE_LIBRARY } from "../constants/stageLibrary";
 import { useTranslation } from "react-i18next";
-import { Save, Settings } from "lucide-react";
+import { Save, Settings, Crown } from "lucide-react";
 
-export default function StageDetailsPanel({ stage, stages, onUpdate }) {
+export default function StageDetailsPanel({ stage, stages, onUpdate, isCompanyPremium }) {
   const { t } = useTranslation();
+
+  const premiumKeys = new Set(
+    STAGE_LIBRARY.filter((s) => s.isPremium).map((s) => s.key),
+  );
+  const filteredOptions = STAGE_TYPE_OPTIONS.filter(
+    (opt) => isCompanyPremium || !premiumKeys.has(opt.value),
+  );
   const [form, setForm] = useState({
     name: "",
     stage_type: "",
@@ -137,13 +144,14 @@ export default function StageDetailsPanel({ stage, stages, onUpdate }) {
             <option value="">
               {t("stage_details.placeholders.select_type")}
             </option>
-            {STAGE_TYPE_OPTIONS.map((opt) => (
+            {filteredOptions.map((opt) => (
               <option key={opt.value} value={opt.value} className="dark:bg-slate-800">
                 {opt.label}
+                {premiumKeys.has(opt.value) ? " ★" : ""}
               </option>
             ))}
             {stage.is_locked &&
-              !STAGE_TYPE_OPTIONS.some((o) => o.value === form.stage_type) && (
+              !filteredOptions.some((o) => o.value === form.stage_type) && (
                 <option value={form.stage_type} className="dark:bg-slate-800">
                   {form.stage_type.replace(/_/g, " ")}
                 </option>

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import { Plus, Minus } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+
 const faqs = [
   {
     q: "How can I find jobs on HireReadyAI?",
@@ -31,10 +33,30 @@ const faqs = [
 
 export default function FAQ() {
   const [open, setOpen] = useState(1); // open second item by default (mirrors screenshot)
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
   return (
-    <section className="py-20 px-4 bg-background">
-      <div className="max-w-6xl mx-auto">
+    <motion.section
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, margin: "-50px" }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="py-20 px-4 bg-background"
+    >
+      <div className="max-w-6xl mx-auto space-y-12">
+
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
+            {t("faq.eyebrow")}
+          </span>
+          <h2 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+            {t("faq.title")}
+          </h2>
+          <p className="text-muted-foreground text-sm md:text-base max-w-sm mx-auto">
+            {t("faq.subtitle")}
+          </p>
+        </div>
+
         <div className="grid md:grid-cols-2 gap-12 items-start">
           {/* Left — decorative illustration column */}
           <div className="hidden md:flex flex-col items-center justify-center h-full">
@@ -112,8 +134,8 @@ export default function FAQ() {
                 </div>
               </div>
 
-              {/* Floating status badge */}
-              <div className="absolute -right-2 top-16 bg-card border border-border rounded-xl px-3 py-2 shadow-lg">
+              {/* Floating status badge with floating animation */}
+              <div className="absolute -right-2 top-16 bg-card border border-border rounded-xl px-3 py-2 shadow-lg faq-float-badge">
                 <p className="text-[9px] font-semibold text-foreground">
                   Interview Request
                 </p>
@@ -126,16 +148,6 @@ export default function FAQ() {
 
           {/* Right — FAQ accordion */}
           <div>
-            <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
-              {t("faq.eyebrow")}
-            </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
-              {t("faq.title")}
-            </h2>
-            <p className="text-muted-foreground text-sm md:text-base mb-8 max-w-sm">
-              {t("faq.subtitle")}
-            </p>
-
             <div className="space-y-2">
               {faqs.map((faq, i) => {
                 const isOpen = open === i;
@@ -143,10 +155,9 @@ export default function FAQ() {
                   <div
                     key={i}
                     className={`rounded-xl border transition-colors cursor-pointer
-                      ${
-                        isOpen
-                          ? "border-primary/30 dark:border-accent/30 bg-secondary dark:bg-surface-muted"
-                          : "border-border bg-card hover:bg-surface-hover"
+                      ${isOpen
+                        ? "border-primary/30 dark:border-accent/30 bg-secondary dark:bg-surface-muted"
+                        : "border-border bg-card hover:bg-surface-hover"
                       }`}
                     onClick={() => setOpen(isOpen ? null : i)}
                   >
@@ -158,11 +169,10 @@ export default function FAQ() {
                       </span>
                       <div
                         className={`shrink-0 w-7 h-7 rounded-full flex items-center justify-center border transition-colors
-                        ${
-                          isOpen
+                        ${isOpen
                             ? "border-primary/30 dark:border-accent/30 bg-primary/10 dark:bg-accent/10"
                             : "border-border bg-surface-muted"
-                        }`}
+                          }`}
                       >
                         {isOpen ? (
                           <Minus
@@ -188,6 +198,21 @@ export default function FAQ() {
           </div>
         </div>
       </div>
-    </section>
+
+      <style>{`
+        @keyframes floatBadgeAnimation {
+          0%, 100% { transform: translateY(0px) rotate(0deg); }
+          50% { transform: translateY(-8px) rotate(1deg); }
+        }
+        .faq-float-badge {
+          animation: floatBadgeAnimation 4s ease-in-out infinite alternate;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .faq-float-badge {
+            animation: none;
+          }
+        }
+      `}</style>
+    </motion.section>
   );
 }

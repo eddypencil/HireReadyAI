@@ -28,3 +28,11 @@ SET recruiter_permissions =
   END
 WHERE recruiter_permissions IS NULL
   AND permissions IS NOT NULL;
+
+-- Add premium subscription columns to profiles
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_premium boolean DEFAULT false;
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS stripe_customer_id text;
+
+-- Add premium subscription columns to companies
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS is_premium boolean DEFAULT false;
+ALTER TABLE companies ADD COLUMN IF NOT EXISTS stripe_customer_id text;

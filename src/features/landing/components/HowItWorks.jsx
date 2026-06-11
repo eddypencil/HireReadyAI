@@ -1,4 +1,3 @@
-// src/features/landing-page/components/HowItWorks.jsx
 import { useEffect, useState } from "react";
 import { FileText, MessageSquare, CheckCircle, ClipboardList, Eye, Users, Award } from "lucide-react";
 
@@ -9,6 +8,11 @@ export default function HowItWorks() {
         const storedRole = localStorage.getItem("user_role") || "applicant";
         setRole(storedRole);
     }, []);
+
+    const handleRoleChange = (newRole) => {
+        setRole(newRole);
+        localStorage.setItem("user_role", newRole);
+    };
 
     const applicantSteps = [
         { id: 1, title: "Browse Jobs", desc: "Explore and search for open positions easily.", icon: ClipboardList },
@@ -45,10 +49,31 @@ export default function HowItWorks() {
                             ? "Your journey to your dream job designed to be seamless and transparent."
                             : "End-to-end talent acquisition platform powered by advanced AI."}
                     </p>
+
+
+                    <div className="flex justify-center p-1 bg-muted/60 rounded-xl max-w-xs mx-auto mt-6 border border-border">
+                        <button
+                            onClick={() => handleRoleChange("applicant")}
+                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${role === "applicant"
+                                ? "bg-background text-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                        >
+                            Job Seeker
+                        </button>
+                        <button
+                            onClick={() => handleRoleChange("recruiter")}
+                            className={`flex-1 py-2 text-xs font-bold rounded-lg transition-colors cursor-pointer ${role === "recruiter"
+                                ? "bg-background text-foreground shadow-sm"
+                                : "text-muted-foreground hover:text-foreground"
+                                }`}
+                        >
+                            Employer
+                        </button>
+                    </div>
                 </div>
 
-
-                <div className="relative grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div className="relative grid grid-cols-1 md:grid-cols-4 gap-8 pt-6">
                     <div className="hidden md:block absolute left-0 right-0 top-[72%] h-px bg-border z-0" />
 
                     {steps.map((step, index) => {

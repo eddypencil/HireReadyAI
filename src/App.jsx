@@ -22,6 +22,8 @@ import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
 import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
 import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
 import PublicCompanyProfile from "./features/companies/pages/PublicCompanyProfile";
+import PremiumSuccessPage from "./features/premium/pages/PremiumSuccessPage";
+import PremiumCancelPage from "./features/premium/pages/PremiumCancelPage";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 
 // eslint-disable-next-line no-unused-vars
@@ -139,6 +141,16 @@ function App() {
       </Route>
 
       <Route path="/company/:id" element={<PublicCompanyProfile />} />
+
+      <Route
+        path="/premium/success"
+        element={
+          <ProtectedRoute>
+            <PremiumSuccessPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/premium/cancel" element={<PremiumCancelPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

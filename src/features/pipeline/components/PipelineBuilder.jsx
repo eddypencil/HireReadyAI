@@ -29,6 +29,7 @@ function useMediaQuery(query) {
 export default function PipelineBuilder({
   job,
   stages,
+  isCompanyPremium,
   onAddStage,
   onUpdateStage,
   onDeleteStage,
@@ -119,7 +120,7 @@ export default function PipelineBuilder({
             dark:[&::-webkit-scrollbar-thumb]:bg-slate-800
             dark:[&::-webkit-scrollbar-thumb]:hover:bg-slate-700"
         >
-          <StageLibrary onAddStage={handleAddFromLibrary} />
+          <StageLibrary onAddStage={handleAddFromLibrary} isCompanyPremium={isCompanyPremium} />
         </div>
 
 
@@ -328,7 +329,7 @@ export default function PipelineBuilder({
               <X className="w-4 h-4" />
             </button>
           </div>
-          <StageLibrary onAddStage={handleAddFromLibrary} />
+          <StageLibrary onAddStage={handleAddFromLibrary} isCompanyPremium={isCompanyPremium} />
         </div>
       </div>
 
@@ -369,6 +370,7 @@ export default function PipelineBuilder({
             stage={selectedStage}
             stages={stages}
             onUpdate={onUpdateStage}
+            isCompanyPremium={isCompanyPremium}
           />
         </div>
       </div>

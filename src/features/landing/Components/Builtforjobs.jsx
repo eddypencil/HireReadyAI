@@ -1,6 +1,7 @@
 // src/features/landing/sections/BuiltForJobs.jsx
 import { Search, BarChart2, FileText, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
 const features = [
   {
     title: "AI-Powered Resume Review",
@@ -85,19 +86,20 @@ const heroFeature = {
 };
 
 export default function BuiltForJobs() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
+
   return (
     <section className="py-20 px-4 bg-background">
       <div className="max-w-6xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-14">
+
+        <div className="text-center mb-16 space-y-4">
           <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
             {t("builtForJobs.eyebrow")}
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-tight">
             {t("builtForJobs.title")}
           </h2>
-          <p className="mt-3 text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
+          <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
             {t("builtForJobs.subtitle")}
           </p>
         </div>
@@ -123,7 +125,7 @@ export default function BuiltForJobs() {
                   </p>
                   {visual}
                 </div>
-              ),
+              )
             )}
           </div>
 

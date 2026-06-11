@@ -208,38 +208,18 @@ ${taskText}
 ${questionTypeGuide}
 ${codeRepetitionGuard}
 ${typeConstraint}
-Return ONLY a valid JSON object. No markdown, no extra text:
+Return ONLY a valid JSON object (no | null annotations, no markdown, no extra text):
 {
-  "answer_evaluation": {
-    "score": <integer 0-100>,
-    "feedback": "<2-3 sentence internal assessment>",
-    "detailed_points": [
-      {
-        "point": "<specific aspect of the answer>",
-        "score_impact": <integer, positive or negative points e.g., +10 or -5>,
-        "type": "strength|weakness"
-      }
-    ],
-    "strengths": ["<strength 1>", "<strength 2>"],
-    "weaknesses": ["<weakness 1>", "<weakness 2>"]
-  } | null,
-  "next_question": {
-    "text": "<the exact question text, direct and neutral>",
-    "type": "video|text|multiple_choice|code",
-    "code_type": "visuals|problem_solving|null",
-    "options": ["<A>", "<B>", "<C>", "<D>"] | null,
-    "language": "<javascript|python|java|...>" | null,
-    "max_time": <integer in seconds, based on question complexity. Examples: simple_question=60-120, moderate=180-300, complex=300-600> | null
-  } | null,
-  "is_final": <boolean>,
-  "session_summary": {
-    "overall_score": <integer 0-100>,
-    "recommendation": "proceed|review|reject",
-    "reasoning": "<3-4 sentence overall session assessment>",
-    "strengths": ["<stage strength 1>", "<stage strength 2>"],
-    "weaknesses": ["<stage weakness 1>", "<stage weakness 2>"]
-  } | null
-}`;
+  "answer_evaluation": null,
+  "next_question": null,
+  "is_final": false,
+  "session_summary": null
+}
+
+Field specifications (set each to null when not applicable):
+- "answer_evaluation": { "score": <0-100>, "feedback": "<2-3 sentence internal assessment>", "detailed_points": [{ "point": "<specific aspect>", "score_impact": <integer, positive or negative, e.g. +10 or -5>, "type": "strength"|"weakness" }], "strengths": ["..."], "weaknesses": ["..."] }
+- "next_question": { "text": "<exact question text, direct and neutral>", "type": "video"|"text"|"multiple_choice"|"code", "code_type": "visuals"|"problem_solving"|null, "options": ["<A>","<B>","<C>","<D>"]|null, "language": "javascript"|"python"|"java"|null, "max_time": <integer seconds, e.g. 60-600>|null }
+- "session_summary": { "overall_score": <0-100>, "recommendation": "proceed"|"review"|"reject", "reasoning": "<3-4 sentence assessment>", "strengths": ["..."], "weaknesses": ["..."] }`;
 }
 
 
@@ -281,7 +261,9 @@ async function callAI(prompt: string): Promise<AIOutput> {
   try {
     // The AI sometimes outputs "+5" for positive score_impact values.
     // Leading + is invalid JSON — strip it before parsing.
-    const sanitized = content.replace(/:\s*\+(\d)/g, ": $1");
+    let sanitized = content.replace(/:\s*\+(\d+)/g, ": $1");
+    // Strip stray TypeScript union type annotations like | null, | "foo" etc.
+    sanitized = sanitized.replace(/\s*\|\s*(null|"[^"]*"|'[^']*')\s*/g, "");
     return JSON.parse(sanitized) as AIOutput;
   } catch {
     throw new Error(`Failed to parse AI response: ${content}`);

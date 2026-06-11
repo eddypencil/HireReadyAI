@@ -11,6 +11,7 @@ import { useUser } from "@/features/auth/context/user.context";
 import { t } from "i18next";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import { MEMBERSHIP_PERMISSION } from "@/shared/constants/enums";
+import { createCheckoutSession } from "@/features/premium/services/premium.service";
 
 export default function NoCompanyView({ onCompanyJoined }) {
   const { profile } = useUser();
@@ -105,7 +106,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
         recruiter_permissions: MEMBERSHIP_PERMISSION.hrManager,
       });
 
-      onCompanyJoined(created.id);
+      if (selectedPlan === "premium") {
+        const { url } = await createCheckoutSession(created.id);
+        window.location.href = url;
+      } else {
+        onCompanyJoined(created.id);
+      }
     } catch (err) {
       console.error("Error creating company:", err);
       setError(err.message);
@@ -145,7 +151,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
       </motion.header>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
           {error && (
             <motion.div
@@ -235,8 +241,8 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   whileHover={{ scale: 1.02 }}
                   className="bg-gradient-to-b from-primary/5 to-background rounded-xl border border-primary/30 p-6 shadow-xs flex flex-col relative overflow-hidden"
                 >
-                  <div className="absolute top-3 right-3 bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">
-                    Coming Soon
+                  <div className="absolute top-3 right-3 bg-warning text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                    One-time
                   </div>
                   <div className="mb-4">
                     <div className="w-10 h-10 bg-warning/20 rounded-lg flex items-center justify-center mb-3">
@@ -248,7 +254,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     <p className="text-2xl font-bold text-foreground mt-1">
                       $29
                       <span className="text-xs font-normal text-muted-foreground">
-                        /month
+                        /one-time
                       </span>
                     </p>
                   </div>
@@ -275,10 +281,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     </li>
                   </ul>
                   <button
-                    disabled
-                    className="w-full py-2 bg-muted text-muted-foreground rounded-md text-xs font-medium cursor-not-allowed"
+                    onClick={() => {
+                      setSelectedPlan("premium");
+                      setIsCreating(true);
+                    }}
+                    className="w-full py-2 bg-warning text-white rounded-md text-xs font-medium hover:bg-warning/90 transition-colors cursor-pointer"
                   >
-                    Coming Soon
+                    Buy Premium
                   </button>
                 </motion.div>
               </div>
@@ -286,12 +295,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
           )}
 
           {/* Create Company Form */}
-          {isCreating && selectedPlan === "free" && (
+          {isCreating && (selectedPlan === "free" || selectedPlan === "premium") && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="bg-background rounded-lg shadow-xs border border-border/60 overflow-hidden max-w-xl mx-auto"
+              className="bg-background rounded-lg shadow-xs border border-border/60 max-w-xl mx-auto"
             >
               <div className="p-4 border-b border-border/60 flex items-center gap-3">
                 <button
@@ -510,7 +519,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1.5 bg-primary text-white rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {isSubmitting ? "Creating..." : "Create Company"}
                   </button>
