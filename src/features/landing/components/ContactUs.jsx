@@ -2,26 +2,41 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 
+const FORMSPREE_URL = "https://formspree.io/f/mlgkwakw";
+
 export default function ContactUs() {
     const [formData, setFormData] = useState({ name: "", email: "", company: "", message: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [error, setError] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setError(null);
 
-        setTimeout(() => {
+        try {
+            const res = await fetch(FORMSPREE_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...formData, _replyto: formData.email }),
+            });
+
+            if (!res.ok) throw new Error("Failed to send message");
+
             setIsSubmitting(false);
             setSubmitted(true);
             setFormData({ name: "", email: "", company: "", message: "" });
             setTimeout(() => setSubmitted(false), 5000);
-        }, 1500);
+        } catch (err) {
+            setIsSubmitting(false);
+            setError(err.message);
+        }
     };
 
     return (
@@ -119,6 +134,11 @@ export default function ContactUs() {
                                 </button>
                             </div>
 
+                            {error && (
+                                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-xl text-center text-xs text-destructive font-medium">
+                                    {error}
+                                </div>
+                            )}
                             {submitted && (
                                 <div className="p-3 bg-success/10 border border-success/20 rounded-xl text-center text-xs text-success font-medium">
                                     Your message has been sent successfully!
