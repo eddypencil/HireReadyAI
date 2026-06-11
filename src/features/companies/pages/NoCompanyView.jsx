@@ -106,7 +106,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
         recruiter_permissions: MEMBERSHIP_PERMISSION.hrManager,
       });
 
-      onCompanyJoined(created.id);
+      if (selectedPlan === "premium") {
+        const { url } = await createCheckoutSession(created.id);
+        window.location.href = url;
+      } else {
+        onCompanyJoined(created.id);
+      }
     } catch (err) {
       console.error("Error creating company:", err);
       setError(err.message);
@@ -146,7 +151,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
       </motion.header>
 
       {/* Main Content */}
-      <main className="flex-1 p-6">
+      <main className="flex-1 p-6 overflow-y-auto">
         <div className="max-w-4xl mx-auto">
           {error && (
             <motion.div
@@ -276,13 +281,9 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     </li>
                   </ul>
                   <button
-                    onClick={async () => {
-                      try {
-                        const { url } = await createCheckoutSession();
-                        window.location.href = url;
-                      } catch (err) {
-                        console.error("Failed to start checkout:", err);
-                      }
+                    onClick={() => {
+                      setSelectedPlan("premium");
+                      setIsCreating(true);
                     }}
                     className="w-full py-2 bg-warning text-white rounded-md text-xs font-medium hover:bg-warning/90 transition-colors cursor-pointer"
                   >
@@ -294,12 +295,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
           )}
 
           {/* Create Company Form */}
-          {isCreating && selectedPlan === "free" && (
+          {isCreating && (selectedPlan === "free" || selectedPlan === "premium") && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="bg-background rounded-lg shadow-xs border border-border/60 overflow-hidden max-w-xl mx-auto"
+              className="bg-background rounded-lg shadow-xs border border-border/60 max-w-xl mx-auto"
             >
               <div className="p-4 border-b border-border/60 flex items-center gap-3">
                 <button
@@ -518,7 +519,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+                    className="px-3 py-1.5 bg-primary text-white rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {isSubmitting ? "Creating..." : "Create Company"}
                   </button>

@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
-import Stripe from "https://esm.sh/stripe@17.7.0?target=deno";
+import { createClient } from "npm:@supabase/supabase-js@2.45.0";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -48,10 +47,26 @@ serve(async (req) => {
     );
   }
 
-  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") ?? "");
+  const stripeSecretKey = Deno.env.get("STRIPE_SECRET_KEY");
+  if (!stripeSecretKey) {
+    return new Response(
+      JSON.stringify({ error: "Stripe not configured" }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } },
+    );
+  }
+
+  const auth = btoa(`${stripeSecretKey}:`);
 
   try {
-    const session = await stripe.checkout.sessions.retrieve(session_id);
+    const stripeRes = await fetch(
+      `https://api.stripe.com/v1/checkout/sessions/${session_id}`,
+      { headers: { Authorization: `Basic ${auth}` } },
+    );
+
+    const session = await stripeRes.json();
+    if (!stripeRes.ok) {
+      throw new Error(session.error?.message ?? "Failed to retrieve Stripe session");
+    }
 
     if (session.payment_status !== "paid") {
       return new Response(
@@ -60,32 +75,50 @@ serve(async (req) => {
       );
     }
 
-    const userId = session.client_reference_id;
-    if (!userId) {
+    const companyId = session.client_reference_id || session.metadata?.company_id;
+    if (!companyId) {
       return new Response(
-        JSON.stringify({ error: "No user reference in session" }),
+        JSON.stringify({ error: "No company reference in session" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } },
       );
     }
 
-    if (userId !== user.id) {
+    console.log("[confirm-payment] companyId from:", session.client_reference_id ? "client_reference_id" : "metadata", "value:", companyId, "userId:", user.id);
+
+    const { data: membership, error: membershipError } = await supabase
+      .from("company_memberships")
+      .select("id")
+      .eq("company_id", companyId)
+      .eq("profile_id", user.id)
+      .maybeSingle();
+
+    if (membershipError) {
+      console.error("[confirm-payment] membership query error:", membershipError);
       return new Response(
-        JSON.stringify({ error: "Session does not belong to this user" }),
+        JSON.stringify({ error: "Database error", details: membershipError.message }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } },
+      );
+    }
+
+    if (!membership) {
+      console.error("[confirm-payment] no membership row for companyId:", companyId, "userId:", user.id);
+      return new Response(
+        JSON.stringify({ error: "Not authorized for this company" }),
         { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } },
       );
     }
 
     const { error: updateError } = await supabase
-      .from("profiles")
+      .from("companies")
       .update({
         is_premium: true,
         stripe_customer_id: session.customer,
       })
-      .eq("id", userId);
+      .eq("id", companyId);
 
     if (updateError) {
       return new Response(
-        JSON.stringify({ error: "Failed to update profile", details: updateError }),
+        JSON.stringify({ error: "Failed to update company", details: updateError }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } },
       );
     }

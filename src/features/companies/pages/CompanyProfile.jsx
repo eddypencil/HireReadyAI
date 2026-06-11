@@ -1,4 +1,4 @@
-import { Plus, Check, X, Trash2, Upload, Pencil, Save } from "lucide-react";
+import { Plus, Check, X, Trash2, Upload, Pencil, Save, Crown } from "lucide-react";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import { removeMembership, updateMembershipPermission } from "../services/member
 import { updateCompany } from "../services/companies.service";
 import { supabase } from "@/shared/services/supabase";
 import { MEMBERSHIP_PERMISSION } from "@/shared/constants/enums";
+import { createCheckoutSession } from "../../premium/services/premium.service";
 
 function Field({ label, value, editing, onChange }) {
   return (
@@ -77,6 +78,7 @@ export default function CompanyProfile({
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [uploadingCover, setUploadingCover] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [upgrading, setUpgrading] = useState(false);
   const [editForm, setEditForm] = useState({
     name: "", industry: "", size: "", location: "",
     founding_date: "", description: "", culture: "", benefits: "",
@@ -247,6 +249,18 @@ export default function CompanyProfile({
       setEditing(false);
     } catch (err) {
       console.error("Error updating company:", err);
+    }
+  };
+
+  const handleUpgrade = async () => {
+    if (!company?.id) return;
+    try {
+      setUpgrading(true);
+      const { url } = await createCheckoutSession(company.id);
+      window.location.href = url;
+    } catch (err) {
+      console.error("Error creating checkout session:", err);
+      setUpgrading(false);
     }
   };
 
@@ -558,6 +572,59 @@ export default function CompanyProfile({
               </button>
             </div>
           )}
+        </motion.div>
+
+        {/* Premium / Subscription Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false, margin: "-30px" }}
+          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+          className="bg-background p-5 rounded-xl border border-border/60 shadow-xs hover:border-accent/20 transition-colors duration-200"
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h2 className="text-base font-bold text-foreground mb-0.5">
+                Plan & Billing
+              </h2>
+              <p className="text-xs text-muted-foreground/70 mb-1">
+                {company?.is_premium
+                  ? "Your company is on the Premium plan."
+                  : "Upgrade to unlock premium stage types in your pipeline."}
+              </p>
+              {!company?.is_premium && (
+                <ul className="text-xs text-muted-foreground/60 space-y-0.5 mt-2">
+                  <li>• Assessment tests</li>
+                  <li>• Coding tests</li>
+                  <li>• Video interviews</li>
+                  <li>• Background checks</li>
+                </ul>
+              )}
+            </div>
+            <div className="shrink-0">
+              {company?.is_premium ? (
+                <span className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-success bg-success/10 border border-success/20 rounded-lg">
+                  <Crown className="w-3.5 h-3.5" />
+                  Premium
+                </span>
+              ) : (
+                <button
+                  onClick={handleUpgrade}
+                  disabled={upgrading}
+                  className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {upgrading ? (
+                    "Redirecting..."
+                  ) : (
+                    <>
+                      <Crown className="w-4 h-4" />
+                      Upgrade - $29
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
+          </div>
         </motion.div>
 
         {/* Team Members Card */}

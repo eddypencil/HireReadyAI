@@ -15,6 +15,7 @@ export default function PipelineBuilderPage() {
     loading,
     error,
     warning,
+    isCompanyPremium,
     handleAddStage,
     handleUpdateStage,
     handleDeleteStage,
@@ -81,6 +82,7 @@ export default function PipelineBuilderPage() {
         <PipelineBuilder
           job={job}
           stages={stages}
+          isCompanyPremium={isCompanyPremium}
           onAddStage={handleAddStage}
           onUpdateStage={handleUpdateStage}
           onDeleteStage={handleDeleteStage}
