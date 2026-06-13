@@ -77,6 +77,7 @@ export default function ApplicantProfilePage() {
   const [savingBasic, setSavingBasic] = useState(false);
   const [savingBio, setSavingBio] = useState(false);
   const [dialog, setDialog] = useState(null);
+  const [errors, setErrors] = useState({});
   const [savingDialog, setSavingDialog] = useState(false);
   const [lightboxSrc, setLightboxSrc] = useState(null);
 
@@ -103,6 +104,14 @@ export default function ApplicantProfilePage() {
   }, [fetchId]);
 
   const handleSaveBasic = async () => {
+    const basicErrors = {};
+    if (!profile.full_name?.trim()) basicErrors.full_name = "Full name is required";
+
+    if (Object.keys(basicErrors).length > 0) {
+      setErrors(basicErrors);
+      return;
+    }
+
     setSavingBasic(true);
     try {
       await updateApplicantProfile(fetchId, {
@@ -111,6 +120,8 @@ export default function ApplicantProfilePage() {
         phone: profile.phone,
         location: profile.location,
         linkedin_url: profile.linkedin_url,
+        github_url: profile.github_url,
+        portfolio_url: profile.portfolio_url,
       });
       setEditBasic(false);
     } catch (err) {
@@ -142,27 +153,85 @@ export default function ApplicantProfilePage() {
 
   const handleOpenAdd = (section) => {
     setDialog({ section, index: null, data: {} });
+    setErrors({});
   };
 
   const handleOpenEdit = (section, index) => {
     const items = profile[section] || [];
     setDialog({ section, index, data: { ...items[index] } });
+    setErrors({});
   };
 
   const handleCloseDialog = () => {
     setDialog(null);
+    setErrors({});
     setSavingDialog(false);
   };
 
   const handleDialogChange = (key, value) => {
     setDialog((prev) => ({ ...prev, data: { ...prev.data, [key]: value } }));
+    if (errors[key]) {
+      setErrors((prevErrors) => {
+        const next = { ...prevErrors };
+        delete next[key];
+        return next;
+      });
+    }
   };
 
   const handleSaveDialog = async () => {
     if (!dialog) return;
+
+    const { section, data } = dialog;
+    const newErrors = {};
+
+    if (section === "experience") {
+      if (!data.title?.trim()) newErrors.title = "Job title is required";
+      if (!data.company_name?.trim()) newErrors.company_name = "Company name is required";
+      if (!data.from) newErrors.from = "Start date is required";
+      if (!data.to && data.to !== "present") newErrors.to = "End date is required";
+    }
+
+    if (section === "education") {
+      if (!data.level) newErrors.level = "Degree level is required";
+      if (!data.university?.trim()) newErrors.university = "University name is required";
+      if (!data.start_year) newErrors.start_year = "Start year is required";
+      if (!data.end_year && data.end_year !== "present") newErrors.end_year = "End year is required";
+    }
+
+    if (section === "skills") {
+      if (!data.name?.trim()) newErrors.name = "Skill name is required";
+    }
+
+    if (section === "languages") {
+      if (!data.name?.trim()) newErrors.name = "Language is required";
+    }
+
+    if (section === "certificates") {
+      if (!data.name?.trim()) newErrors.name = "Certificate name is required";
+      if (!data.organization?.trim()) newErrors.organization = "Organization is required";
+      if (!data.date) newErrors.date = "Date is required";
+    }
+
+    if (section === "projects") {
+      if (!data.name?.trim()) newErrors.name = "Project name is required";
+    }
+
+    if (section === "volunteering") {
+      if (!data.organization?.trim()) newErrors.organization = "Organization is required";
+      if (!data.role?.trim()) newErrors.role = "Role is required";
+      if (!data.start) newErrors.start = "Start date is required";
+      if (!data.end && data.end !== "present") newErrors.end = "End date is required";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     setSavingDialog(true);
     try {
-      const { section, index, data } = dialog;
+      const { index } = dialog;
       const Model = SECTION_MODEL[section];
       const item = Model ? Model.fromJson(data) : data;
       const json = item instanceof Model ? item.toJson() : item;
@@ -295,7 +364,6 @@ export default function ApplicantProfilePage() {
           })}
         </div>
 
-
         {activeTab === "about" && (
           <div className="space-y-5">
             <ContactSection
@@ -387,7 +455,7 @@ export default function ApplicantProfilePage() {
           onSave={handleSaveDialog}
           saving={savingDialog}
         >
-          <DialogForms dialog={dialog} handleDialogChange={handleDialogChange} />
+          <DialogForms dialog={dialog} handleDialogChange={handleDialogChange} errors={errors} />
         </ItemDialog>
       )}
 

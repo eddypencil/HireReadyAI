@@ -29,13 +29,20 @@ export function getInitials(name = "") {
   return name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "?";
 }
 
-export function InputField({ label, value, onChange, multiline = false, placeholder = "", type = "text" }) {
+export function InputField({ label, value, onChange, multiline = false, placeholder = "", type = "text", error }) {
   return (
     <div>
-      {label && <label className="block text-xs font-medium text-muted-foreground mb-1">{label}</label>}
+      {label && (
+        <label className={`block text-xs font-medium mb-1 ${error ? "text-destructive" : "text-muted-foreground"}`}>
+          {label}
+        </label>
+      )}
       {multiline ? (
         <textarea
-          className="w-full text-sm bg-background border border-border/70 rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all min-h-[80px] resize-y"
+          className={`w-full text-sm bg-background border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 transition-all ${error
+              ? "border-destructive focus:ring-destructive/30"
+              : "border-border/70 focus:ring-primary/30 focus:border-primary"
+            }`}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
@@ -43,12 +50,16 @@ export function InputField({ label, value, onChange, multiline = false, placehol
       ) : (
         <input
           type={type}
-          className="w-full text-sm bg-background border border-border/70 rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+          className={`w-full text-sm bg-background border rounded-lg px-3 py-2 text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-2 transition-all ${error
+              ? "border-destructive focus:ring-destructive/30"
+              : "border-border/70 focus:ring-primary/30 focus:border-primary"
+            }`}
           value={value || ""}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
         />
       )}
+      {error && <p className="text-xs text-destructive mt-1 font-medium">{error}</p>}
     </div>
   );
 }

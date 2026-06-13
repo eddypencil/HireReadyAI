@@ -26,7 +26,7 @@ export default function ItemDialog({ open, onClose, title, children, onSave, sav
           <button
             onClick={onSave}
             disabled={saving}
-            className="flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
+            className="px-4 py-2 text-sm font-semibold text-white bg-primary rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors"
           >
             {saving ? "Saving..." : "Save"}
           </button>

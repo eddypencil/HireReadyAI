@@ -18,10 +18,11 @@ export default function ContactSection({
           <InputField label="LinkedIn URL" value={profile.linkedin_url || ""} onChange={(v) => onFieldChange("linkedin_url", v)} placeholder="https://linkedin.com/in/..." />
           <div className="flex items-center gap-2 pt-1">
             <button onClick={onCancelBasic} className="px-2.5 py-1 text-xs font-medium text-muted-foreground border border-border/70 rounded-md hover:bg-secondary/50 transition-colors">Cancel</button>
-            <button onClick={onSaveBasic} disabled={savingBasic} className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-primary-foreground bg-primary rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors">
+            <button onClick={onSaveBasic} disabled={savingBasic} className="flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-white bg-primary rounded-md hover:bg-primary/90 disabled:opacity-50 transition-colors">
               <Check className="w-3 h-3" />{savingBasic ? "Saving..." : "Save"}
             </button>
           </div>
+
         </div>
       </SectionCard>
     );
