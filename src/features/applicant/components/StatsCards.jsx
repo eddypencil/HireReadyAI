@@ -6,7 +6,10 @@ import { ChevronDown, ChevronUp, AlertCircle } from "lucide-react";
 
 function formatDate(dateStr) {
   if (!dateStr) return "";
-  return new Date(dateStr).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+  });
 }
 
 export default function StatsCards({ applications }) {
@@ -15,7 +18,8 @@ export default function StatsCards({ applications }) {
   const [showRejected, setShowRejected] = useState(false);
 
   const rejectedApps = (applications || []).filter(
-    a => a.current_stage === APPLICATION_STAGE.rejected || a.is_rejected === true,
+    (a) =>
+      a.current_stage === APPLICATION_STAGE.rejected || a.is_rejected === true,
   );
 
   const interviewCount = useMemo(() => {
@@ -37,9 +41,15 @@ export default function StatsCards({ applications }) {
     if (!applications) return 0;
     return applications.filter((app) => {
       if (app.current_recruitment_stage?.stage_type === "offer") return true;
-      if (app.current_stage_id && (app.application_stages || []).some(
-        (s) => s.stage_id === app.current_stage_id && s.recruitment_stages?.stage_type === "offer",
-      )) return true;
+      if (
+        app.current_stage_id &&
+        (app.application_stages || []).some(
+          (s) =>
+            s.stage_id === app.current_stage_id &&
+            s.recruitment_stages?.stage_type === "offer",
+        )
+      )
+        return true;
       if (app.current_stage === APPLICATION_STAGE.offer) return true;
       return false;
     }).length;
@@ -72,24 +82,38 @@ export default function StatsCards({ applications }) {
           {stats.map((s, idx) => (
             <div
               key={s.label}
-              onClick={s.isRejected ? () => setShowRejected(!showRejected) : undefined}
+              onClick={
+                s.isRejected ? () => setShowRejected(!showRejected) : undefined
+              }
               className={`bg-card rounded-xl px-4 py-3 shadow-sm relative overflow-hidden transition-all duration-200 ${
                 s.isRejected
                   ? "cursor-pointer hover:shadow-[0_4px_12px_rgba(185,28,28,0.12)]"
                   : "cursor-default"
               } ${s.isRejected && showRejected ? "border border-destructive" : "border border-border"}`}
             >
-              <p className={`text-xs font-semibold m-0 mb-0.5 tracking-wide ${s.isRejected ? "text-destructive" : "text-accent"}`}>
+              <p
+                className={`text-xs font-semibold m-0 mb-0.5 tracking-wide ${s.isRejected ? "text-destructive" : "text-accent"}`}
+              >
                 {s.label}
               </p>
               <div className="flex items-center gap-2">
-                <h2 className={`text-2xl font-bold m-0 leading-none ${idx === 2 ? "text-success" : idx === 3 ? "text-destructive" : "text-primary"}`}>{s.value}</h2>
+                <h2
+                  className={`text-2xl font-bold m-0 leading-none ${idx === 2 ? "text-success" : idx === 3 ? "text-destructive" : "text-primary"}`}
+                >
+                  {s.value}
+                </h2>
                 {s.isRejected && s.value > 0 && (
                   <span
                     className="text-destructive transition-transform duration-200"
-                    style={{ transform: showRejected ? "rotate(180deg)" : "none" }}
+                    style={{
+                      transform: showRejected ? "rotate(180deg)" : "none",
+                    }}
                   >
-                    {showRejected ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    {showRejected ? (
+                      <ChevronUp size={16} />
+                    ) : (
+                      <ChevronDown size={16} />
+                    )}
                   </span>
                 )}
               </div>
@@ -103,7 +127,7 @@ export default function StatsCards({ applications }) {
             <div className="px-5 py-3.5 border-b border-surface-muted flex items-center gap-2">
               <AlertCircle size={14} className="text-destructive" />
               <span className="text-[13px] font-semibold text-destructive">
-                Rejected Applications
+                {t("rejected_applications")}
               </span>
             </div>
             {rejectedApps.map((app) => {
@@ -119,16 +143,24 @@ export default function StatsCards({ applications }) {
                       {job?.title || "Unknown Position"}
                     </p>
                     <p className="m-0 mt-0.5 text-[11px] text-accent">
-                      <Link to={`/company/${company?.id}`} className="hover:underline">
+                      <Link
+                        to={`/company/${company?.id}`}
+                        className="hover:underline"
+                      >
                         {company?.name}
-                      </Link>{app.applied_at ? ` · Applied ${formatDate(app.applied_at)}` : ""}
+                      </Link>
+                      {app.applied_at
+                        ? ` · Applied ${formatDate(app.applied_at)}`
+                        : ""}
                     </p>
                   </div>
                   <button
-                    onClick={() => navigate(`/applicant/feedback?appId=${app.id}`)}
+                    onClick={() =>
+                      navigate(`/applicant/feedback?appId=${app.id}`)
+                    }
                     className="shrink-0 px-3.5 py-1.5 bg-transparent border border-destructive rounded-lg text-destructive text-xs font-semibold cursor-pointer transition-all duration-150 hover:bg-destructive hover:text-white"
                   >
-                    Show Feedback
+                    {t("show_feedback")}
                   </button>
                 </div>
               );

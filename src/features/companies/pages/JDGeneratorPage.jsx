@@ -260,11 +260,11 @@ export default function JDGeneratorPage({ company, profile }) {
   if (published) {
     return (
       <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="min-h-screen bg-background flex items-center justify-center p-6 font-sans"
-    >
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="min-h-screen bg-background flex items-center justify-center p-6 font-sans"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -688,7 +688,10 @@ export default function JDGeneratorPage({ company, profile }) {
                         </h3>
                         <ul className="space-y-1.5">
                           {aiResult.responsibilities.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <li
+                              key={i}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
                               <span className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
                               {item}
                             </li>
@@ -709,7 +712,10 @@ export default function JDGeneratorPage({ company, profile }) {
                         </h3>
                         <ul className="space-y-1.5">
                           {aiResult.requirements.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                            <li
+                              key={i}
+                              className="flex items-start gap-2 text-sm text-muted-foreground"
+                            >
                               <span className="w-1 h-1 rounded-full bg-accent mt-2 shrink-0" />
                               {item}
                             </li>
@@ -762,10 +768,10 @@ export default function JDGeneratorPage({ company, profile }) {
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border shrink-0">
                   <div>
                     <h2 className="text-lg font-bold text-foreground">
-                      Application Questions
+                      {t("application_questions_modal.title")}
                     </h2>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Add questions applicants will answer when applying
+                      {t("application_questions_modal.subtitle")}
                     </p>
                   </div>
                   <button
@@ -792,14 +798,14 @@ export default function JDGeneratorPage({ company, profile }) {
                         <button
                           onClick={() => moveUp(i)}
                           disabled={i === 0}
-                          className="p-0.5 rounded text-dark-amethyst-400 hover:text-dark-amethyst-600 disabled:opacity-20 disabled:cursor-not-allowed transition"
+                          className="p-0.5 rounded text-muted-foreground hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition"
                         >
                           <ChevronUp className="w-3.5 h-3.5" />
                         </button>
                         <button
                           onClick={() => moveDown(i)}
                           disabled={i === questions.length - 1}
-                          className="p-0.5 rounded text-dark-amethyst-400 hover:text-dark-amethyst-600 disabled:opacity-20 disabled:cursor-not-allowed transition"
+                          className="p-0.5 rounded text-muted-foreground hover:text-primary disabled:opacity-20 disabled:cursor-not-allowed transition"
                         >
                           <ChevronDown className="w-3.5 h-3.5" />
                         </button>
@@ -812,14 +818,14 @@ export default function JDGeneratorPage({ company, profile }) {
                             updateQuestion(i, "question", e.target.value)
                           }
                           placeholder="Write your question..."
-                          className="w-full h-9 rounded-lg px-3 text-sm text-dark-amethyst-900 bg-white border border-dark-amethyst-200 outline-none focus:border-dark-amethyst-400 transition placeholder:text-dark-amethyst-300"
+                          className="w-full h-9 rounded-lg px-3 text-sm text-foreground bg-background border border-input outline-none focus:border-ring transition placeholder:text-muted-foreground"
                         />
                         <select
                           value={q.type}
                           onChange={(e) =>
                             updateQuestion(i, "type", e.target.value)
                           }
-                          className="h-8 rounded-lg px-2 text-xs text-dark-amethyst-600 bg-white border border-dark-amethyst-200 outline-none focus:border-dark-amethyst-400 transition"
+                          className="h-8 rounded-lg px-2 text-xs text-foreground bg-background border border-input outline-none focus:border-ring transition"
                         >
                           {questionsTypes.map((t) => (
                             <option key={t} value={t}>
@@ -830,7 +836,7 @@ export default function JDGeneratorPage({ company, profile }) {
                       </div>
                       <button
                         onClick={() => removeQuestion(i)}
-                        className="p-1.5 rounded-lg text-dark-amethyst-400 hover:text-red-500 hover:bg-red-50 transition shrink-0 mt-0.5"
+                        className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition shrink-0 mt-0.5"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -843,13 +849,13 @@ export default function JDGeneratorPage({ company, profile }) {
                   <div className="flex items-center gap-2">
                     <button
                       onClick={addQuestion}
-                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-dark-amethyst-600 bg-white border border-dark-amethyst-200 hover:bg-muted transition"
+                      className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold text-primary bg-card border border-border hover:bg-surface-muted transition"
                     >
                       <Plus className="w-3.5 h-3.5" />
                       Add Question
                     </button>
                     {questions.length > 0 && (
-                      <span className="text-xs text-dark-amethyst-400">
+                      <span className="text-xs text-muted-foreground">
                         {questions.length} question
                         {questions.length !== 1 ? "s" : ""}
                       </span>
@@ -859,14 +865,14 @@ export default function JDGeneratorPage({ company, profile }) {
                     <button
                       onClick={() => executePublish(false)}
                       disabled={publishing}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold text-dark-amethyst-500 bg-white border border-dark-amethyst-200 hover:bg-muted transition disabled:opacity-50"
+                      className="px-4 py-2 rounded-xl text-xs font-semibold text-foreground bg-card border border-border hover:bg-surface-muted transition disabled:opacity-50"
                     >
-                      Skip
+                      {t("application_questions_modal.skip")}
                     </button>
                     <button
                       onClick={() => executePublish(true)}
                       disabled={publishing}
-                      className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-dark-amethyst-600 hover:bg-dark-amethyst-700 transition disabled:opacity-50"
+                      className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-primary hover:bg-primary-hover transition disabled:opacity-50"
                     >
                       {publishing
                         ? t("jd_generator.header.publishing")

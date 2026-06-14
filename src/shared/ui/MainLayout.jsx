@@ -24,7 +24,6 @@ import {
   Moon,
 } from "lucide-react";
 
-
 export default function MainLayout() {
   const { profile, signOutUser } = useUser();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

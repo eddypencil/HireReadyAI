@@ -1,32 +1,33 @@
-//src\features\auth\pages\GoogleRoleSelect.jsx
+// src/features/auth/pages/GoogleRoleSelect.jsx
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/shared/services/supabase";
 import AuthLayout from "../components/AuthLayout";
 import { USER_ROLE } from "@/shared/constants/enums";
-
-const ROLES = [
-  {
-    label: "Applicant",
-    value: USER_ROLE.applicant,
-    desc: "Browse and apply for jobs",
-  },
-  {
-    label: "Recruiter",
-    value: USER_ROLE.recruiter,
-    desc: "Post jobs and manage candidates",
-  },
-];
+import { useTranslation } from "react-i18next";
 
 export default function GoogleRoleSelect() {
   const navigate = useNavigate();
   const { state } = useLocation();
   const user = state?.user;
-
+  const { t } = useTranslation();
   const [role, setRole] = useState(USER_ROLE.applicant);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const getRoles = (t) => [
+    {
+      label: t("googleRoleSelect.roles.applicant.label"),
+      value: USER_ROLE.applicant,
+      desc: t("googleRoleSelect.roles.applicant.desc"),
+    },
+    {
+      label: t("googleRoleSelect.roles.recruiter.label"),
+      value: USER_ROLE.recruiter,
+      desc: t("googleRoleSelect.roles.recruiter.desc"),
+    },
+  ];
+  const ROLES = getRoles(t);
   async function handleConfirm() {
     if (!user) {
       navigate("/auth/sign-in");
@@ -54,8 +55,8 @@ export default function GoogleRoleSelect() {
 
   return (
     <AuthLayout
-      headline="One last step"
-      subheading="How will you be using HireReadyAI?"
+      headline={t("googleRoleSelect.headline")}
+      subheading={t("googleRoleSelect.subheading")}
     >
       <div className="flex flex-col gap-3">
         {ROLES.map(({ label, value, desc }) => (
@@ -71,7 +72,9 @@ export default function GoogleRoleSelect() {
               }`}
           >
             <p
-              className={`text-sm font-semibold ${role === value ? "text-foreground" : "text-muted-foreground"}`}
+              className={`text-sm font-semibold ${
+                role === value ? "text-foreground" : "text-muted-foreground"
+              }`}
             >
               {label}
             </p>
@@ -82,7 +85,7 @@ export default function GoogleRoleSelect() {
 
       {error && (
         <div className="flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20 mt-4">
-          <span>⚠</span>
+          <span>{t("googleRoleSelect.alert")}</span>
           {error}
         </div>
       )}
@@ -92,7 +95,9 @@ export default function GoogleRoleSelect() {
         disabled={loading}
         className="w-full h-11 rounded-xl text-white text-sm font-semibold mt-5 bg-primary hover:bg-primary-hover transition-all duration-200 disabled:opacity-60 cursor-pointer"
       >
-        {loading ? "Setting up your account..." : "Get Started"}
+        {loading
+          ? t("googleRoleSelect.error.settingUp")
+          : t("googleRoleSelect.error.getStarted")}
       </button>
     </AuthLayout>
   );

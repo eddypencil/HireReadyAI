@@ -18,7 +18,7 @@ export default function PendingApprovalPage({ companyName }) {
       >
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
-            <Clock className="w-3.5 h-3.5 text-primary-foreground" />
+            <Clock className="w-3.5 h-3.5 text-white" />
           </div>
           <span className="text-lg font-bold tracking-tight text-foreground">
             HireReadyAI
@@ -47,14 +47,16 @@ export default function PendingApprovalPage({ companyName }) {
             {t("pending_approval.title")}
           </h1>
           <p className="text-sm text-muted-foreground mb-1">
-            {t("pending_approval.subtitle", { company: companyName || "the company" })}
+            {t("pending_approval.subtitle", {
+              company: companyName || "the company",
+            })}
           </p>
           <p className="text-xs text-muted-foreground/70 mb-6">
             {t("pending_approval.contact_hr")}
           </p>
           <button
             onClick={() => navigate("/")}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-white rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             {t("pending_approval.back_to_home")}

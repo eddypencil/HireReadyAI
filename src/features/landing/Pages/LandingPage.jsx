@@ -5,7 +5,6 @@ import FeaturesSection from "../Components/FeaturesSection";
 import AnimatedSection from "../Components/AnimatedSection";
 import LandingLayout from "../LandingLayout";
 import HowItWorks from "../components/HowItWorks";
-import Customers from "../components/Customers";
 import ContactUs from "../components/ContactUs";
 import Footer from "../components/Footer";
 
@@ -34,7 +33,6 @@ export default function LandingPage() {
       </AnimatedSection>
       <FeaturesSection />
       <HowItWorks />
-      <Customers />
       <BuiltForJobs />
       <TopFeaturedJobs />
       <ContactUs />

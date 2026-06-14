@@ -1,5 +1,5 @@
 import { Check, X, AlertTriangle, Lightbulb } from "lucide-react";
-
+import { useTranslation } from "react-i18next";
 function collectStrings(arrays) {
   const map = new Map();
   arrays.forEach((arr) => {
@@ -15,7 +15,7 @@ export default function KeyTakeaways({ cvFeedback, stages }) {
   const allStrengths = [cvFeedback?.strengths || []];
   const allWeaknesses = [cvFeedback?.weaknesses || []];
   const allGaps = [cvFeedback?.gaps || []];
-
+  const { t } = useTranslation();
   (stages || []).forEach((stage) => {
     const evals = stage.application_stage_evaluations;
     const evalData = Array.isArray(evals) ? evals[0] : evals;
@@ -48,7 +48,9 @@ export default function KeyTakeaways({ cvFeedback, stages }) {
     <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-4">
         <Lightbulb className="w-4 h-4 text-accent" />
-        <h2 className="text-sm font-bold text-foreground">Key Takeaways</h2>
+        <h2 className="text-sm font-bold text-foreground">
+          {t("takeaways.title")}
+        </h2>
       </div>
 
       <div className="space-y-2.5">
@@ -62,11 +64,14 @@ export default function KeyTakeaways({ cvFeedback, stages }) {
           <div className="flex items-start gap-2 text-sm">
             <Check className="w-4 h-4 text-success mt-0.5 shrink-0" />
             <span className="text-foreground/80">
-              <strong className="text-success">Strength: </strong>
+              <strong className="text-success">
+                {t("takeaways.strength")}{" "}
+              </strong>
               {topStrengths[0]}
               {topStrengths.length > 1 && (
                 <span className="text-muted-foreground/60">
-                  {" "}(also noted: {topStrengths.slice(1, 3).join(", ")})
+                  {" "}
+                  (also noted: {topStrengths.slice(1, 3).join(", ")})
                 </span>
               )}
             </span>
@@ -77,11 +82,14 @@ export default function KeyTakeaways({ cvFeedback, stages }) {
           <div className="flex items-start gap-2 text-sm">
             <X className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
             <span className="text-foreground/80">
-              <strong className="text-destructive">Area to improve: </strong>
+              <strong className="text-destructive">
+                {t("takeaways.improve")}{" "}
+              </strong>
               {topWeaknesses[0]}
               {topWeaknesses.length > 1 && (
                 <span className="text-muted-foreground/60">
-                  {" "}(also: {topWeaknesses.slice(1, 3).join(", ")})
+                  {" "}
+                  (also: {topWeaknesses.slice(1, 3).join(", ")})
                 </span>
               )}
             </span>
@@ -92,7 +100,7 @@ export default function KeyTakeaways({ cvFeedback, stages }) {
           <div className="flex items-start gap-2 text-sm">
             <AlertTriangle className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
             <span className="text-foreground/80">
-              <strong className="text-amber-600">Gap: </strong>
+              <strong className="text-amber-600"> {t("takeaways.gap")} </strong>
               {topGaps.slice(0, 2).join(", ")}
             </span>
           </div>

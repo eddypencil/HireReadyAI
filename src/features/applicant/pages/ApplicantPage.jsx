@@ -62,51 +62,23 @@ export default function ApplicantPage() {
         <div className="max-w-7xl mx-auto">
           {/* ── EMPTY STATE (ONLY WHEN NO APPLICATIONS) ───────────────── */}
           {applications?.length === 0 ? (
-            <div
-              style={{
-                background: "white",
-                borderRadius: "16px",
-                padding: "40px 24px",
-                textAlign: "center",
-                border: "1px solid #e6eef5",
-                boxShadow: "0 6px 20px rgba(0,0,0,0.04)",
-              }}
-            >
-              <h2
-                style={{
-                  fontSize: "18px",
-                  fontWeight: "600",
-                  marginBottom: "8px",
-                  color: "#012a4a",
-                }}
-              >
+            <div className="bg-card rounded-2xl h-dvh flex flex-col justify-center items-center p-10 text-center border border-border shadow-sm">
+              <h2 className="text-lg font-semibold text-foreground mb-2">
                 {t("apply_job.empty_state.no_applications")}
               </h2>
 
-              <p
-                style={{
-                  fontSize: "13px",
-                  color: "#5b7280",
-                  marginBottom: "20px",
-                }}
-              >
+              <p className="text-sm text-muted-foreground mb-6">
                 {t("apply_job.empty_state.start_exploring")}
               </p>
 
               <button
                 onClick={() => navigate("/jobs")}
-                style={{
-                  background: "#01497c",
-                  color: "white",
-                  padding: "10px 16px",
-                  borderRadius: "10px",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  border: "none",
-                  cursor: "pointer",
-                }}
+                className="
+      bg-primary text-white px-4 py-2.5 rounded-xl text-sm font-medium
+      hover:bg-primary-hover transition-colors
+    "
               >
-                Browse jobs
+                {t("howItWorks.applicantSteps.step1.title")}
               </button>
             </div>
           ) : (

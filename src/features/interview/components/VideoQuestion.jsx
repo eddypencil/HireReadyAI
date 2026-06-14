@@ -133,8 +133,12 @@ export default function VideoQuestion({
           <Camera className="size-7 text-accent" />
         </div>
         <div className="text-center space-y-1.5">
-          <p className="text-sm font-medium text-foreground">Camera access required</p>
-          <p className="text-xs text-muted-foreground max-w-xs">Allow camera and microphone access to record your video answer</p>
+          <p className="text-sm font-medium text-foreground">
+            Camera access required
+          </p>
+          <p className="text-xs text-muted-foreground max-w-xs">
+            Allow camera and microphone access to record your video answer
+          </p>
         </div>
         <button
           onClick={requestCamera}
@@ -184,11 +188,11 @@ export default function VideoQuestion({
             <div className="size-10 rounded-xl border-2 border-white/20 border-t-white animate-spin" />
             <div className="text-center">
               <p className="text-white text-sm font-medium">
-              {t("interview_page.video_question.transcribing")}
-            </p>
+                {t("interview_page.video_question.transcribing")}
+              </p>
               <p className="text-white/60 text-xs mt-0.5">
-              {t("interview_page.video_question.transcribing_sub")}
-            </p>
+                {t("interview_page.video_question.transcribing_sub")}
+              </p>
             </div>
           </div>
         )}
@@ -197,7 +201,9 @@ export default function VideoQuestion({
         {status === "idle" && (
           <div className="absolute inset-0 bg-[#0a0f1a] flex flex-col items-center justify-center gap-3">
             <Camera className="size-8 text-foreground/20" />
-            <p className="text-xs text-muted-foreground">Initializing camera…</p>
+            <p className="text-xs text-muted-foreground">
+              Initializing camera…
+            </p>
           </div>
         )}
       </div>
@@ -211,7 +217,9 @@ export default function VideoQuestion({
           >
             <span className="size-3 rounded-full bg-white animate-pulse" />
             <span>Start Recording</span>
-            <span className="text-destructive-foreground/70 text-xs">(max 3 min)</span>
+            <span className="text-destructive-foreground/70 text-xs">
+              (max 3 min)
+            </span>
           </button>
         )}
 
@@ -236,7 +244,7 @@ export default function VideoQuestion({
             </button>
             <button
               onClick={handleSubmit}
-              className="flex items-center justify-center gap-2 bg-primary text-primary-foreground rounded-xl py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
+              className="flex items-center justify-center gap-2 bg-primary text-white rounded-xl py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
             >
               <CheckCircle2 className="size-4" />
               {t("interview_page.video_question.submit_answer")} →

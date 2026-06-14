@@ -40,9 +40,16 @@ export default function TextQuestion({ onAnswer }) {
                 : "bg-success/10 text-success border border-success/20",
             ].join(" ")}
           >
-            {tooShort ? <AlertCircle className="size-3" /> : <CheckCircle2 className="size-3" />}
+            {tooShort ? (
+              <AlertCircle className="size-3" />
+            ) : (
+              <CheckCircle2 className="size-3" />
+            )}
             <span>
-              {charCount}{charCount >= MIN_LENGTH ? " chars" : ` chars (min ${MIN_LENGTH})`}
+              {charCount}
+              {charCount >= MIN_LENGTH
+                ? " chars"
+                : ` chars (min ${MIN_LENGTH})`}
             </span>
           </div>
 
@@ -55,7 +62,7 @@ export default function TextQuestion({ onAnswer }) {
         <button
           onClick={handleSubmit}
           disabled={tooShort}
-          className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 bg-primary text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <CheckCircle2 className="size-4" />
           {t("code_question.submit_answer")} →

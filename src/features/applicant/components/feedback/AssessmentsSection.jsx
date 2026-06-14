@@ -2,9 +2,16 @@ import { Brain } from "lucide-react";
 import { motion } from "framer-motion";
 import StageSelector from "./StageSelector";
 import ExpandableQuestion from "./ExpandableQuestion";
-
+import { useTranslation } from "react-i18next";
 function getInitials(name = "") {
-  return (name || "").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase() || "?";
+  return (
+    (name || "")
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase() || "?"
+  );
 }
 
 export default function AssessmentsSection({
@@ -17,7 +24,7 @@ export default function AssessmentsSection({
   const isEmpty =
     stagesWithQuestions.length === 0 ||
     stagesWithQuestions.every((s) => s.questions.length === 0);
-
+  const { t } = useTranslation();
   return (
     <motion.div
       className="mt-8"
@@ -37,7 +44,9 @@ export default function AssessmentsSection({
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="relative flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-white">Assessments & Interviews</h1>
+            <h1 className="text-2xl font-bold text-white">
+              {t("assessments.title")}
+            </h1>
             <p className="text-sm text-white/70 mt-1 font-medium">
               {candidateName || jobTitle}
             </p>
@@ -45,7 +54,11 @@ export default function AssessmentsSection({
           {!isEmpty && (
             <div className="text-right">
               <span className="text-xs text-white/70 font-semibold bg-white/15 px-3 py-1.5 rounded-lg">
-                {stagesWithQuestions.reduce((a, s) => a + s.questions.length, 0)} total questions
+                {stagesWithQuestions.reduce(
+                  (a, s) => a + s.questions.length,
+                  0,
+                )}{" "}
+                {t("assessments.totalQuestions")}
               </span>
             </div>
           )}
@@ -74,9 +87,11 @@ export default function AssessmentsSection({
           transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <Brain className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
-          <h2 className="text-lg font-bold text-foreground/80 mb-1">No Assessment Data</h2>
+          <h2 className="text-lg font-bold text-foreground/80 mb-1">
+            {t("assessments.noDataTitle")}
+          </h2>
           <p className="text-sm text-muted-foreground/60">
-            You have not completed any interviews or assessments for this application yet.
+            {t("assessments.noDataDescription")}
           </p>
         </motion.div>
       ) : activeStage ? (
@@ -109,7 +124,8 @@ export default function AssessmentsSection({
                       ai_screening: Brain,
                     };
                     const StageIcon =
-                      icons[activeStage.recruitment_stages?.stage_type] || Brain;
+                      icons[activeStage.recruitment_stages?.stage_type] ||
+                      Brain;
                     return <StageIcon className="w-5 h-5" />;
                   })()}
                 </div>
@@ -118,7 +134,10 @@ export default function AssessmentsSection({
                     {activeStage.recruitment_stages?.name}
                   </h2>
                   <p className="text-xs text-muted-foreground capitalize">
-                    {activeStage.recruitment_stages?.stage_type?.replace(/_/g, " ")}
+                    {activeStage.recruitment_stages?.stage_type?.replace(
+                      /_/g,
+                      " ",
+                    )}
                   </p>
                 </div>
               </div>
@@ -147,7 +166,8 @@ export default function AssessmentsSection({
                           : "bg-muted text-muted-foreground"
                   }`}
                 >
-                  {activeStage.status?.charAt(0).toUpperCase() + activeStage.status?.slice(1)}
+                  {activeStage.status?.charAt(0).toUpperCase() +
+                    activeStage.status?.slice(1)}
                 </span>
               </div>
             </div>
@@ -159,7 +179,7 @@ export default function AssessmentsSection({
                 <div className="mt-4 pt-4 border-t border-border grid grid-cols-3 gap-4">
                   <div>
                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                      Recommendation
+                      {t("assessments.recommendation")}
                     </span>
                     <p
                       className={`text-sm font-bold mt-0.5 ${
@@ -176,7 +196,7 @@ export default function AssessmentsSection({
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                      Confidence
+                      {t("assessments.confidence")}
                     </span>
                     <p className="text-sm font-bold text-foreground/80 mt-0.5">
                       {evalData.confidence != null
@@ -186,7 +206,7 @@ export default function AssessmentsSection({
                   </div>
                   <div>
                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
-                      Questions
+                      {t("assessments.questions")}
                     </span>
                     <p className="text-sm font-bold text-foreground/80 mt-0.5">
                       {activeStage.questions?.length || 0}

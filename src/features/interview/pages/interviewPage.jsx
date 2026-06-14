@@ -1,3 +1,4 @@
+//src\features\interview\pages\interviewPage.jsx
 import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import VideoQuestion from "../components/VideoQuestion";
@@ -307,7 +308,7 @@ export default function InterviewPage() {
                 </div>
               </>
             )}
-            <span className="rounded-full border px-3 py-0.5 text-[11px] font-medium bg-cerulean-500/10 text-cerulean-500 border-cerulean-500/20 whitespace-nowrap">
+            <span className="rounded-full border px-3 py-0.5 text-[11px] font-medium bg-primary/10 text-primary border-primary/20 whitespace-nowrap">
               {stageLabel}
             </span>
           </div>
@@ -319,14 +320,14 @@ export default function InterviewPage() {
         <div className="w-full max-w-4xl space-y-5">
           {/* INIT / LOADING */}
           {(phase === PHASE.INIT || phase === PHASE.LOADING) && (
-            <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-8">
+            <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-8">
               <Spinner label="Preparing your interview…" />
             </div>
           )}
 
           {/* EVALUATING */}
           {phase === PHASE.EVALUATING && (
-            <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-8">
+            <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-8">
               <Spinner label="Evaluating your answer…" icon={BarChart3} />
               <div className="flex items-center justify-center gap-2 mt-2">
                 <div className="flex gap-1">
@@ -354,9 +355,9 @@ export default function InterviewPage() {
           {phase === PHASE.ANSWERING && currentQuestion && (
             <>
               {/* Question header card */}
-              <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-5 sm:p-6 space-y-3">
+              <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-5 sm:p-6 space-y-3">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex items-center gap-1.5 rounded-full bg-primary/8 text-primary text-xs font-semibold px-3 py-1 border border-primary/15">
+                  <span className="flex items-center gap-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold px-3 py-1 border border-primary/15">
                     <HelpCircle className="size-3" />Q{questionNumber} /{" "}
                     {maxQuestions}
                   </span>
@@ -379,7 +380,7 @@ export default function InterviewPage() {
               </div>
 
               {/* Answer card */}
-              <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-5 sm:p-6">
+              <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-5 sm:p-6">
                 <QuestionComponent
                   question={currentQuestion}
                   applicationStageId={applicationStage?.id}
@@ -435,7 +436,7 @@ export default function InterviewPage() {
 
           {/* FINISHED */}
           {phase === PHASE.FINISHED && (
-            <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-6 sm:p-8 space-y-6 sm:space-y-8 text-center">
+            <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-6 sm:p-8 space-y-6 sm:space-y-8 text-center">
               {/* Icon */}
               <div className="flex justify-center">
                 <div className="size-16 rounded-2xl bg-success/10 flex items-center justify-center border border-success/20">
@@ -458,7 +459,7 @@ export default function InterviewPage() {
 
               <button
                 onClick={() => navigate(`/applications/${applicationId}`)}
-                className="w-full max-w-md bg-primary text-primary-foreground rounded-xl px-4 py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
+                className="w-full max-w-md bg-primary text-white rounded-xl px-4 py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
               >
                 {t("interview_page.finished.back_to_application")}
               </button>
@@ -467,7 +468,7 @@ export default function InterviewPage() {
 
           {/* ERROR */}
           {phase === PHASE.ERROR && (
-            <div className="bg-card rounded-2xl border border-border shadow-md shadow-cerulean-900/10 p-6 sm:p-8 space-y-6 text-center max-w-lg mx-auto">
+            <div className="bg-card rounded-2xl border border-border shadow-lg shadow-primary/10 p-6 sm:p-8 space-y-6 text-center max-w-lg mx-auto">
               <div className="size-14 rounded-2xl bg-destructive/10 flex items-center justify-center mx-auto border border-destructive/20">
                 <AlertCircle className="size-7 text-destructive" />
               </div>

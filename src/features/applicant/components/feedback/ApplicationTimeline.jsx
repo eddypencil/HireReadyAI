@@ -1,11 +1,17 @@
 import { Check, X, Clock } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function ApplicationTimeline({ stages }) {
+  const { t } = useTranslation();
+
   if (!stages || stages.length === 0) return null;
 
   return (
     <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
-      <h2 className="text-sm font-bold text-foreground mb-5">Application Timeline</h2>
+      <h2 className="text-sm font-bold text-foreground mb-5">
+        {t("applicationTimeline.title")}
+      </h2>
+
       <div className="relative">
         {stages.map((stage, i) => {
           const isPassed =
@@ -37,6 +43,8 @@ export default function ApplicationTimeline({ stages }) {
                   ? "bg-amber-50 text-amber-700"
                   : "bg-destructive/10 text-destructive";
 
+          const statusKey = stage.status || "pending";
+
           return (
             <div key={stage.id} className="flex items-start gap-4">
               <div className="flex flex-col items-center">
@@ -55,22 +63,31 @@ export default function ApplicationTimeline({ stages }) {
                   <div className="w-0.5 h-full min-h-[24px] bg-border" />
                 )}
               </div>
+
               <div className="pb-6 flex-1">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-foreground">
-                      {stage.recruitment_stages?.name || "Unknown"}
+                      {stage.recruitment_stages?.name ||
+                        t("applicationTimeline.unknown")}
                     </p>
                     <p className="text-[11px] text-muted-foreground capitalize">
-                      {stage.recruitment_stages?.stage_type?.replace(/_/g, " ") || ""}
+                      {stage.recruitment_stages?.stage_type?.replace(
+                        /_/g,
+                        " ",
+                      ) || ""}
                     </p>
                   </div>
+
                   <div className="flex items-center gap-2">
                     {stage.score != null && (
-                      <span className={`px-2 py-0.5 rounded-md text-xs font-bold ${scoreColor}`}>
+                      <span
+                        className={`px-2 py-0.5 rounded-md text-xs font-bold ${scoreColor}`}
+                      >
                         {Math.round(stage.score)}
                       </span>
                     )}
+
                     <span
                       className={`text-[10px] font-semibold ${
                         isPassed
@@ -83,8 +100,10 @@ export default function ApplicationTimeline({ stages }) {
                       }`}
                     >
                       {isInProgress
-                        ? "In Progress"
-                        : stage.status?.charAt(0).toUpperCase() + stage.status?.slice(1) || "Pending"}
+                        ? t("applicationTimeline.inProgress")
+                        : t(`applicationTimeline.status.${statusKey}`, {
+                            defaultValue: t("applicationTimeline.pending"),
+                          })}
                     </span>
                   </div>
                 </div>

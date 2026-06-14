@@ -65,7 +65,7 @@ export default function MultipleChoiceQuestion({ question, onAnswer }) {
         <button
           onClick={handleSubmit}
           disabled={selected === null}
-          className="flex items-center gap-2 bg-primary text-primary-foreground rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 bg-primary text-white rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <CheckCircle2 className="size-4" />
           {t("code_question.submit_answer")} →

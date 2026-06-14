@@ -101,12 +101,6 @@ export default function ShortlistsPage({ jobs, company }) {
             ))}
           </select>
 
-          {/* Filters (UI only) */}
-          <button className="flex items-center gap-2 text-sm border border-border rounded-lg px-3 py-2 bg-background text-foreground hover:bg-secondary transition-colors">
-            <SlidersHorizontal className="w-3.5 h-3.5 text-muted-foreground" />
-            {t("shortlists.filters")}
-          </button>
-
           {/* Sort chips */}
           <div className="flex items-center gap-1 ml-auto">
             <span className="text-xs text-muted-foreground mr-1">
@@ -116,10 +110,11 @@ export default function ShortlistsPage({ jobs, company }) {
               <button
                 key={key}
                 onClick={() => setSortMode(key)}
-                className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${sortMode === key
+                className={`text-xs px-3 py-1.5 rounded-full border font-medium transition-colors ${
+                  sortMode === key
                     ? "bg-primary text-white border-primary"
                     : "bg-background text-muted-foreground border-border hover:border-primary/40 hover:text-primary"
-                  }`}
+                }`}
               >
                 {label}
               </button>

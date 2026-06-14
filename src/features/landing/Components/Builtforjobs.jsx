@@ -125,7 +125,11 @@ export default function BuiltForJobs() {
               ({ title, description, icon: Icon, bg, accent, visual }) => (
                 <div
                   key={title}
-                  className={`rounded-2xl border border-border p-6 ${bg} transition-shadow hover:shadow-md`}
+                  className={`
+  rounded-2xl border border-border p-6 ${bg}
+  transition-all duration-300 ease-out
+  hover:shadow-lg hover:border-primary/30 hover:-translate-y-1
+`}
                 >
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-card border border-border">
                     <Icon size={18} className={accent} />
@@ -145,7 +149,7 @@ export default function BuiltForJobs() {
           {/* Right column — two stacked cards */}
           <div className="flex flex-col gap-5">
             {/* Card 1 —AI Job Description Generator*/}
-            <div className="rounded-2xl border border-border bg-gradient-to-br from-primary/5 via-secondary to-surface-muted dark:from-surface dark:via-surface-muted dark:to-surface p-6 flex flex-col gap-5 transition-shadow hover:shadow-md">
+            <div className="rounded-2xl border border-border bg-gradient-to-br from-primary/5 via-secondary to-surface-muted dark:from-surface dark:via-surface-muted dark:to-surface p-6 flex flex-col gap-5 transition-all duration-300 ease-out hover:shadow-lg hover:border-primary/30 hover:-translate-y-1">
               <div>
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-3 bg-card border border-border">
                   <MessageSquare
@@ -232,7 +236,7 @@ export default function BuiltForJobs() {
               </div>
             </div> */}
 
-            <div className="flex-1 rounded-2xl border border-border bg-secondary dark:bg-surface-muted p-6 flex flex-col gap-3 transition-shadow hover:shadow-md">
+            <div className="flex-1 rounded-2xl border border-border bg-secondary dark:bg-surface-muted p-6 flex flex-col gap-3 transition-all duration-300 ease-out hover:shadow-lg hover:border-primary/30 hover:-translate-y-1">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-card border border-border">
                 <Search size={18} className="text-primary dark:text-accent" />
               </div>

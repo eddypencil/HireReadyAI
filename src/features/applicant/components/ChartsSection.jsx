@@ -11,7 +11,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
-
+import { useTranslation } from "react-i18next";
 const STATUS_CONFIG = {
   passed: { label: "Passed", color: "#22c55e" },
   failed: { label: "Failed", color: "#ef4444" },
@@ -25,7 +25,9 @@ function PieTooltip({ active, payload }) {
     return (
       <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-md text-xs">
         <p className="font-semibold text-foreground">{payload[0].name}</p>
-        <p className="text-accent">{payload[0].value} stage{payload[0].value !== 1 ? "s" : ""} ({pct}%)</p>
+        <p className="text-accent">
+          {payload[0].value} stage{payload[0].value !== 1 ? "s" : ""} ({pct}%)
+        </p>
       </div>
     );
   }
@@ -36,8 +38,12 @@ function BarTooltip({ active, payload }) {
   if (active && payload && payload.length) {
     return (
       <div className="bg-card border border-border rounded-lg px-3 py-2 shadow-md text-xs">
-        <p className="font-semibold text-foreground">{payload[0].payload.month}</p>
-        <p className="text-accent">{payload[0].value} application{payload[0].value !== 1 ? "s" : ""}</p>
+        <p className="font-semibold text-foreground">
+          {payload[0].payload.month}
+        </p>
+        <p className="text-accent">
+          {payload[0].value} application{payload[0].value !== 1 ? "s" : ""}
+        </p>
       </div>
     );
   }
@@ -45,6 +51,7 @@ function BarTooltip({ active, payload }) {
 }
 
 export default function ChartsSection({ applications }) {
+  const { t } = useTranslation();
   const stageStatusData = useMemo(() => {
     if (!applications) return [];
     const counts = { passed: 0, failed: 0, in_progress: 0 };
@@ -91,7 +98,10 @@ export default function ChartsSection({ applications }) {
         const [y, m] = month.split("-");
         const date = new Date(+y, +m - 1);
         return {
-          month: date.toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+          month: date.toLocaleDateString("en-US", {
+            month: "short",
+            year: "numeric",
+          }),
           applications: count,
         };
       });
@@ -104,11 +114,15 @@ export default function ChartsSection({ applications }) {
       {/* Stage Status Distribution */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-border">
-          <h3 className="text-sm font-bold text-foreground m-0">Stage Status Breakdown</h3>
+          <h3 className="text-sm font-bold text-foreground m-0">
+            {t("analytics_charts.stage_status_breakdown")}
+          </h3>
         </div>
         <div className="p-4">
           {stageStatusData.length === 0 ? (
-            <p className="text-xs text-accent text-center py-6">No stage data available</p>
+            <p className="text-xs text-accent text-center py-6">
+               {t("analytics_charts.no_stage_data")}
+            </p>
           ) : (
             <>
               <ResponsiveContainer width="100%" height={210}>
@@ -132,8 +146,13 @@ export default function ChartsSection({ applications }) {
               <div className="flex flex-wrap gap-x-4 gap-y-1.5 mt-1 justify-center">
                 {stageStatusData.map((item) => (
                   <div key={item.name} className="flex items-center gap-1.5">
-                    <span className="size-2.5 rounded-full shrink-0" style={{ background: item.color }} />
-                    <span className="text-[11px] text-accent">{item.name} ({item.value})</span>
+                    <span
+                      className="size-2.5 rounded-full shrink-0"
+                      style={{ background: item.color }}
+                    />
+                    <span className="text-[11px] text-accent">
+                      {item.name} ({item.value})
+                    </span>
                   </div>
                 ))}
               </div>
@@ -145,15 +164,25 @@ export default function ChartsSection({ applications }) {
       {/* Applications Over Time */}
       <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="px-5 py-4 border-b border-border">
-          <h3 className="text-sm font-bold text-foreground m-0">Applications Over Time</h3>
+          <h3 className="text-sm font-bold text-foreground m-0">
+           {t("analytics_charts.applications_over_time")}
+          </h3>
         </div>
         <div className="p-4">
           {timelineData.length === 0 ? (
-            <p className="text-xs text-accent text-center py-6">No data available</p>
+            <p className="text-xs text-accent text-center py-6">
+             {t("analytics_charts.no_data")}
+            </p>
           ) : (
             <ResponsiveContainer width="100%" height={210}>
-              <BarChart data={timelineData} margin={{ top: 5, right: 10, left: -15, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" />
+              <BarChart
+                data={timelineData}
+                margin={{ top: 5, right: 10, left: -15, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="var(--color-border)"
+                />
                 <XAxis
                   dataKey="month"
                   tick={{ fontSize: 11, fill: "var(--color-accent)" }}
@@ -167,7 +196,12 @@ export default function ChartsSection({ applications }) {
                   tickLine={false}
                 />
                 <Tooltip content={<BarTooltip />} />
-                <Bar dataKey="applications" radius={[4, 4, 0, 0]} fill="#01497c" maxBarSize={36} />
+                <Bar
+                  dataKey="applications"
+                  radius={[4, 4, 0, 0]}
+                  fill="#01497c"
+                  maxBarSize={36}
+                />
               </BarChart>
             </ResponsiveContainer>
           )}

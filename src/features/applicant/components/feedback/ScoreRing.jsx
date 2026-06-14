@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 export default function ScoreRing({
   score,
   size = 80,
@@ -8,7 +9,7 @@ export default function ScoreRing({
   const circumference = 2 * Math.PI * radius;
   const progress = Math.min(Math.max(score || 0, 0), 100);
   const offset = circumference - (progress / 100) * circumference;
-
+  const { t } = useTranslation();
   const color =
     progress >= 80
       ? "stroke-success"
@@ -60,7 +61,7 @@ export default function ScoreRing({
         </div>
       </div>
       <span className="text-[10px] font-semibold text-muted-foreground uppercase">
-        Overall
+        {t("scoreRing.overall")}
       </span>
       {percentileTag && (
         <span

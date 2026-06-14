@@ -856,7 +856,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               onClick={() => setShowFilters((s) => !s)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
                 showFilters
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  ? "bg-primary text-white border-primary shadow-sm"
                   : "border-border text-foreground bg-surface hover:bg-muted"
               }`}
             >
@@ -890,7 +890,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
                 onClick={() => setFilterFit(f)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
                   filterFit === f
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                    ? "bg-primary text-white border-primary shadow-sm"
                     : "bg-surface text-foreground border-border hover:bg-muted"
                 }`}
               >
