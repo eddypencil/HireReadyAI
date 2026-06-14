@@ -59,12 +59,6 @@ export default function ShortlistInsightsBar({ insightsSummary }) {
           )}
         </span>
       </div>
-
-      {/* AI Suggestion - Accent Pill Variant */}
-      <div className="flex items-center gap-1.5 text-xs font-medium text-accent bg-accent/10 border border-accent/20 px-3 py-1.5 rounded-full">
-        <Sparkles className="w-3.5 h-3.5" />
-        {t("shortlistInsights.aiSuggestion", { count: topAdvanceCount })}
-      </div>
     </motion.div>
   );
 }

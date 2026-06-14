@@ -1,5 +1,5 @@
 import { Brain, MessageSquare, Monitor, Code, Video } from "lucide-react";
-
+import { useTranslation } from "react-i18next";
 const STAGE_ICONS = {
   hr_interview: MessageSquare,
   technical_interview: Monitor,
@@ -13,12 +13,13 @@ const STAGE_ICONS = {
 
 export default function StageSelector({ stages, activeStage, onSelect }) {
   if (stages.length <= 1) return null;
-
+  const { t } = useTranslation();
   return (
     <div className="border-b border-border">
       <div className="flex -mb-px overflow-x-auto">
         {stages.map((stage) => {
-          const Icon = STAGE_ICONS[stage.recruitment_stages?.stage_type] || Brain;
+          const Icon =
+            STAGE_ICONS[stage.recruitment_stages?.stage_type] || Brain;
           const isActive = activeStage?.id === stage.id;
 
           return (
@@ -32,7 +33,8 @@ export default function StageSelector({ stages, activeStage, onSelect }) {
               }`}
             >
               <Icon className="w-4 h-4" />
-              {stage.recruitment_stages?.name || "Unknown"}
+              {stage.recruitment_stages?.name ||
+                t("company_profile.team.unknown")}
             </button>
           );
         })}

@@ -77,7 +77,9 @@ export default function RecruiterDashboardPage() {
 
           <div className="px-4 py-2 rounded-xl bg-surface border border-border text-xs text-muted-foreground font-semibold shadow-xs">
             {t("sign_in.headline")},{" "}
-            <span className="text-primary font-bold">{fullName || "Recruiter"}</span>
+            <span className="text-primary font-bold">
+              {fullName || "Recruiter"}
+            </span>
           </div>
         </motion.div>
 

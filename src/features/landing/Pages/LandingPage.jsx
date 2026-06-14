@@ -12,15 +12,18 @@ import BuiltForJobs from "../Components/Builtforjobs";
 import TopFeaturedJobs from "../Components/Topfeaturedjobs";
 import FAQ from "../Components/Faq";
 
-const NAV_LINKS = [
-  { label: "Features", href: "#features" },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "Contact", href: "#contact" },
-  { label: "FAQ", href: "#faq" },
-
-];
+import { useTranslation } from "react-i18next";
 
 export default function LandingPage() {
+  const { t } = useTranslation();
+
+  const NAV_LINKS = [
+    { label: t("landing_navbar.nav.features"), href: "#features" },
+    { label: t("landing_navbar.nav.how_it_works"), href: "#how-it-works" },
+    { label: t("landing_navbar.nav.faq"), href: "#faq" },
+    { label: t("landing_navbar.nav.contact"), href: "#contact" },
+  ];
+
   return (
     <LandingLayout>
       <Navbar links={NAV_LINKS} />

@@ -1,7 +1,18 @@
 //src\features\interview\components\CodeQuestion.jsx
 import { useEffect, useRef, useState } from "react";
 import { executeCode } from "../services/wandbox.service";
-import { Loader2, Play, Terminal, Clock, Cpu, CheckCircle2, XCircle, ChevronDown, ChevronRight, AlertCircle } from "lucide-react";
+import {
+  Loader2,
+  Play,
+  Terminal,
+  Clock,
+  Cpu,
+  CheckCircle2,
+  XCircle,
+  ChevronDown,
+  ChevronRight,
+  AlertCircle,
+} from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const PLACEHOLDER = {
@@ -100,8 +111,12 @@ export default function CodeQuestion({ question, onAnswer }) {
       answerPayload.push("EXECUTION OUTPUT:");
       answerPayload.push(`- Exit Code: ${consoleOutput.exitCode ?? "N/A"}`);
       answerPayload.push(`- Signal: ${consoleOutput.signal ?? "none"}`);
-      answerPayload.push(`- CPU Time: ${consoleOutput.executionTime ?? "N/A"}ms`);
-      answerPayload.push(`- Memory: ${consoleOutput.memoryUsage != null ? (consoleOutput.memoryUsage / 1024).toFixed(2) + " KB" : "N/A"}`);
+      answerPayload.push(
+        `- CPU Time: ${consoleOutput.executionTime ?? "N/A"}ms`,
+      );
+      answerPayload.push(
+        `- Memory: ${consoleOutput.memoryUsage != null ? (consoleOutput.memoryUsage / 1024).toFixed(2) + " KB" : "N/A"}`,
+      );
       answerPayload.push(`- stdout: ${consoleOutput.stdout || "(empty)"}`);
       answerPayload.push(`- stderr: ${consoleOutput.stderr || "(none)"}`);
     }
@@ -112,7 +127,7 @@ export default function CodeQuestion({ question, onAnswer }) {
     <div className="flex flex-col lg:flex-row gap-4 h-full">
       {/* ── Left: Editor ─────────────────────────────────────────────── */}
       <div className="flex-1 min-w-0 flex flex-col gap-3">
-        <div className="rounded-xl overflow-hidden border border-border bg-card shadow-md shadow-cerulean-900/10">
+        <div className="rounded-xl overflow-hidden border border-border bg-card shadow-md shadow-primary/10">
           {/* Editor header */}
           <div className="flex items-center justify-between px-4 py-2.5 bg-secondary/60 border-b border-border">
             <div className="flex items-center gap-3">
@@ -131,7 +146,9 @@ export default function CodeQuestion({ question, onAnswer }) {
                 {langInfo.label}
               </span>
             </div>
-            <span className="text-[11px] text-muted-foreground">Tab = 2 spaces</span>
+            <span className="text-[11px] text-muted-foreground">
+              Tab = 2 spaces
+            </span>
           </div>
 
           {/* Code area */}
@@ -144,7 +161,7 @@ export default function CodeQuestion({ question, onAnswer }) {
                 background: "var(--color-muted)",
                 borderRight: "1px solid var(--color-border)",
                 fontFamily:
-                "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
+                  "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
                 fontSize: "13px",
                 lineHeight: "21px",
                 color: "var(--color-muted-foreground)",
@@ -166,7 +183,7 @@ export default function CodeQuestion({ question, onAnswer }) {
                 background: "var(--color-card)",
                 color: "var(--color-foreground)",
                 fontFamily:
-                "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
+                  "'JetBrains Mono', 'Fira Code', 'Consolas', monospace",
                 fontSize: "13px",
                 lineHeight: "21px",
                 caretColor: "var(--color-ring)",
@@ -189,7 +206,7 @@ export default function CodeQuestion({ question, onAnswer }) {
           <button
             onClick={handleSubmit}
             disabled={isEmpty}
-            className="flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-primary/20"
+            className="flex items-center justify-center gap-2 w-full bg-primary text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed shadow-md shadow-primary/20"
           >
             <CheckCircle2 className="size-4" />
             Submit Answer →
@@ -215,7 +232,11 @@ export default function CodeQuestion({ question, onAnswer }) {
             onClick={() => setShowExpected(!showExpected)}
             className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors px-1"
           >
-            {showExpected ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
+            {showExpected ? (
+              <ChevronDown className="size-3.5" />
+            ) : (
+              <ChevronRight className="size-3.5" />
+            )}
             Expected Output
           </button>
         )}
@@ -231,18 +252,22 @@ export default function CodeQuestion({ question, onAnswer }) {
         <div className="w-full lg:w-80 xl:w-96 flex flex-col gap-3">
           <div className="flex items-center gap-2 px-1">
             <Terminal className="size-4 text-muted-foreground" />
-            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Console</span>
+            <span className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+              Console
+            </span>
           </div>
 
           <div
             ref={consoleRef}
-            className="flex-1 rounded-xl border border-border bg-card shadow-md shadow-cerulean-900/10 overflow-y-auto"
+            className="flex-1 rounded-xl border border-border bg-card shadow-md shadow-primary/10 overflow-y-auto"
             style={{ minHeight: "200px", maxHeight: "400px" }}
           >
             {!consoleOutput && !isRunning && (
               <div className="flex flex-col items-center justify-center h-full py-12 px-4 text-center">
                 <Terminal className="size-8 text-muted-foreground/30 mb-3" />
-                <p className="text-xs text-muted-foreground">Click "Run Code" to see output here</p>
+                <p className="text-xs text-muted-foreground">
+                  Click "Run Code" to see output here
+                </p>
               </div>
             )}
 
@@ -259,10 +284,17 @@ export default function CodeQuestion({ question, onAnswer }) {
                 <div>
                   <div className="flex items-center gap-1.5 mb-1.5">
                     <CheckCircle2 className="size-3.5 text-success" />
-                    <span className="text-[11px] font-medium text-success/80 uppercase tracking-wider">stdout</span>
+                    <span className="text-[11px] font-medium text-success/80 uppercase tracking-wider">
+                      stdout
+                    </span>
                   </div>
-                  <pre className="rounded-lg bg-[#0d1117] p-3 text-[13px] font-mono text-[#e6edf3] whitespace-pre-wrap overflow-x-auto leading-relaxed" style={{ minHeight: "2.5rem" }}>
-                    {consoleOutput.stdout || <span className="text-[#484f58] italic">(empty)</span>}
+                  <pre
+                    className="rounded-lg bg-[#0d1117] p-3 text-[13px] font-mono text-[#e6edf3] whitespace-pre-wrap overflow-x-auto leading-relaxed"
+                    style={{ minHeight: "2.5rem" }}
+                  >
+                    {consoleOutput.stdout || (
+                      <span className="text-[#484f58] italic">(empty)</span>
+                    )}
                   </pre>
                 </div>
 
@@ -271,7 +303,9 @@ export default function CodeQuestion({ question, onAnswer }) {
                   <div>
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <XCircle className="size-3.5 text-destructive" />
-                      <span className="text-[11px] font-medium text-destructive/80 uppercase tracking-wider">stderr</span>
+                      <span className="text-[11px] font-medium text-destructive/80 uppercase tracking-wider">
+                        stderr
+                      </span>
                     </div>
                     <pre className="rounded-lg bg-[#1a0a0a] border border-destructive/20 p-3 text-[13px] font-mono text-[#f87171] whitespace-pre-wrap overflow-x-auto leading-relaxed">
                       {consoleOutput.stderr}
@@ -284,7 +318,9 @@ export default function CodeQuestion({ question, onAnswer }) {
                   <div>
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <AlertCircle className="size-3.5 text-destructive" />
-                      <span className="text-[11px] font-medium text-destructive/80 uppercase tracking-wider">Error</span>
+                      <span className="text-[11px] font-medium text-destructive/80 uppercase tracking-wider">
+                        Error
+                      </span>
                     </div>
                     <pre className="rounded-lg bg-[#1a0a0a] border border-destructive/20 p-3 text-[13px] font-mono text-[#f87171] whitespace-pre-wrap overflow-x-auto leading-relaxed">
                       {consoleOutput.error}
@@ -297,16 +333,22 @@ export default function CodeQuestion({ question, onAnswer }) {
                   <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
                     <Clock className="size-3.5 text-muted-foreground" />
                     <div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Time</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                        Time
+                      </div>
                       <div className="text-sm font-mono font-medium text-foreground">
-                        {consoleOutput.executionTime != null ? `${consoleOutput.executionTime}ms` : "—"}
+                        {consoleOutput.executionTime != null
+                          ? `${consoleOutput.executionTime}ms`
+                          : "—"}
                       </div>
                     </div>
                   </div>
                   <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
                     <Cpu className="size-3.5 text-muted-foreground" />
                     <div>
-                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Memory</div>
+                      <div className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                        Memory
+                      </div>
                       <div className="text-sm font-mono font-medium text-foreground">
                         {consoleOutput.memoryUsage != null
                           ? `${(consoleOutput.memoryUsage / 1024).toFixed(2)} KB`
@@ -319,8 +361,12 @@ export default function CodeQuestion({ question, onAnswer }) {
                 {/* Exit code */}
                 {consoleOutput.exitCode != null && (
                   <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground">Exit code:</span>
-                    <span className={`text-[11px] font-mono font-medium ${consoleOutput.exitCode === 0 ? "text-success" : "text-destructive"}`}>
+                    <span className="text-[11px] text-muted-foreground">
+                      Exit code:
+                    </span>
+                    <span
+                      className={`text-[11px] font-mono font-medium ${consoleOutput.exitCode === 0 ? "text-success" : "text-destructive"}`}
+                    >
                       {consoleOutput.exitCode}
                       {consoleOutput.signal ? ` (${consoleOutput.signal})` : ""}
                     </span>
@@ -334,7 +380,7 @@ export default function CodeQuestion({ question, onAnswer }) {
           <button
             onClick={handleSubmit}
             disabled={isEmpty}
-            className="flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground rounded-lg px-4 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 w-full bg-primary text-white rounded-lg px-4 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <CheckCircle2 className="size-4" />
             {t("code_question.submit_answer")} →

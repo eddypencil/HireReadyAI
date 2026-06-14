@@ -23,6 +23,7 @@ import {
   fetchQuestionsByIds,
 } from "../services/candidateProfile.service";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
+import { useTranslation } from "react-i18next";
 
 function getInitials(name = "") {
   return (
@@ -77,7 +78,7 @@ export default function CandidateProfilePage() {
   const [error, setError] = useState(null);
   const [qaList, setQaList] = useState([]);
   const [showQA, setShowQA] = useState(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (!id) return;
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -132,13 +133,13 @@ export default function CandidateProfilePage() {
     return (
       <div className="p-8 text-center">
         <p className="text-destructive font-medium">
-          {error || "Candidate not found"}
+          {error || t("candidate_profile.candidate_not_found")}
         </p>
         <Link
           to="../candidates"
           className="text-primary hover:underline mt-4 inline-block"
         >
-          &larr; Back to pipeline
+          &larr; {t("candidate_profile.back_to_pipeline")}
         </Link>
       </div>
     );
@@ -192,7 +193,7 @@ export default function CandidateProfilePage() {
           className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-primary transition-colors mb-6"
         >
           <ArrowLeft className="w-4 h-4" />
-          Back to Pipeline
+          {t("candidate_profile.back_to_pipeline")}
         </Link>
       </motion.div>
 
@@ -220,7 +221,7 @@ export default function CandidateProfilePage() {
                 className="flex items-center gap-1 text-[10px] font-semibold text-primary bg-primary/10 border border-primary/20 rounded-lg px-2.5 py-1 hover:bg-primary/20 transition-colors"
               >
                 <Download className="w-3 h-3" />
-                CV
+                {t("candidate_profile.cv")}
               </a>
             )}
           </div>
@@ -228,18 +229,20 @@ export default function CandidateProfilePage() {
           <div className="flex-1">
             <div className="flex items-center gap-3 flex-wrap">
               <h1 className="text-2xl font-bold text-foreground">
-                {candidate.full_name || "Unknown Candidate"}
+                {candidate.full_name ||
+                  t("candidate_profile.unknown_candidate")}
               </h1>
               {app.is_rejected && (
                 <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-destructive/10 text-destructive border border-destructive/20">
-                  Rejected
+                  {t("candidate_profile.rejected")}
                 </span>
               )}
               <Link
                 to={`/companies/applicants/${candidate.id}/profile`}
                 className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-primary bg-primary/5 border border-primary/15 rounded-md hover:bg-primary/10 transition-colors"
               >
-                Show Profile <ExternalLink className="w-3 h-3" />
+                {t("candidate_profile.show_profile")}{" "}
+                <ExternalLink className="w-3 h-3" />
               </Link>
             </div>
             {candidate.headline && (
@@ -257,7 +260,7 @@ export default function CandidateProfilePage() {
               {app.job_postings?.title && (
                 <span className="flex items-center gap-1">
                   <FileText className="w-3.5 h-3.5 text-muted-foreground/60" />
-                  Applied for:{" "}
+                  {t("candidate_profile.applied_for")}{" "}
                   <strong className="text-foreground font-semibold">
                     {app.job_postings.title}
                   </strong>
@@ -274,7 +277,7 @@ export default function CandidateProfilePage() {
               </span>
             </div>
             <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
-              Composite
+              {t("candidate_profile.composite")}
             </span>
             {percentileTag && (
               <span
@@ -308,7 +311,7 @@ export default function CandidateProfilePage() {
                   <div className="flex items-center gap-2 mb-4">
                     <Sparkles className="w-6 h-6 text-white/70" />
                     <h2 className="text-lg font-bold text-white">
-                      AI CV Review
+                      {t("candidate_profile.ai_cv_review")}
                     </h2>
                     <span
                       className={`ml-auto px-3 py-1 rounded-lg text-xs font-bold ${
@@ -344,7 +347,7 @@ export default function CandidateProfilePage() {
                     <div className="flex items-center gap-2">
                       <MessageSquare className="w-4 h-4 text-primary" />
                       <span className="text-sm font-bold text-foreground">
-                        Application Questions & Answers
+                        {t("candidate_profile.application_questions")}
                       </span>
                       <span className="text-xs font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
                         {qaList.length}
@@ -364,12 +367,12 @@ export default function CandidateProfilePage() {
                           className="bg-muted/50 rounded-xl p-4 border border-border"
                         >
                           <p className="text-xs font-semibold text-foreground mb-1.5">
-                            Q: {item.question}
+                            {t("candidate_profile.question")}: {item.question}
                           </p>
                           <p className="text-sm text-muted-foreground leading-relaxed">
                             {item.answer || (
                               <span className="italic text-muted-foreground/60">
-                                No answer provided
+                                {t("candidate_profile.no_answer")}
                               </span>
                             )}
                           </p>
@@ -392,7 +395,7 @@ export default function CandidateProfilePage() {
                   <div className="flex items-center gap-2 mb-5">
                     <BarChart3 className="w-5 h-5 text-primary" />
                     <h2 className="text-lg font-bold text-foreground">
-                      Dimension Scores
+                      {t("candidate_profile.dimension_scores")}
                     </h2>
                   </div>
                   <div className="space-y-3">
@@ -424,7 +427,7 @@ export default function CandidateProfilePage() {
                     <div className="flex items-center gap-1.5 mb-3">
                       <Check className="w-4 h-4 text-success" />
                       <h3 className="text-xs font-bold text-success uppercase tracking-wider">
-                        Strengths
+                        {t("candidate_profile.strengths")}
                       </h3>
                     </div>
                     <ul className="space-y-2">
@@ -451,7 +454,7 @@ export default function CandidateProfilePage() {
                     <div className="flex items-center gap-1.5 mb-3">
                       <X className="w-4 h-4 text-destructive" />
                       <h3 className="text-xs font-bold text-destructive uppercase tracking-wider">
-                        Weaknesses
+                        {t("candidate_profile.weaknesses")}
                       </h3>
                     </div>
                     <ul className="space-y-2">
@@ -478,7 +481,7 @@ export default function CandidateProfilePage() {
                     <div className="flex items-center gap-1.5 mb-3">
                       <AlertTriangle className="w-4 h-4 text-warning" />
                       <h3 className="text-xs font-bold text-warning uppercase tracking-wider">
-                        Gaps
+                        {t("candidate_profile.gaps")}
                       </h3>
                     </div>
                     <ul className="space-y-2">
@@ -508,10 +511,10 @@ export default function CandidateProfilePage() {
             >
               <FileText className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
               <p className="text-muted-foreground font-medium">
-                No CV review data available
+                {t("candidate_profile.no_cv_review")}
               </p>
               <p className="text-xs text-muted-foreground/60 mt-1">
-                CV has not been reviewed yet.
+                {t("candidate_profile.cv_not_reviewed")}
               </p>
             </motion.div>
           )}
@@ -530,7 +533,7 @@ export default function CandidateProfilePage() {
             <div className="flex items-center gap-2 mb-4">
               <Award className="w-4 h-4 text-primary" />
               <h2 className="text-sm font-bold text-foreground">
-                Stage Scores
+                {t("candidate_profile.stage_scores")}
               </h2>
             </div>
             <div className="space-y-3">
@@ -552,7 +555,8 @@ export default function CandidateProfilePage() {
                       }`}
                     />
                     <span className="text-sm text-foreground/90">
-                      {stage.recruitment_stages?.name || "Unknown"}
+                      {stage.recruitment_stages?.name ||
+                        t("candidate_profile.unknown")}
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -592,7 +596,7 @@ export default function CandidateProfilePage() {
               ))}
               {stages.length === 0 && (
                 <p className="text-sm text-muted-foreground/60 italic">
-                  No stages available.
+                  {t("candidate_profile.no_stages")}
                 </p>
               )}
             </div>
@@ -613,7 +617,7 @@ export default function CandidateProfilePage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-sm font-bold text-foreground">
-                      Assessments & Interviews
+                      {t("candidate_profile.assessments")}
                     </h2>
                     <p className="text-xs text-muted-foreground mt-0.5">
                       {interviewStages.length} stage(s) with results

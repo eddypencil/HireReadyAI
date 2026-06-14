@@ -11,8 +11,12 @@ import {
   Loader2,
   ExternalLink,
 } from "lucide-react";
-import { rejectApplication, unrejectApplication } from "../../shortlist/services/shortlist.service";
+import {
+  rejectApplication,
+  unrejectApplication,
+} from "../../shortlist/services/shortlist.service";
 import { moveToStage } from "../services/candidatesPipline.service";
+import { useTranslation } from "react-i18next";
 
 function getInitials(name = "") {
   return (
@@ -76,6 +80,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
   const navigate = useNavigate();
   const [actionLoading, setActionLoading] = useState(false);
   const [actionError, setActionError] = useState("");
+  const { t } = useTranslation();
   if (!candidate) return null;
 
   const { profile, stagesData = [], answers } = candidate;
@@ -107,25 +112,36 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
   let resumeScore = null;
   let aiMatchScore = null;
   let hasAppScore = false;
-  const cvDimKeys = ["technical_skills", "experience_match", "education", "soft_skills"];
+  const cvDimKeys = [
+    "technical_skills",
+    "experience_match",
+    "education",
+    "soft_skills",
+  ];
   if (cvReviewStage?.ai_feedback) {
     try {
       const feedback = JSON.parse(cvReviewStage.ai_feedback);
       const dims = feedback.dimension_scores;
       if (dims) {
         hasAppScore = "application_score" in dims;
-        const cvValues = cvDimKeys.map(k => dims[k]).filter(v => typeof v === "number");
+        const cvValues = cvDimKeys
+          .map((k) => dims[k])
+          .filter((v) => typeof v === "number");
         if (cvValues.length === cvDimKeys.length) {
-          resumeScore = Math.round(cvValues.reduce((a, b) => a + b, 0) / cvDimKeys.length);
+          resumeScore = Math.round(
+            cvValues.reduce((a, b) => a + b, 0) / cvDimKeys.length,
+          );
         }
-        const allValues = Object.values(dims).filter((v) => typeof v === "number");
+        const allValues = Object.values(dims).filter(
+          (v) => typeof v === "number",
+        );
         if (allValues.length > 0) {
           aiMatchScore = Math.round(
             allValues.reduce((a, b) => a + b, 0) / allValues.length,
           );
         }
       }
-    } catch { }
+    } catch {}
   }
 
   const currentStageIndex = sortedStages.findIndex(
@@ -174,7 +190,9 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
     setActionError("");
     try {
       await moveToStage(candidate.id, nextStage.recruitment_stages.id);
-      onUpdate?.(candidate.id, { currentStageId: nextStage.recruitment_stages.id });
+      onUpdate?.(candidate.id, {
+        currentStageId: nextStage.recruitment_stages.id,
+      });
       onClose();
     } catch (err) {
       setActionError(err.message || "Failed to advance candidate");
@@ -203,7 +221,6 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
         transition={{ duration: 0.3, ease: "easeOut" }}
         className="fixed top-0 right-0 h-screen w-full max-w-115 bg-surface border-l border-border shadow-2xl z-50 flex flex-col overflow-hidden font-sans"
       >
-
         {/* HEADER */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -234,14 +251,18 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                   {candidate.name}
                 </h2>
                 <button
-                  onClick={(e) => { e.stopPropagation(); navigate(`/companies/applicants/${profile?.id}/profile`); }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    navigate(`/companies/applicants/${profile?.id}/profile`);
+                  }}
                   className="flex items-center gap-1 px-2 py-0.5 text-[10px] font-medium text-primary bg-primary/5 border border-primary/15 rounded-md hover:bg-primary/10 transition-colors shrink-0"
                 >
-                  Show Profile <ExternalLink className="w-3 h-3" />
+                  {t("candidate_sidebar.show_profile")}{" "}
+                  <ExternalLink className="w-3 h-3" />
                 </button>
                 {candidate.is_rejected && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-destructive/10 text-destructive border border-destructive/20">
-                    Rejected
+                    {t("candidate_sidebar.rejected")}
                   </span>
                 )}
               </div>
@@ -282,7 +303,6 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
           transition={{ duration: 0.3, delay: 0.15, ease: "easeOut" }}
           className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-8 bg-background/40"
         >
-
           {/* Top Section */}
           <div className="flex flex-col gap-6">
             {/* Metric Cards */}
@@ -294,22 +314,22 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
               className="flex gap-3"
             >
               <MetricCard
-                title="Resume"
+                title={t("candidate_sidebar.metrics.resume")}
                 score={resumeScore}
                 colorClass="bg-muted-foreground/60"
               />
               {hasAppScore && (
                 <MetricCard
-                  title="AI Match"
+                  title={t("candidate_sidebar.metrics.ai_match")}
                   score={aiMatchScore}
                   colorClass="bg-primary"
                 />
               )}
               <MetricCard
-                title="Stage"
+                title={t("candidate_sidebar.metrics.stage")}
                 score={candidate.score}
-              colorClass="bg-accent"
-            />
+                colorClass="bg-accent"
+              />
             </motion.div>
 
             {/* AI Recommendation Card */}
@@ -324,12 +344,12 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                 <div className="flex items-center gap-1.5">
                   <Sparkles className="w-4 h-4 text-accent" />
                   <span className="text-xs font-bold text-accent tracking-wide uppercase">
-                    AI Recommendation
+                    {t("candidate_sidebar.ai_recommendation")}
                   </span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-[10px] font-semibold text-muted-foreground uppercase">
-                    Confidence
+                    {t("candidate_sidebar.confidence")}
                   </span>
                   <span className="text-sm font-bold text-accent leading-none mt-0.5">
                     {currentEval?.confidence != null
@@ -341,13 +361,12 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
 
               <h3 className="text-lg font-bold text-foreground mb-2">
                 {currentEval?.recommendation === "reject"
-                  ? "Politely reject"
-                  : "Advance to next stage"}
+                  ? t("candidate_sidebar.politely_reject")
+                  : t("candidate_sidebar.advance_next_stage")}
               </h3>
 
               <p className="text-sm text-muted-foreground leading-relaxed mb-5">
-                {currentEval?.reasoning ||
-                  "Evaluation completed, but no detailed reasoning was provided."}
+                {currentEval?.reasoning || t("candidate_sidebar.no_reasoning")}
               </p>
 
               <div className="flex gap-3 items-center">
@@ -357,8 +376,12 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                     disabled={actionLoading}
                     className="flex items-center gap-2 bg-primary text-primary-foreground font-semibold text-sm px-4 py-2 rounded-xl hover:bg-primary/90 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                   >
-                    {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
-                    Advance to next stage
+                    {actionLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Check className="w-4 h-4" />
+                    )}
+                    {t("candidate_sidebar.advance_next_stage")}
                   </button>
                 )}
                 {candidate.is_rejected ? (
@@ -367,8 +390,10 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                     disabled={actionLoading}
                     className="flex items-center gap-2 bg-success text-success-foreground font-semibold text-sm px-4 py-2 rounded-xl hover:bg-success/90 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                   >
-                    {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Un-reject
+                    {actionLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : null}
+                    {t("candidate_sidebar.unreject")}
                   </button>
                 ) : (
                   <button
@@ -376,8 +401,10 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                     disabled={actionLoading}
                     className="bg-surface border border-border text-foreground font-semibold text-sm px-4 py-2 rounded-xl hover:bg-secondary transition-colors disabled:opacity-50 cursor-pointer"
                   >
-                    {actionLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                    Reject
+                    {actionLoading ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : null}
+                    {t("candidate_sidebar.reject")}
                   </button>
                 )}
               </div>
@@ -395,7 +422,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider">
-                  Pipeline Progress
+                  {t("candidate_sidebar.pipeline_progress")}
                 </h3>
               </div>
 
@@ -422,7 +449,8 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                         <span
                           className={`text-sm ${isInProgress ? "font-bold text-foreground" : isPending ? "font-medium text-muted-foreground/60" : "font-medium text-foreground/80"}`}
                         >
-                          {stage.recruitment_stages?.name || "Unknown Stage"}
+                          {stage.recruitment_stages?.name ||
+                            t("candidate_sidebar.unknown_stage")}
                         </span>
                       </div>
                       <StatusBadge
@@ -446,7 +474,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
             transition={{ duration: 0.4, delay: 0.35, ease: "easeOut" }}
           >
             <h3 className="text-[11px] font-bold text-muted-foreground/70 uppercase tracking-wider mb-4">
-              Stage Results
+              {t("candidate_sidebar.stage_results")}
             </h3>
             <div className="flex flex-col gap-4">
               {sortedStages.map((stage) => {
@@ -483,13 +511,13 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
 
                     {/* Strengths & Weaknesses Cards */}
                     {evalData &&
-                      (evalData.strengths?.length > 0 ||
-                        evalData.weaknesses?.length > 0) ? (
+                    (evalData.strengths?.length > 0 ||
+                      evalData.weaknesses?.length > 0) ? (
                       <div className="flex flex-col gap-3">
                         {evalData.strengths?.length > 0 && (
                           <div className="bg-success/5 border border-success/20 rounded-xl p-4">
                             <h5 className="text-[10px] font-bold text-success uppercase tracking-wider mb-2">
-                              Strengths
+                              {t("candidate_sidebar.strengths")}
                             </h5>
                             <ul className="space-y-1.5">
                               {evalData.strengths.map((s, i) => (
@@ -507,7 +535,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                         {evalData.weaknesses?.length > 0 && (
                           <div className="bg-destructive/5 border border-destructive/20 rounded-xl p-4">
                             <h5 className="text-[10px] font-bold text-destructive uppercase tracking-wider mb-2">
-                              Weaknesses
+                              {t("candidate_sidebar.weaknesses")}
                             </h5>
                             <ul className="space-y-1.5">
                               {evalData.weaknesses.map((w, i) => (
@@ -530,20 +558,20 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
                             <li className="flex items-start gap-2.5 text-sm text-primary">
                               <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
                               <span className="leading-snug">
-                                Currently evaluating
+                                {t("candidate_sidebar.currently_evaluating")}
                               </span>
                             </li>
                             <li className="flex items-start gap-2.5 text-sm text-primary">
                               <div className="w-1 h-1 rounded-full bg-primary mt-2 shrink-0" />
                               <span className="leading-snug">
-                                Live session scheduled
+                                {t("candidate_sidebar.live_session_scheduled")}
                               </span>
                             </li>
                           </>
                         ) : (
                           <li className="flex items-start gap-2.5 text-sm text-muted-foreground/60 italic">
                             <span className="leading-snug">
-                              No detailed feedback available.
+                              {t("candidate_sidebar.no_feedback")}
                             </span>
                           </li>
                         )}
@@ -557,10 +585,14 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
 
           {/* View Profile Button */}
           <button
-            onClick={() => { navigate(`/companies/candidates/${candidate.id}`); onClose(); }}
+            onClick={() => {
+              navigate(`/companies/candidates/${candidate.id}`);
+              onClose();
+            }}
             className="w-full bg-primary text-white font-semibold text-sm px-4 py-3 rounded-xl hover:bg-primary/90 transition-colors shadow-xs flex items-center justify-center gap-2 mt-4 cursor-pointer"
           >
-            View Profile <ChevronRight className="w-4 h-4" />
+            {t("candidate_sidebar.view_profile")}{" "}
+            <ChevronRight className="w-4 h-4" />
           </button>
         </motion.div>
       </motion.div>

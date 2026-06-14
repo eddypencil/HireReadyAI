@@ -60,8 +60,10 @@ export default function AuthLayout({ children, headline, subheading }) {
           >
             HireReadyAI
           </span>
-          <div className="ml-auto flex flex-row items-center gap-4">
-            <LanguageSwitcher />
+          <div className="ml-auto flex flex-row items-center gap-5">
+
+              <LanguageSwitcher />
+
             <button
               onClick={toggleTheme}
               className="w-full flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white transition-colors py-2 cursor-pointer"

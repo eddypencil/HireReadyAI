@@ -96,6 +96,7 @@
     "title": "Profile Picture",
     "upload": "Upload / Change",
     "uploading": "Uploading...",
+    "upload_only": "Upload",
     "remove": "Remove",
     "cancel": "Cancel"
   },
@@ -153,7 +154,7 @@
     },
 
     "buttons": {
-      "back": "Back",
+      "back": " Back ",
       "next": "Next",
       "submit": "Submit Application",
       "submitting": "Submitting..."
@@ -599,7 +600,8 @@
 
     "placeholders": {
       "add_item": "Type and press Enter to add...",
-      "add_skill": "Add skill..."
+      "add_skill": "Add skill...",
+      "add_skill2": "Add skill"
     }
   },
 
@@ -1059,7 +1061,7 @@
     },
     "hero": {
       "headline": "Hire Smarter. Apply Faster.",
-      "subheadline": "AI-powered platform connecting top talent with forward-thinking companies. Find your dream job or hire the perfect candidate \u2014 all in one place.",
+      "subheadline": "AI-powered platform connecting top talent with forward-thinking companies. Find your dream job or hire the perfect candidate  all in one place.",
       "cta_applicant": "Find Your Dream Job",
       "cta_recruiter": "Hire Top Talent"
     },
@@ -1198,7 +1200,7 @@
     "applicant": {
       "resumeScore": {
         "title": "AI Resume Match Score",
-        "description": "Get an instant AI-powered score showing how well your resume matches the job you applied for, along with insights to improve your chances.",
+        "description": "Get an AI-powered score showing how well your resume matches the job you applied for, along with insights to improve your chances.",
         "cardTitle": "Resume Match Score",
         "position": "Frontend Developer Position",
         "insight1": "+ Strong React Experience",
@@ -1244,7 +1246,7 @@
   "topFeaturedJobs": {
     "eyebrow": "Featured Jobs",
     "title": "Top Featured Jobs",
-    "subtitle": "Hand-picked roles from companies actively hiring on HireReadyAI — vetted for quality, clarity, and career growth.",
+    "subtitle": "Hand-picked roles from companies actively hiring on HireReadyAI, vetted for quality, clarity, and career growth.",
     "browseAll": "Browse All Jobs",
     "applyLabel": "Apply",
     "applicantsLabel": "applicants",
@@ -1388,8 +1390,8 @@
         "a": "The My Applications dashboard gives you a real-time pipeline view , from Applied through Screening, Interview, Assessment, and Final Stage. Each card updates automatically when a recruiter takes action."
       },
       "3": {
-        "q": "Can I prepare for interviews inside the platform?",
-        "a": "Yes. HireReadyAI includes an AI Interview Coach that simulates common and role-specific questions, scores your responses, and gives actionable feedback on clarity, structure, and confidence."
+        "q": "Can I take interviews directly on the platform?",
+        "a": "Yes. HireReadyAI lets you start live AI-powered interviews instantly. You don't need to prepare externally , just choose a role and begin. The AI asks role-specific questions, evaluates your responses in real time, and provides feedback on your answers."
       },
       "4": {
         "q": "What types of roles and industries does HireReadyAI cover?",
@@ -1446,6 +1448,362 @@
         "title": "Final Decisions",
         "description": "Evaluate and shortlist for top candidate."
       }
+    }
+  },
+
+  "application_questions_modal": {
+    "title": "Application Questions",
+    "subtitle": "Add questions applicants will answer when applying",
+    "empty_state": "No questions yet. Click \"Add Question\" to get started.",
+    "question_placeholder": "Write your question...",
+    "add_question": "Add Question",
+    "skip": "Skip",
+    "question_count_one": "{{count}} question",
+    "question_count_other": "{{count}} questions"
+  },
+  "analytics_charts": {
+    "stage_status_breakdown": "Stage Status Breakdown",
+    "applications_over_time": "Applications Over Time",
+    "no_stage_data": "No stage data available",
+    "no_data": "No data available"
+  },
+  "app_selector": {
+    "unknown_job": "Unknown",
+    "rejected": "Rejected",
+    "hired": "Hired"
+  },
+  "applicationTimeline": {
+    "title": "Application Timeline",
+    "unknown": "Unknown",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "status": {
+      "passed": "Passed",
+      "completed": "Completed",
+      "failed": "Failed",
+      "in_progress": "In Progress"
+    }
+  },
+  "assessments": {
+    "title": "Assessments & Interviews",
+    "totalQuestions": "total questions",
+    "noDataTitle": "No Assessment Data",
+    "noDataDescription": "You have not completed any interviews or assessments for this application yet.",
+    "recommendation": "Recommendation",
+    "confidence": "Confidence",
+    "questions": "Questions",
+    "stageTypes": {
+      "hr_interview": "HR Interview",
+      "technical_interview": "Technical Interview",
+      "assessment": "Assessment",
+      "assessment_test": "Assessment Test",
+      "coding_test": "Coding Test",
+      "video_interview": "Video Interview",
+      "manager_interview": "Manager Interview",
+      "ai_screening": "AI Screening"
+    }
+  },
+  "candidate": {
+    "status": {
+      "rejected": "Rejected",
+      "hired": "Hired"
+    },
+    "appliedFor": "Applied for"
+  },
+  "cv": {
+    "title": "AI CV Review",
+    "noDataTitle": "No CV review data available",
+    "noDataDescription": "CV has not been reviewed yet.",
+    "dimensionScores": "Dimension Scores",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "gaps": "Gaps",
+    "recommendation": {
+      "proceed": "Proceed",
+      "review": "Review",
+      "reject": "Reject"
+    }
+  },
+  "questions": {
+    "types": {
+      "video": "Video Response",
+      "text": "Written Answer",
+      "code": "Code Challenge",
+      "multiple_choice": "Multiple Choice"
+    },
+    "answer": "Answer",
+    "noVideo": "No video recording available",
+    "transcript": "Transcript",
+    "noTextAnswer": "No answer provided.",
+    "noCode": "No code submitted.",
+    "options": "Options",
+    "noSelected": "No answer selected.",
+    "aiFeedback": "AI Feedback",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "noFeedback": "No AI feedback available for this answer."
+  },
+  "takeaways": {
+    "title": "Key Takeaways",
+    "strength": "Strength:",
+    "improve": "Area to improve:",
+    "gap": "Gap:"
+  },
+  "scoreRing": {
+    "overall": "Overall"
+  },
+  "similarJobs": {
+    "title": "Similar Opportunities"
+  },
+  "skills": {
+    "title": "Skills to Develop",
+    "subtitle": "Based on your feedback, consider strengthening these areas:"
+  },
+  "arraySection": {
+    "empty": "No {{section}} added yet",
+    "add": "Add {{section}}"
+  },
+  "dialogs": {
+    "education": {
+      "degreeLevel": "Degree Level",
+      "selectDegree": "Select degree level"
+    }
+  },
+  "add_language": " Add Language",
+  "proficiency": "Proficiency",
+  "rejected_applications": "Rejected Applications",
+  "show_feedback": "Show Feedback",
+  "feedback": {
+    "back_to_dashboard": "Back to Dashboard",
+    "title": "My Feedback",
+    "no_feedback_title": "No feedback available yet",
+    "no_feedback_description": "Feedback and evaluation results will appear here once your applications are reviewed by recruiters or completed through the hiring process.",
+    "explore_jobs": "Explore Jobs",
+    "select_application": "Select an application to view feedback",
+    "detailed_breakdown": "Detailed Breakdown",
+    "detailed_breakdown_hint": "(CV review, dimension scores, assessments)"
+  },
+  "profile_not_found": "Profile not found",
+  "common": {
+    "loading": "Loading...",
+    "loading_profile": "Loading profile..."
+  },
+  "payment_cancelled": "Payment Cancelled",
+  "cancelled_the_payment": "You cancelled the payment. No charges were made.",
+  "premium": {
+    "loading_title": "Confirming your payment...",
+    "loading_description": "Please wait a moment.",
+    "success_title": "Premium Activated!",
+    "success_description": "Redirecting you back...",
+    "error_title": "Something went wrong",
+    "error_description": "We couldn't confirm your payment. Please contact support.",
+    "back_to_dashboard": "Back to Dashboard"
+  },
+  "billing": {
+    "title": "Plan & Billing",
+    "premium_description": "Your company is on the Premium plan.",
+    "upgrade_description": "Upgrade to unlock premium stage types in your pipeline.",
+    "features": {
+      "assessment_tests": "Assessment tests",
+      "coding_tests": "Coding tests",
+      "video_interviews": "Video interviews",
+      "background_checks": "Background checks"
+    },
+    "premium_label": "Premium",
+    "upgrade_button": "Upgrade - $29",
+    "redirecting": "Redirecting..."
+  },
+  "googleRoleSelect": {
+    "headline": "One last step",
+    "subheading": "How will you be using HireReadyAI?",
+    "roles": {
+      "applicant": {
+        "label": "Applicant",
+        "desc": "Browse and apply for jobs"
+      },
+      "recruiter": {
+        "label": "Recruiter",
+        "desc": "Post jobs and manage candidates"
+      }
+    },
+    "error": {
+      "settingUp": "Setting up your account...",
+      "getStarted": "Get Started"
+    }
+  },
+  "subscription": {
+    "title": "Choose your plan",
+    "subtitle": "Start with a free plan and upgrade anytime",
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "period": "/forever",
+      "feature1": "Up to 10 active job postings",
+      "feature2": "Basic candidate management",
+      "feature3": "Team collaboration (up to 5 members)",
+      "feature4": "Email support",
+      "button": "Get Started Free"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "$29",
+      "period": "/one-time",
+      "badge": "One-time",
+      "feature1": "Unlimited job postings",
+      "feature2": "AI-powered candidate screening",
+      "feature3": "Advanced analytics & reports",
+      "feature4": "Priority support",
+      "feature5": "Custom branding",
+      "button": "Buy Premium"
+    }
+  },
+  "companySelection": {
+    "description": "Select a company to get started with HireReadyAI or create your own",
+    "createButton": "Create a New Company",
+    "noCompanies": "No companies available to join."
+  },
+  "landing_navbar": {
+    "nav": {
+      "get_started": "Get Started",
+      "features": "Features",
+      "how_it_works": "How It Works",
+      "testimonials": "Testimonials",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "contact": "Contact"
+    }
+  },
+  "candidate_sidebar": {
+    "show_profile": "Show Profile",
+    "view_profile": "View Profile",
+    "rejected": "Rejected",
+    "reject": "Reject",
+    "unreject": "Un-reject",
+    "ai_recommendation": "AI Recommendation",
+    "confidence": "Confidence",
+    "politely_reject": "Politely reject",
+    "advance_next_stage": "Advance to next stage",
+    "no_reasoning": "Evaluation completed, but no detailed reasoning was provided.",
+    "pipeline_progress": "Pipeline Progress",
+    "stage_results": "Stage Results",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "currently_evaluating": "Currently evaluating",
+    "live_session_scheduled": "Live session scheduled",
+    "no_feedback": "No detailed feedback available.",
+    "unknown_stage": "Unknown Stage",
+    "metrics": {
+      "resume": "Resume",
+      "ai_match": "AI Match",
+      "stage": "Stage"
+    },
+    "status": {
+      "rejected": "Rejected",
+      "passed": "Passed",
+      "in_progress": "In Progress",
+      "failed": "Failed",
+      "pending": "Pending"
+    }
+  },
+  "candidate_assessments": {
+    "title": "Assessments & Interviews",
+    "candidate": "Candidate",
+    "back_to_profile": "Back to Profile",
+    "total_questions": "total questions",
+    "unknown": "Unknown",
+
+    "answer": "Answer",
+    "transcript": "Transcript",
+    "options": "Options",
+
+    "no_video": "No video recording available",
+    "no_answer": "No answer provided.",
+    "no_code": "No code submitted.",
+    "no_selection": "No answer selected.",
+    "no_ai_feedback": "No AI feedback available for this answer.",
+
+    "ai_feedback": "AI Feedback",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+
+    "ui_visual": "UI / Visual",
+    "problem_solving": "Problem Solving",
+
+    "no_assessment_data": "No Assessment Data",
+    "no_assessment_subtitle": "This candidate has not completed any interviews or assessments yet.",
+
+    "recommendation": "Recommendation",
+    "confidence": "Confidence",
+    "questions": "Questions",
+    "na": "N/A",
+
+    "question_types": {
+      "video": "Video Response",
+      "text": "Written Answer",
+      "code": "Code Challenge",
+      "multiple_choice": "Multiple Choice"
+    },
+
+    "recommendations": {
+      "proceed": "Proceed",
+      "review": "Review",
+      "reject": "Reject"
+    },
+
+    "status": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "in_progress": "In Progress",
+      "pending": "Pending"
+    }
+  },
+  "candidate_profile": {
+    "candidate_not_found": "Candidate not found",
+    "back_to_pipeline": "Back to Pipeline",
+    "cv": "CV",
+    "unknown_candidate": "Unknown Candidate",
+    "unknown": "Unknown",
+
+    "rejected": "Rejected",
+    "show_profile": "Show Profile",
+
+    "applied_for": "Applied for:",
+    "composite": "Composite",
+
+    "ai_cv_review": "AI CV Review",
+
+    "application_questions": "Application Questions & Answers",
+    "question": "Q",
+    "no_answer": "No answer provided",
+
+    "dimension_scores": "Dimension Scores",
+
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "gaps": "Gaps",
+
+    "no_cv_review": "No CV review data available",
+    "cv_not_reviewed": "CV has not been reviewed yet.",
+
+    "stage_scores": "Stage Scores",
+    "no_stages": "No stages available.",
+
+    "assessments": "Assessments & Interviews",
+    "stages_with_results": "stage(s) with results",
+
+    "na": "N/A",
+
+    "recommendations": {
+      "proceed": "PROCEED",
+      "review": "REVIEW",
+      "reject": "REJECT"
+    },
+
+    "status": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "in_progress": "In Progress",
+      "pending": "Pending"
     }
   }
 }

@@ -1,6 +1,7 @@
+import { useTranslation } from "react-i18next";
 export default function AppSelector({ applications, selectedId, onSelect }) {
   if (!applications || applications.length === 0) return null;
-
+  const { t } = useTranslation();
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">
       {applications.map((app) => {
@@ -19,7 +20,9 @@ export default function AppSelector({ applications, selectedId, onSelect }) {
                 : "bg-card text-foreground/80 border-border hover:bg-surface-hover hover:border-accent/30"
             }`}
           >
-            <span className="truncate max-w-[160px]">{job?.title || "Unknown"}</span>
+            <span className="truncate max-w-[160px]">
+              {job?.title || t("app_selector.unknown_job")}
+            </span>
             <span
               className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
                 isRejected
@@ -31,7 +34,9 @@ export default function AppSelector({ applications, selectedId, onSelect }) {
                     : "bg-success/10 text-success"
               }`}
             >
-              {isRejected ? "Rejected" : "Hired"}
+              {isRejected
+                ? t("app_selector.rejected")
+                : t("app_selector.hired")}
             </span>
           </button>
         );

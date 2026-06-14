@@ -41,6 +41,7 @@ export default function FAQ() {
       viewport={{ once: false, margin: "-50px" }}
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="py-20 px-4 bg-background"
+      id="faq"
     >
       <div className="max-w-6xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">

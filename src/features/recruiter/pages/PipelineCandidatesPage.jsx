@@ -51,29 +51,62 @@ const scoreColor = (s) => {
   return "bg-destructive/10 text-destructive border-destructive/20";
 };
 
+// function getFit(score, isRejected, t) {
+//   if (isRejected) {
+//     return {
+//       label: t("candidate_pipeline.fit.rejected"),
+//       cls: "bg-destructive/10 text-destructive border-destructive/20",
+//     };
+//   }
+//   if (score >= 85)
+//     return {
+//       label: t("candidate_pipeline.fit.strong_fit"),
+//       cls: "bg-success/10 text-success border-success/20",
+//     };
+//   if (score >= 70)
+//     return {
+//       label: t("candidate_pipeline.fit.good_fit"),
+//       cls: "bg-primary/10 text-primary border-primary/20",
+//     };
+//   if (score >= 55)
+//     return {
+//       label: t("candidate_pipeline.fit.needs_review"),
+//       cls: "bg-warning/10 text-warning border-warning/20",
+//     };
+//   return {
+//     label: t("candidate_pipeline.fit.low_fit"),
+//     cls: "bg-destructive/10 text-destructive border-destructive/20",
+//   };
+// }
+
 function getFit(score, isRejected, t) {
   if (isRejected) {
     return {
+      key: "rejected",
       label: t("candidate_pipeline.fit.rejected"),
       cls: "bg-destructive/10 text-destructive border-destructive/20",
     };
   }
   if (score >= 85)
     return {
+      key: "strong_fit",
       label: t("candidate_pipeline.fit.strong_fit"),
       cls: "bg-success/10 text-success border-success/20",
     };
   if (score >= 70)
     return {
+      key: "good_fit",
       label: t("candidate_pipeline.fit.good_fit"),
       cls: "bg-primary/10 text-primary border-primary/20",
     };
   if (score >= 55)
     return {
+      key: "needs_review",
       label: t("candidate_pipeline.fit.needs_review"),
       cls: "bg-warning/10 text-warning border-warning/20",
     };
   return {
+    key: "low_fit",
     label: t("candidate_pipeline.fit.low_fit"),
     cls: "bg-destructive/10 text-destructive border-destructive/20",
   };
@@ -407,7 +440,10 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
   const [stages, setStages] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState(null);
   const [search, setSearch] = useState("");
-  const [filterFit, setFilterFit] = useState("All");
+
+  // const [filterFit, setFilterFit] = useState("All");
+  const [filterFit, setFilterFit] = useState("all");
+
   const [showFilters, setShowFilters] = useState(false);
   const [isAdvancing, setIsAdvancing] = useState(false);
   const [draggingCandidate, setDraggingCandidate] = useState(null);
@@ -711,17 +747,30 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
   }, [company?.id, t]);
   // -------------------------------------------------------------------------
 
+  // const filtered = candidates.filter((c) => {
+  //   if (selectedJobId && c.jobId !== selectedJobId) return false;
+  //   if (search && !c.name.toLowerCase().includes(search.toLowerCase()))
+  //     return false;
+  //   if (filterFit === "Rejected") return c.is_rejected;
+  //   if (filterFit !== "All") {
+  //     const fitLabel = c.hasEvaluation
+  //       ? getFit(c.score, c.is_rejected, t).label
+  //       : "In Progress";
+  //     if (fitLabel !== filterFit) return false;
+  //   }
+  //   return true;
+  // });
+
   const filtered = candidates.filter((c) => {
     if (selectedJobId && c.jobId !== selectedJobId) return false;
     if (search && !c.name.toLowerCase().includes(search.toLowerCase()))
       return false;
-    if (filterFit === t("candidate_pipeline.fit.rejected"))
-      return c.is_rejected;
-    if (filterFit !== t("candidate_pipeline.filters.all")) {
-      const fitLabel = c.hasEvaluation
-        ? getFit(c.score, c.is_rejected, t).label
-        : "In Progress";
-      if (fitLabel !== filterFit) return false;
+    if (filterFit === "rejected") return c.is_rejected;
+    if (filterFit !== "all") {
+      const fitKey = c.hasEvaluation
+        ? getFit(c.score, c.is_rejected, t).key
+        : "in_progress";
+      if (fitKey !== filterFit) return false;
     }
     return true;
   });
@@ -950,7 +999,7 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               onClick={() => setShowFilters((s) => !s)}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl border text-sm font-semibold transition-all cursor-pointer ${
                 showFilters
-                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  ? "bg-primary text-white border-primary shadow-sm"
                   : "border-border text-foreground bg-surface hover:bg-muted"
               }`}
             >
@@ -971,24 +1020,30 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
               {t("candidate_pipeline.filters.fit")}
             </span>
             {[
-              t("candidate_pipeline.filters.all"),
-              "In Progress",
-              t("candidate_pipeline.fit.strong_fit"),
-              t("candidate_pipeline.fit.good_fit"),
-              t("candidate_pipeline.fit.needs_review"),
-              t("candidate_pipeline.fit.low_fit"),
-              t("candidate_pipeline.fit.rejected"),
+              { key: "all", label: t("candidate_pipeline.filters.all") },
+              { key: "in_progress", label: "In Progress" },
+              {
+                key: "strong_fit",
+                label: t("candidate_pipeline.fit.strong_fit"),
+              },
+              { key: "good_fit", label: t("candidate_pipeline.fit.good_fit") },
+              {
+                key: "needs_review",
+                label: t("candidate_pipeline.fit.needs_review"),
+              },
+              { key: "low_fit", label: t("candidate_pipeline.fit.low_fit") },
+              { key: "rejected", label: t("candidate_pipeline.fit.rejected") },
             ].map((f) => (
               <button
-                key={f}
-                onClick={() => setFilterFit(f)}
+                key={f.key}
+                onClick={() => setFilterFit(f.key)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
-                  filterFit === f
-                    ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  filterFit === f.key
+                    ? "bg-primary text-white border-primary shadow-sm"
                     : "bg-surface text-foreground border-border hover:bg-muted"
                 }`}
               >
-                {f}
+                {f.label}
               </button>
             ))}
           </motion.div>

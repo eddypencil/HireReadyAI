@@ -1,7 +1,14 @@
-import { Sparkles, FileText, BarChart3, Check, X, AlertTriangle } from "lucide-react";
+import {
+  Sparkles,
+  FileText,
+  BarChart3,
+  Check,
+  X,
+  AlertTriangle,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import DimensionBar from "./DimensionBar";
-
+import { useTranslation } from "react-i18next";
 function parseAIFeedback(stage) {
   if (!stage?.ai_feedback) return null;
   try {
@@ -13,11 +20,17 @@ function parseAIFeedback(stage) {
 
 export default function CvReviewSection({ app }) {
   if (!app) return null;
-
+  const { t } = useTranslation();
   const allStages = (app.application_stages || [])
     .filter((s) => s.recruitment_stages)
-    .sort((a, b) => (a.recruitment_stages.order_index || 0) - (b.recruitment_stages.order_index || 0));
-  const cvStage = allStages.find((s) => s.recruitment_stages?.stage_type === "cv_review");
+    .sort(
+      (a, b) =>
+        (a.recruitment_stages.order_index || 0) -
+        (b.recruitment_stages.order_index || 0),
+    );
+  const cvStage = allStages.find(
+    (s) => s.recruitment_stages?.stage_type === "cv_review",
+  );
   const cvFeedback = parseAIFeedback(cvStage);
 
   if (!cvFeedback) {
@@ -30,8 +43,12 @@ export default function CvReviewSection({ app }) {
         transition={{ duration: 0.4, ease: "easeOut" }}
       >
         <FileText className="w-10 h-10 text-muted-foreground/40 mx-auto mb-3" />
-        <p className="text-muted-foreground font-medium">No CV review data available</p>
-        <p className="text-xs text-muted-foreground/60 mt-1">CV has not been reviewed yet.</p>
+        <p className="text-muted-foreground font-medium">
+          {t("cv.noDataTitle")}
+        </p>
+        <p className="text-xs text-muted-foreground/60 mt-1">
+          {t("cv.noDataDescription")}
+        </p>
       </motion.div>
     );
   }
@@ -56,7 +73,7 @@ export default function CvReviewSection({ app }) {
         <div className="relative">
           <div className="flex items-center gap-2 mb-4">
             <Sparkles className="w-6 h-6 text-white/70" />
-            <h2 className="text-lg font-bold text-white">AI CV Review</h2>
+            <h2 className="text-lg font-bold text-white"> {t("cv.title")}</h2>
             <span
               className={`ml-auto px-3 py-1 rounded-lg text-xs font-bold ${
                 cvFeedback.recommendation === "proceed"
@@ -85,13 +102,17 @@ export default function CvReviewSection({ app }) {
         >
           <div className="flex items-center gap-2 mb-5">
             <BarChart3 className="w-5 h-5 text-accent" />
-            <h2 className="text-lg font-bold text-foreground">Dimension Scores</h2>
+            <h2 className="text-lg font-bold text-foreground">
+              {t("cv.dimensionScores")}
+            </h2>
           </div>
           <div className="space-y-3">
             {Object.entries(cvFeedback.dimension_scores).map(([key, val]) => (
               <DimensionBar
                 key={key}
-                label={key.replace(/_/g, " ").replace(/\b\w/g, (l) => l.toUpperCase())}
+                label={key
+                  .replace(/_/g, " ")
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
                 score={val}
               />
             ))}
@@ -110,11 +131,16 @@ export default function CvReviewSection({ app }) {
           <div className="bg-success/5 dark:bg-success/15 border border-success/20 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center gap-1.5 mb-3">
               <Check className="w-4 h-4 text-success" />
-              <h3 className="text-xs font-bold text-success uppercase tracking-wider">Strengths</h3>
+              <h3 className="text-xs font-bold text-success uppercase tracking-wider">
+                {t("cv.strengths")}
+              </h3>
             </div>
             <ul className="space-y-2">
               {cvFeedback.strengths.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-success">
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-success"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-success/60 mt-1.5 shrink-0" />
                   <span>{s}</span>
                 </li>
@@ -128,12 +154,15 @@ export default function CvReviewSection({ app }) {
             <div className="flex items-center gap-1.5 mb-3">
               <X className="w-4 h-4 text-destructive" />
               <h3 className="text-xs font-bold text-destructive uppercase tracking-wider">
-                Weaknesses
+                {t("cv.weaknesses")}
               </h3>
             </div>
             <ul className="space-y-2">
               {cvFeedback.weaknesses.map((w, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-destructive">
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-destructive"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-destructive/60 mt-1.5 shrink-0" />
                   <span>{w}</span>
                 </li>
@@ -146,11 +175,16 @@ export default function CvReviewSection({ app }) {
           <div className="bg-amber-50 dark:bg-amber-900/25 border border-amber-200 dark:border-amber-700/40 rounded-2xl p-5 shadow-sm">
             <div className="flex items-center gap-1.5 mb-3">
               <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
-              <h3 className="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider">Gaps</h3>
+              <h3 className="text-xs font-bold text-amber-700 dark:text-amber-300 uppercase tracking-wider">
+                {t("cv.gaps")}
+              </h3>
             </div>
             <ul className="space-y-2">
               {cvFeedback.gaps.map((g, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-amber-800 dark:text-amber-200">
+                <li
+                  key={i}
+                  className="flex items-start gap-2 text-sm text-amber-800 dark:text-amber-200"
+                >
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 dark:bg-amber-500 mt-1.5 shrink-0" />
                   <span>{g}</span>
                 </li>

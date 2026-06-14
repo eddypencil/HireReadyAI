@@ -24,7 +24,6 @@ import {
   Moon,
 } from "lucide-react";
 
-
 import { supabase } from "@/shared/services/supabase";
 import ToastNotification from "@/features/applications/components/apply/ToastNotification";
 import { useRealtimeApplicant, useRealtimeRecruiter } from "@/shared/hooks/useRealtime";

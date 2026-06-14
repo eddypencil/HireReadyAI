@@ -1,4 +1,7 @@
-export default function LoadingSpinner({ message = "Loading..." }) {
+import { useTranslation } from "react-i18next";
+export default function LoadingSpinner({ message }) {
+  const { t } = useTranslation();
+  const text = message || t("common.loading");
   return (
     <div className="min-h-screen flex items-center justify-center bg-surface-muted relative overflow-hidden">
       <div
@@ -12,7 +15,9 @@ export default function LoadingSpinner({ message = "Loading..." }) {
       />
       <div className="relative z-10 bg-card border border-border rounded-xl shadow-sm flex flex-col items-center gap-4 px-10 py-8 w-full max-w-[260px]">
         <div className="size-9 rounded-full border-3 border-muted border-t-primary animate-spin" />
-        <p className="text-muted-foreground font-medium text-xs text-center">{message}</p>
+        <p className="text-muted-foreground font-medium text-xs text-center">
+          {text}
+        </p>
       </div>
     </div>
   );

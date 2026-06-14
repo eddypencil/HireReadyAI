@@ -95,6 +95,7 @@
     "title": "الصورة الشخصية",
     "upload": "رفع / تغيير",
     "uploading": "جارٍ الرفع...",
+    "upload_only": "رفع",
     "remove": "إزالة",
     "cancel": "إلغاء"
   },
@@ -597,7 +598,8 @@
 
     "placeholders": {
       "add_item": "اكتب واضغط Enter للإضافة...",
-      "add_skill": "إضافة مهارة..."
+      "add_skill": "إضافة مهارة...",
+      "add_skill2": "إضافة مهارة"
     }
   },
 
@@ -1052,7 +1054,7 @@
     },
     "hero": {
       "headline": "وظّف بذكاء. تقدّم أسرع.",
-      "subheadline": "منصة مدعومة بالذكاء الاصطناعي تربط المواهب المتميزة بالشركات المتطورة. ابحث عن وظيفة أحلامك أو وظّف المرشح المثالي \u2014 كل ذلك في مكان واحد.",
+      "subheadline": "منصة مدعومة بالذكاء الاصطناعي تربط المواهب المتميزة بالشركات المتطورة. ابحث عن وظيفة أحلامك أو وظّف المرشح المثالي  كل ذلك في مكان واحد.",
       "cta_applicant": "ابحث عن وظيفة أحلامك",
       "cta_recruiter": "وظّف أفضل المواهب"
     },
@@ -1191,7 +1193,7 @@
     "applicant": {
       "resumeScore": {
         "title": "نتيجة توافق السيرة الذاتية بالذكاء الاصطناعي",
-        "description": "احصل على نتيجة فورية مدعومة بالذكاء الاصطناعي توضح مدى توافق سيرتك الذاتية مع الوظيفة التي تقدمت إليها، بالإضافة إلى رؤى لتحسين فرصك.",
+        "description": "احصل على نتيجة  مدعومة بالذكاء الاصطناعي توضح مدى توافق سيرتك الذاتية مع الوظيفة التي تقدمت إليها، بالإضافة إلى رؤى لتحسين فرصك.",
         "cardTitle": "نتيجة توافق السيرة الذاتية",
         "position": "وظيفة مطور واجهات أمامية",
         "insight1": "+ خبرة قوية في React",
@@ -1237,7 +1239,7 @@
   "topFeaturedJobs": {
     "eyebrow": "الوظائف المميزة",
     "title": "أبرز الوظائف المميزة",
-    "subtitle": "وظائف مختارة بعناية من شركات توظّف الآن على HireReadyAI — تم التحقق منها للجودة والوضوح والنمو الوظيفي.",
+    "subtitle": "وظائف مختارة بعناية من شركات توظّف الآن على HireReadyAI , تم التحقق منها للجودة والوضوح والنمو الوظيفي.",
     "browseAll": "تصفح جميع الوظائف",
     "applyLabel": "تقديم",
     "applicantsLabel": "متقدم",
@@ -1375,8 +1377,8 @@
         "a": "تمنحك لوحة \"طلباتي\" عرضاً للمراحل في الوقت الفعلي  من \"مقدّم\" مروراً بـ\"الفرز\" و\"المقابلة\" و\"التقييم\" وحتى \"المرحلة النهائية\". يتحدث كل بطاقة تلقائياً عند اتخاذ المسؤول عن التوظيف أي إجراء."
       },
       "3": {
-        "q": "هل يمكنني التحضير للمقابلات داخل المنصة؟",
-        "a": "نعم. يتضمن HireReadyAI مدرّب مقابلات بالذكاء الاصطناعي يحاكي الأسئلة الشائعة والخاصة بالدور، ويقيّم إجاباتك، ويقدم ملاحظات قابلة للتنفيذ حول الوضوح والبنية والثقة."
+        "q": "هل يمكنني إجراء المقابلات مباشرة على المنصة؟",
+        "a": "نعم. يتيح لك HireReadyAI بدء مقابلات حية تعمل بالذكاء الاصطناعي فوراً. لا تحتاج إلى التحضير خارجياً، فقط اختر الدور وابدأ. يطرح عليك الذكاء الاصطناعي أسئلة خاصة بالدور، ويقيّم إجاباتك في الوقت الفعلي، ويقدم لك تغذية راجعة حول إجاباتك."
       },
       "4": {
         "q": "ما أنواع الوظائف والصناعات التي يغطيها HireReadyAI؟",
@@ -1433,6 +1435,362 @@
         "title": "القرارات النهائية",
         "description": "تقييم واختيار المرشحين الأفضل."
       }
+    }
+  },
+  "application_questions_modal": {
+    "title": "أسئلة التقديم",
+    "subtitle": "أضف الأسئلة التي سيجيب عنها المتقدمون عند التقديم",
+    "empty_state": "لا توجد أسئلة بعد. اضغط على \"إضافة سؤال\" للبدء.",
+    "question_placeholder": "اكتب سؤالك...",
+    "add_question": "إضافة سؤال",
+    "skip": "تخطي",
+    "question_count_one": "{{count}} سؤال",
+    "question_count_other": "{{count}} أسئلة"
+  },
+  "analytics_charts": {
+    "stage_status_breakdown": "توزيع حالات المراحل",
+    "applications_over_time": "طلبات التوظيف عبر الوقت",
+    "no_stage_data": "لا توجد بيانات للمراحل",
+    "no_data": "لا توجد بيانات متاحة"
+  },
+
+  "app_selector": {
+    "unknown_job": "غير معروف",
+    "rejected": "مرفوض",
+    "hired": "تم التوظيف"
+  },
+  "applicationTimeline": {
+    "title": "الجدول الزمني للتقديم",
+    "unknown": "غير معروف",
+    "pending": "معلق",
+    "inProgress": "قيد التنفيذ",
+    "status": {
+      "passed": "تم القبول",
+      "completed": "مكتمل",
+      "failed": "مرفوض",
+      "in_progress": "قيد التنفيذ"
+    }
+  },
+  "assessments": {
+    "title": "التقييمات والمقابلات",
+    "totalQuestions": "إجمالي الأسئلة",
+    "noDataTitle": "لا توجد بيانات تقييم",
+    "noDataDescription": "لم تكمل أي مقابلات أو تقييمات لهذا الطلب حتى الآن.",
+    "recommendation": "التوصية",
+    "confidence": "مستوى الثقة",
+    "questions": "الأسئلة",
+    "stageTypes": {
+      "hr_interview": "مقابلة الموارد البشرية",
+      "technical_interview": "المقابلة التقنية",
+      "assessment": "تقييم",
+      "assessment_test": "اختبار التقييم",
+      "coding_test": "اختبار البرمجة",
+      "video_interview": "مقابلة فيديو",
+      "manager_interview": "مقابلة المدير",
+      "ai_screening": "فرز بالذكاء الاصطناعي"
+    }
+  },
+  "candidate": {
+    "status": {
+      "rejected": "مرفوض",
+      "hired": "تم التوظيف"
+    },
+    "appliedFor": "تم التقديم على"
+  },
+  "cv": {
+    "title": "مراجعة السيرة الذاتية بالذكاء الاصطناعي",
+    "noDataTitle": "لا توجد بيانات لمراجعة السيرة الذاتية",
+    "noDataDescription": "لم يتم مراجعة السيرة الذاتية بعد.",
+    "dimensionScores": "مستويات التقييم",
+    "strengths": "نقاط القوة",
+    "weaknesses": "نقاط الضعف",
+    "gaps": "الفجوات",
+    "recommendation": {
+      "proceed": "متابعة",
+      "review": "مراجعة",
+      "reject": "رفض"
+    }
+  },
+  "questions": {
+    "types": {
+      "video": "إجابة فيديو",
+      "text": "إجابة كتابية",
+      "code": "تحدي برمجي",
+      "multiple_choice": "اختيار من متعدد"
+    },
+    "answer": "الإجابة",
+    "noVideo": "لا يوجد تسجيل فيديو",
+    "transcript": "النص التفريغي",
+    "noTextAnswer": "لم يتم تقديم إجابة.",
+    "noCode": "لم يتم إرسال كود.",
+    "options": "الاختيارات",
+    "noSelected": "لم يتم اختيار إجابة.",
+    "aiFeedback": "تقييم الذكاء الاصطناعي",
+    "strengths": "نقاط القوة",
+    "weaknesses": "نقاط الضعف",
+    "noFeedback": "لا يوجد تقييم متاح لهذه الإجابة."
+  },
+  "takeaways": {
+    "title": "أهم الملاحظات",
+    "strength": "نقطة قوة:",
+    "improve": "مجال للتحسين:",
+    "gap": "فجوة:"
+  },
+  "scoreRing": {
+    "overall": "الإجمالي"
+  },
+  "similarJobs": {
+    "title": "فرص مشابهة"
+  },
+  "skills": {
+    "title": "المهارات المطلوب تطويرها",
+    "subtitle": "بناءً على التقييم، يُنصح بتقوية هذه الجوانب:"
+  },
+  "arraySection": {
+    "empty": "لا يوجد {{section}} مضافة حتى الآن",
+    "add": "إضافة {{section}}"
+  },
+  "dialogs": {
+    "education": {
+      "degreeLevel": "المستوى التعليمي",
+      "selectDegree": "اختر المستوى التعليمي"
+    }
+  },
+  "add_language": " أضافة لغة ",
+  "proficiency": "الكفاءة",
+  "rejected_applications": "الطلبات المرفوضة",
+  "show_feedback": "عرض التقييم",
+  "feedback": {
+    "back_to_dashboard": "العودة إلى لوحة التحكم",
+    "title": "تقييماتي",
+    "no_feedback_title": "لا توجد تقييمات حتى الآن",
+    "no_feedback_description": "ستظهر نتائج التقييم والملاحظات هنا بمجرد مراجعة طلباتك من قبل مسؤولي التوظيف أو بعد إكمال مراحل التوظيف.",
+    "explore_jobs": "تصفح الوظائف",
+    "select_application": "اختر طلبًا لعرض التقييم",
+    "detailed_breakdown": "تفاصيل التقييم",
+    "detailed_breakdown_hint": "(مراجعة السيرة الذاتية، درجات الأبعاد، التقييمات)"
+  },
+  "profile_not_found": "لم يتم العثور على الملف الشخصي",
+  "common": {
+    "loading": "جاري التحميل...",
+    "loading_profile": "جارٍ تحميل الملف الشخصي..."
+  },
+  "payment_cancelled": "تم إلغاء الدفع",
+  "cancelled_the_payment": "لقد قمت بإلغاء عملية الدفع. لم يتم خصم أي مبالغ.",
+  "premium": {
+    "loading_title": "جاري تأكيد عملية الدفع...",
+    "loading_description": "من فضلك انتظر لحظات.",
+    "success_title": "تم تفعيل البريميوم!",
+    "success_description": "جاري إعادتك...",
+    "error_title": "حدث خطأ ما",
+    "error_description": "لم نتمكن من تأكيد عملية الدفع. من فضلك تواصل مع الدعم.",
+    "back_to_dashboard": "العودة إلى لوحة التحكم"
+  },
+  "billing": {
+    "title": "الخطة والفواتير",
+    "premium_description": "شركتك على خطة بريميوم.",
+    "upgrade_description": "قم بالترقية لفتح أنواع مراحل متقدمة في مسار التوظيف.",
+    "features": {
+      "assessment_tests": "اختبارات التقييم",
+      "coding_tests": "اختبارات البرمجة",
+      "video_interviews": "المقابلات المرئية",
+      "background_checks": "التحقق من الخلفية"
+    },
+    "premium_label": "بريميوم",
+    "upgrade_button": "ترقية - 29$",
+    "redirecting": "جاري التحويل..."
+  },
+  "googleRoleSelect": {
+    "headline": "خطوة أخيرة",
+    "subheading": " HireReadyAI كيف ستستخدم ",
+    "roles": {
+      "applicant": {
+        "label": "باحث عن عمل",
+        "desc": "تصفح وتقدم للوظائف"
+      },
+      "recruiter": {
+        "label": "مسؤول توظيف",
+        "desc": "انشر الوظائف وأدر المرشحين"
+      }
+    },
+    "error": {
+      "settingUp": "جاري إعداد حسابك...",
+      "getStarted": "ابدأ الآن"
+    }
+  },
+  "subscription": {
+    "title": "اختر خطتك",
+    "subtitle": "ابدأ بخطة مجانية وارتقِ في أي وقت",
+    "free": {
+      "name": "مجانية",
+      "price": "٠ دولار",
+      "period": "/للأبد",
+      "feature1": "حتى 10 وظائف منشورة فعالة",
+      "feature2": "إدارة أساسية للمرشحين",
+      "feature3": "تعاون جماعي (حتى 5 أعضاء)",
+      "feature4": "دعم عبر البريد الإلكتروني",
+      "button": "ابدأ مجاناً"
+    },
+    "premium": {
+      "name": "مميزة",
+      "price": "٢٩ دولار",
+      "period": "/مرة واحدة",
+      "badge": "مرة واحدة",
+      "feature1": "وظائف غير محدودة",
+      "feature2": "فحص المرشحين بالذكاء الاصطناعي",
+      "feature3": "تحليلات وتقارير متقدمة",
+      "feature4": "دعم ذو أولوية",
+      "feature5": "علامة تجارية مخصصة",
+      "button": "شراء الباقة المميزة"
+    }
+  },
+  "companySelection": {
+    "description": "اختر شركة للبدء مع HireReadyAI أو أنشئ شركتك الخاصة",
+    "createButton": "إنشاء شركة جديدة",
+    "noCompanies": "لا توجد شركات متاحة للانضمام."
+  },
+  "landing_navbar": {
+    "nav": {
+      "get_started": "ابدأ الآن",
+      "features": "المميزات",
+      "how_it_works": "كيف يعمل",
+      "testimonials": "آراء المستخدمين",
+      "pricing": "الأسعار",
+      "faq": "الأسئلة الشائعة",
+      "contact": "تواصل معنا"
+    }
+  },
+  "candidate_sidebar": {
+    "show_profile": "عرض الملف الشخصي",
+    "view_profile": "عرض الملف الشخصي",
+    "rejected": "مرفوض",
+    "reject": "رفض",
+    "unreject": "إلغاء الرفض",
+    "ai_recommendation": "توصية الذكاء الاصطناعي",
+    "confidence": "مستوى الثقة",
+    "politely_reject": "رفض المرشح",
+    "advance_next_stage": "الانتقال إلى المرحلة التالية",
+    "no_reasoning": "تم إنهاء التقييم، ولكن لم يتم توفير تفاصيل إضافية.",
+    "pipeline_progress": "تقدم مسار التوظيف",
+    "stage_results": "نتائج المراحل",
+    "strengths": "نقاط القوة",
+    "weaknesses": "نقاط الضعف",
+    "currently_evaluating": "جارٍ التقييم",
+    "live_session_scheduled": "تم جدولة جلسة مباشرة",
+    "no_feedback": "لا توجد ملاحظات تفصيلية متاحة.",
+    "unknown_stage": "مرحلة غير معروفة",
+    "metrics": {
+      "resume": "السيرة الذاتية",
+      "ai_match": "التوافق بالذكاء الاصطناعي",
+      "stage": "المرحلة"
+    },
+    "status": {
+      "rejected": "مرفوض",
+      "passed": "ناجح",
+      "in_progress": "قيد التنفيذ",
+      "failed": "راسب",
+      "pending": "معلق"
+    }
+  },
+  "candidate_assessments": {
+    "title": "التقييمات والمقابلات",
+    "candidate": "المرشح",
+    "back_to_profile": "العودة إلى الملف الشخصي",
+    "total_questions": "إجمالي الأسئلة",
+    "unknown": "غير معروف",
+
+    "answer": "الإجابة",
+    "transcript": "النص المستخرج",
+    "options": "الخيارات",
+
+    "no_video": "لا يوجد تسجيل فيديو متاح",
+    "no_answer": "لم يتم تقديم إجابة.",
+    "no_code": "لم يتم إرسال أي كود.",
+    "no_selection": "لم يتم اختيار إجابة.",
+    "no_ai_feedback": "لا توجد ملاحظات من الذكاء الاصطناعي لهذه الإجابة.",
+
+    "ai_feedback": "ملاحظات الذكاء الاصطناعي",
+    "strengths": "نقاط القوة",
+    "weaknesses": "نقاط الضعف",
+
+    "ui_visual": "واجهة / تصميم",
+    "problem_solving": "حل المشكلات",
+
+    "no_assessment_data": "لا توجد بيانات تقييم",
+    "no_assessment_subtitle": "لم يكمل هذا المرشح أي مقابلات أو تقييمات بعد.",
+
+    "recommendation": "التوصية",
+    "confidence": "مستوى الثقة",
+    "questions": "الأسئلة",
+    "na": "غير متوفر",
+
+    "question_types": {
+      "video": "إجابة فيديو",
+      "text": "إجابة كتابية",
+      "code": "تحدي برمجي",
+      "multiple_choice": "اختيار من متعدد"
+    },
+
+    "recommendations": {
+      "proceed": "متابعة",
+      "review": "مراجعة",
+      "reject": "رفض"
+    },
+
+    "status": {
+      "passed": "ناجح",
+      "failed": "راسب",
+      "in_progress": "قيد التنفيذ",
+      "pending": "معلق"
+    }
+  },
+  "candidate_profile": {
+    "candidate_not_found": "لم يتم العثور على المرشح",
+    "back_to_pipeline": "العودة إلى مسار التوظيف",
+    "cv": "السيرة الذاتية",
+    "unknown_candidate": "مرشح غير معروف",
+    "unknown": "غير معروف",
+
+    "rejected": "مرفوض",
+    "show_profile": "عرض الملف الشخصي",
+
+    "applied_for": "تقدم إلى:",
+    "composite": "النتيجة الإجمالية",
+
+    "ai_cv_review": "مراجعة السيرة الذاتية بالذكاء الاصطناعي",
+
+    "application_questions": "أسئلة وإجابات التقديم",
+    "question": "س",
+    "no_answer": "لم يتم تقديم إجابة",
+
+    "dimension_scores": "درجات الأبعاد",
+
+    "strengths": "نقاط القوة",
+    "weaknesses": "نقاط الضعف",
+    "gaps": "الفجوات",
+
+    "no_cv_review": "لا توجد بيانات لمراجعة السيرة الذاتية",
+    "cv_not_reviewed": "لم تتم مراجعة السيرة الذاتية بعد.",
+
+    "stage_scores": "درجات المراحل",
+    "no_stages": "لا توجد مراحل متاحة.",
+
+    "assessments": "التقييمات والمقابلات",
+    "stages_with_results": "مرحلة تحتوي على نتائج",
+
+    "na": "غير متوفر",
+
+    "recommendations": {
+      "proceed": "متابعة",
+      "review": "مراجعة",
+      "reject": "رفض"
+    },
+
+    "status": {
+      "passed": "ناجح",
+      "failed": "راسب",
+      "in_progress": "قيد التنفيذ",
+      "pending": "معلق"
     }
   }
 }

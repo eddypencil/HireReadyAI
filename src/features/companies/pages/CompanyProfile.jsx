@@ -1,8 +1,20 @@
-import { Plus, Check, X, Trash2, Upload, Pencil, Save, Crown } from "lucide-react";
+import {
+  Plus,
+  Check,
+  X,
+  Trash2,
+  Upload,
+  Pencil,
+  Save,
+  Crown,
+} from "lucide-react";
 import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { removeMembership, updateMembershipPermission } from "../services/memberships.service";
+import {
+  removeMembership,
+  updateMembershipPermission,
+} from "../services/memberships.service";
 import { updateCompany } from "../services/companies.service";
 import { supabase } from "@/shared/services/supabase";
 import { MEMBERSHIP_PERMISSION } from "@/shared/constants/enums";
@@ -80,9 +92,17 @@ export default function CompanyProfile({
   const [editing, setEditing] = useState(false);
   const [upgrading, setUpgrading] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: "", industry: "", size: "", location: "",
-    founding_date: "", description: "", culture: "", benefits: "",
-    website_url: "", linkedin_url: "", twitter_url: "",
+    name: "",
+    industry: "",
+    size: "",
+    location: "",
+    founding_date: "",
+    description: "",
+    culture: "",
+    benefits: "",
+    website_url: "",
+    linkedin_url: "",
+    twitter_url: "",
   });
   const logoInputRef = useRef(null);
   const coverInputRef = useRef(null);
@@ -90,10 +110,10 @@ export default function CompanyProfile({
   const isHrManager = currentUserPermission === MEMBERSHIP_PERMISSION.hrManager;
 
   const pendingMembers = members.filter(
-    (m) => m.recruiter_permissions === MEMBERSHIP_PERMISSION.pending
+    (m) => m.recruiter_permissions === MEMBERSHIP_PERMISSION.pending,
   );
   const activeMembers = members.filter(
-    (m) => m.recruiter_permissions !== MEMBERSHIP_PERMISSION.pending
+    (m) => m.recruiter_permissions !== MEMBERSHIP_PERMISSION.pending,
   );
 
   const handleInviteSubmit = (e) => {
@@ -108,10 +128,10 @@ export default function CompanyProfile({
     try {
       const updated = await updateMembershipPermission(
         membership.id,
-        MEMBERSHIP_PERMISSION.recruiter
+        MEMBERSHIP_PERMISSION.recruiter,
       );
       onMembersChange((prev) =>
-        prev.map((m) => (m.id === membership.id ? updated : m))
+        prev.map((m) => (m.id === membership.id ? updated : m)),
       );
     } catch (err) {
       console.error("Error accepting member:", err);
@@ -138,9 +158,12 @@ export default function CompanyProfile({
 
   const handleChangePermission = async (membershipId, newPermission) => {
     try {
-      const updated = await updateMembershipPermission(membershipId, newPermission);
+      const updated = await updateMembershipPermission(
+        membershipId,
+        newPermission,
+      );
       onMembersChange((prev) =>
-        prev.map((m) => (m.id === membershipId ? updated : m))
+        prev.map((m) => (m.id === membershipId ? updated : m)),
       );
     } catch (err) {
       console.error("Error changing permission:", err);
@@ -398,13 +421,13 @@ export default function CompanyProfile({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
               <Field
                 label="Company Name"
-                value={editing ? editForm.name : (company?.name || "")}
+                value={editing ? editForm.name : company?.name || ""}
                 editing={editing}
                 onChange={(v) => setEditForm({ ...editForm, name: v })}
               />
               <Field
                 label="Industry"
-                value={editing ? editForm.industry : (company?.industry || "")}
+                value={editing ? editForm.industry : company?.industry || ""}
                 editing={editing}
                 onChange={(v) => setEditForm({ ...editForm, industry: v })}
               />
@@ -416,21 +439,27 @@ export default function CompanyProfile({
                   <input
                     type="number"
                     value={editForm.size}
-                    onChange={(e) => setEditForm({ ...editForm, size: e.target.value })}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, size: e.target.value })
+                    }
                     className="w-full h-9 px-3 border border-primary rounded-lg text-sm bg-background text-foreground font-medium"
                   />
                 ) : (
                   <input
                     type="text"
                     disabled
-                    value={company?.size ? `${company.size.toLocaleString()} employees` : ""}
+                    value={
+                      company?.size
+                        ? `${company.size.toLocaleString()} employees`
+                        : ""
+                    }
                     className="w-full h-9 px-3 border border-border rounded-lg text-sm bg-muted text-foreground font-medium"
                   />
                 )}
               </div>
               <Field
                 label="Location"
-                value={editing ? editForm.location : (company?.location || "")}
+                value={editing ? editForm.location : company?.location || ""}
                 editing={editing}
                 onChange={(v) => setEditForm({ ...editForm, location: v })}
               />
@@ -442,7 +471,12 @@ export default function CompanyProfile({
                   <input
                     type="date"
                     value={editForm.founding_date}
-                    onChange={(e) => setEditForm({ ...editForm, founding_date: e.target.value })}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        founding_date: e.target.value,
+                      })
+                    }
                     className="w-full h-9 px-3 border border-primary rounded-lg text-sm bg-background text-foreground font-medium"
                   />
                 ) : (
@@ -461,7 +495,11 @@ export default function CompanyProfile({
                 <input
                   type="text"
                   disabled
-                  value={company?.created_at ? new Date(company.created_at).toLocaleDateString() : ""}
+                  value={
+                    company?.created_at
+                      ? new Date(company.created_at).toLocaleDateString()
+                      : ""
+                  }
                   className="w-full h-9 px-3 border border-border rounded-lg text-sm bg-muted text-foreground font-medium"
                 />
               </div>
@@ -475,7 +513,9 @@ export default function CompanyProfile({
               {editing ? (
                 <textarea
                   value={editForm.description}
-                  onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, description: e.target.value })
+                  }
                   rows={4}
                   className="w-full px-3 py-2 border border-primary rounded-lg text-sm bg-background text-foreground font-medium resize-none"
                 />
@@ -494,7 +534,9 @@ export default function CompanyProfile({
               {editing ? (
                 <textarea
                   value={editForm.culture}
-                  onChange={(e) => setEditForm({ ...editForm, culture: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, culture: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-primary rounded-lg text-sm bg-background text-foreground font-medium resize-none"
                 />
@@ -513,7 +555,9 @@ export default function CompanyProfile({
               {editing ? (
                 <textarea
                   value={editForm.benefits}
-                  onChange={(e) => setEditForm({ ...editForm, benefits: e.target.value })}
+                  onChange={(e) =>
+                    setEditForm({ ...editForm, benefits: e.target.value })
+                  }
                   rows={3}
                   className="w-full px-3 py-2 border border-primary rounded-lg text-sm bg-background text-foreground font-medium resize-none"
                 />
@@ -532,21 +576,31 @@ export default function CompanyProfile({
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <LinkField
                   label="Website"
-                  value={editing ? editForm.website_url : (company?.website_url || "")}
+                  value={
+                    editing ? editForm.website_url : company?.website_url || ""
+                  }
                   editing={editing}
                   onChange={(v) => setEditForm({ ...editForm, website_url: v })}
                   href={company?.website_url}
                 />
                 <LinkField
                   label="LinkedIn"
-                  value={editing ? editForm.linkedin_url : (company?.linkedin_url || "")}
+                  value={
+                    editing
+                      ? editForm.linkedin_url
+                      : company?.linkedin_url || ""
+                  }
                   editing={editing}
-                  onChange={(v) => setEditForm({ ...editForm, linkedin_url: v })}
+                  onChange={(v) =>
+                    setEditForm({ ...editForm, linkedin_url: v })
+                  }
                   href={company?.linkedin_url}
                 />
                 <LinkField
                   label="Twitter"
-                  value={editing ? editForm.twitter_url : (company?.twitter_url || "")}
+                  value={
+                    editing ? editForm.twitter_url : company?.twitter_url || ""
+                  }
                   editing={editing}
                   onChange={(v) => setEditForm({ ...editForm, twitter_url: v })}
                   href={company?.twitter_url}
@@ -585,12 +639,12 @@ export default function CompanyProfile({
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 className="text-base font-bold text-foreground mb-0.5">
-                Plan & Billing
+                {t("billing.title")}
               </h2>
               <p className="text-xs text-muted-foreground/70 mb-1">
                 {company?.is_premium
-                  ? "Your company is on the Premium plan."
-                  : "Upgrade to unlock premium stage types in your pipeline."}
+                  ? t("billing.premium_description")
+                  : t("billing.upgrade_description")}
               </p>
               {!company?.is_premium && (
                 <ul className="text-xs text-muted-foreground/60 space-y-0.5 mt-2">
@@ -605,7 +659,7 @@ export default function CompanyProfile({
               {company?.is_premium ? (
                 <span className="flex items-center gap-1 px-3 py-1.5 text-xs font-bold text-success bg-success/10 border border-success/20 rounded-lg">
                   <Crown className="w-3.5 h-3.5" />
-                  Premium
+                  {t("billing.premium_label")}
                 </span>
               ) : (
                 <button
@@ -614,11 +668,11 @@ export default function CompanyProfile({
                   className="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {upgrading ? (
-                    "Redirecting..."
+                    t("billing.redirecting")
                   ) : (
                     <>
                       <Crown className="w-4 h-4" />
-                      Upgrade - $29
+                      {t("billing.upgrade_button")}
                     </>
                   )}
                 </button>
@@ -693,10 +747,10 @@ export default function CompanyProfile({
                       <div className="w-8 h-8 rounded-full bg-warning/20 text-warning flex items-center justify-center text-xs font-bold shrink-0">
                         {member.profiles?.full_name
                           ? member.profiles.full_name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")
-                            .toUpperCase()
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")
+                              .toUpperCase()
                           : "?"}
                       </div>
                       <div className="min-w-0">
@@ -704,7 +758,9 @@ export default function CompanyProfile({
                           {member.profiles?.full_name || "Unknown"}
                         </h4>
                         <p className="text-[11px] text-muted-foreground/70 truncate">
-                          {member.profiles?.headline || member.profiles?.role || "team member"}
+                          {member.profiles?.headline ||
+                            member.profiles?.role ||
+                            "team member"}
                         </p>
                       </div>
                     </div>
@@ -741,17 +797,21 @@ export default function CompanyProfile({
                 initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: false, margin: "-30px" }}
-                transition={{ duration: 0.4, delay: 0.05 + i * 0.05, ease: "easeOut" }}
+                transition={{
+                  duration: 0.4,
+                  delay: 0.05 + i * 0.05,
+                  ease: "easeOut",
+                }}
                 className="flex items-center justify-between pb-3 border-b border-border/40 last:border-0 last:pb-0 gap-2"
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold shrink-0 select-none">
                     {member.profiles?.full_name
                       ? member.profiles.full_name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")
-                        .toUpperCase()
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")
+                          .toUpperCase()
                       : "?"}
                   </div>
                   <div className="min-w-0">
@@ -767,7 +827,7 @@ export default function CompanyProfile({
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  {(isHrManager && member.profile_id !== currentUserId) ? (
+                  {isHrManager && member.profile_id !== currentUserId ? (
                     <select
                       value={member.recruiter_permissions}
                       onChange={(e) =>
@@ -785,7 +845,7 @@ export default function CompanyProfile({
                   ) : (
                     permissionBadge(member.recruiter_permissions)
                   )}
-                  {(isHrManager && member.profile_id !== currentUserId) && (
+                  {isHrManager && member.profile_id !== currentUserId && (
                     <button
                       onClick={() => handleRemove(member.id)}
                       className="p-1.5 text-muted-foreground hover:text-destructive hover:bg-destructive/10 rounded-md transition-colors cursor-pointer"

@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { fetchSimilarJobs } from "@/features/jobs/services/jobs.service";
 import { Briefcase, MapPin, Building2 } from "lucide-react";
-
-export default function SimilarOpportunities({ jobId, seniorityLevel, jobType }) {
+import { useTranslation } from "react-i18next";
+export default function SimilarOpportunities({
+  jobId,
+  seniorityLevel,
+  jobType,
+}) {
   const navigate = useNavigate();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  const { t } = useTranslation();
   useEffect(() => {
     if (!jobId) return;
     setLoading(true);
@@ -23,7 +27,10 @@ export default function SimilarOpportunities({ jobId, seniorityLevel, jobType })
     <div className="bg-card rounded-2xl border border-border p-5 shadow-sm">
       <div className="flex items-center gap-2 mb-3">
         <Briefcase className="w-4 h-4 text-accent" />
-        <h2 className="text-sm font-bold text-foreground">Similar Opportunities</h2>
+        <h2 className="text-sm font-bold text-foreground">
+          {" "}
+          {t("similarJobs.title")}
+        </h2>
       </div>
       <div className="space-y-2.5">
         {jobs.slice(0, 3).map((job) => {
@@ -34,7 +41,10 @@ export default function SimilarOpportunities({ jobId, seniorityLevel, jobType })
               onClick={() => navigate(`/jobs/${job.id}`)}
               className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-surface-hover transition-colors cursor-pointer group"
             >
-              <Link to={`/company/${company?.id}`} className="shrink-0 hover:opacity-80 transition-opacity">
+              <Link
+                to={`/company/${company?.id}`}
+                className="shrink-0 hover:opacity-80 transition-opacity"
+              >
                 {company?.logo_url ? (
                   <img
                     src={company.logo_url}
@@ -57,7 +67,10 @@ export default function SimilarOpportunities({ jobId, seniorityLevel, jobType })
                       to={`/company/${company.id}`}
                       className="flex items-center gap-1 hover:text-primary transition-colors"
                     >
-                      <Building2 size={10} className="text-muted-foreground/60" />
+                      <Building2
+                        size={10}
+                        className="text-muted-foreground/60"
+                      />
                       {company.name}
                     </Link>
                   )}

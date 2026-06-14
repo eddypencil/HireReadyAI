@@ -1,20 +1,62 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { User, Briefcase, GraduationCap, Wrench, Languages, FolderGit2, HeartHandshake, BadgeCheck, MapPin, Calendar, Camera } from "lucide-react";
+import {
+  User,
+  Briefcase,
+  GraduationCap,
+  Wrench,
+  Languages,
+  FolderGit2,
+  HeartHandshake,
+  BadgeCheck, MapPin, Calendar, Camera,
+} from "lucide-react";
 import { useUser } from "@/features/auth/context/user.context";
-import { fetchApplicantProfile, updateApplicantProfile } from "../services/profile.service";
-import { addExperience, updateExperience, deleteExperience } from "../services/experience.service";
-import { addEducation, updateEducation, deleteEducation } from "../services/education.service";
+import {
+  fetchApplicantProfile,
+  updateApplicantProfile,
+} from "../services/profile.service";
+import {
+  addExperience,
+  updateExperience,
+  deleteExperience,
+} from "../services/experience.service";
+import {
+  addEducation,
+  updateEducation,
+  deleteEducation,
+} from "../services/education.service";
 import { addSkill, updateSkill, deleteSkill } from "../services/skills.service";
-import { addLanguage, updateLanguage, deleteLanguage } from "../services/languages.service";
-import { addCertificate, updateCertificate, deleteCertificate } from "../services/certificates.service";
-import { addProject, updateProject, deleteProject } from "../services/projects.service";
-import { addVolunteering, updateVolunteering, deleteVolunteering } from "../services/volunteering.service";
+import {
+  addLanguage,
+  updateLanguage,
+  deleteLanguage,
+} from "../services/languages.service";
+import {
+  addCertificate,
+  updateCertificate,
+  deleteCertificate,
+} from "../services/certificates.service";
+import {
+  addProject,
+  updateProject,
+  deleteProject,
+} from "../services/projects.service";
+import {
+  addVolunteering,
+  updateVolunteering,
+  deleteVolunteering,
+} from "../services/volunteering.service";
 import AvatarModal from "../components/AvatarModal";
 import ItemDialog from "../components/ItemDialog";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import {
-  Experience, Education, Skill, Language, Certificate, Project, Volunteering,
+  Experience,
+  Education,
+  Skill,
+  Language,
+  Certificate,
+  Project,
+  Volunteering,
 } from "../models";
 import ContactSection from "../components/profile/ContactSection";
 import BioSection from "../components/profile/BioSection";
@@ -24,6 +66,7 @@ import LanguagesSection from "../components/profile/LanguagesSection";
 import DialogForms from "../components/profile/DialogForms";
 import ImageLightbox from "../components/profile/ImageLightbox";
 import { getInitials } from "../components/profile/FormFields";
+import { useTranslation } from "react-i18next";
 import CompletenessBar from '../components/profile/CompletenessBar';
 
 const SECTION_MODEL = {
@@ -82,7 +125,7 @@ export default function ApplicantProfilePage() {
   const [lightboxSrc, setLightboxSrc] = useState(null);
 
   const [activeTab, setActiveTab] = useState("about");
-
+  const { t } = useTranslation();
   const viewingOwn = !id || id === user?.id;
   const fetchId = id || user?.id;
 
@@ -276,13 +319,15 @@ export default function ApplicantProfilePage() {
     }
   };
 
-  if (loading) return <LoadingSpinner message="Loading profile..." />;
+  if (loading) return <LoadingSpinner message={t("common.loading_profile")} />;
   if (!profile) {
     return (
       <div className="min-h-screen bg-surface-muted flex items-center justify-center p-5">
         <div className="text-center">
           <User className="w-12 h-12 text-muted-foreground/40 mx-auto mb-3" />
-          <p className="text-sm text-muted-foreground">Profile not found</p>
+          <p className="text-sm text-muted-foreground">
+            {t("profile_not_found")}
+          </p>
         </div>
       </div>
     );
@@ -296,9 +341,16 @@ export default function ApplicantProfilePage() {
 
         <div className="bg-[#0f2d4a] rounded-xl p-6 text-white shadow-md space-y-4">
           <div className="flex items-center gap-4">
-            <div className="relative shrink-0 cursor-pointer" onClick={() => isOwn && setAvatarOpen(true)}>
+            <div
+              className="relative shrink-0 cursor-pointer"
+              onClick={() => isOwn && setAvatarOpen(true)}
+            >
               {profile.profile_pic ? (
-                <img src={profile.profile_pic} alt={profile.full_name} className="w-16 h-16 rounded-full object-cover border-[3px] border-white/20" />
+                <img
+                  src={profile.profile_pic}
+                  alt={profile.full_name}
+                  className="w-16 h-16 rounded-full object-cover border-[3px] border-white/20"
+                />
               ) : (
                 <div className="w-16 h-16 rounded-full bg-white/10 border-[3px] border-white/20 flex items-center justify-center text-lg font-bold text-white relative">
                   {getInitials(profile.full_name)}
@@ -373,7 +425,9 @@ export default function ApplicantProfilePage() {
               editBasic={editBasic}
               setEditBasic={setEditBasic}
               savingBasic={savingBasic}
-              onFieldChange={(key, value) => setProfile((p) => ({ ...p, [key]: value }))}
+              onFieldChange={(key, value) =>
+            setProfile((p) => ({ ...p, [key]: value }))
+          }
               onSaveBasic={handleSaveBasic}
               onCancelBasic={handleCancelBasic}
             />
@@ -393,29 +447,45 @@ export default function ApplicantProfilePage() {
 
         {activeTab === "experience" && (
           <ArraySection
-            icon={Briefcase} title="Experience" section="experience"
-            items={profile.experience || []} isOwn={isOwn}
-            onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+            icon={Briefcase}
+          title="Experience"
+          section="experience"
+            items={profile.experience || []}
+          isOwn={isOwn}
+            onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
           />
         )}
 
         {activeTab === "education" && (
           <ArraySection
-            icon={GraduationCap} title="Education" section="education"
-            items={profile.education || []} isOwn={isOwn}
-            onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+            icon={GraduationCap}
+          title="Education"
+          section="education"
+            items={profile.education || []}
+          isOwn={isOwn}
+            onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
           />
         )}
 
         {activeTab === "skills_langs" && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <SkillsSection
-              items={profile.skills || []} isOwn={isOwn}
-              onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+              items={profile.skills || []}
+          isOwn={isOwn}
+              onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
             />
             <LanguagesSection
-              items={profile.languages || []} isOwn={isOwn}
-              onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+              items={profile.languages || []}
+          isOwn={isOwn}
+              onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
             />
           </div>
         )}
@@ -423,16 +493,26 @@ export default function ApplicantProfilePage() {
         {activeTab === "projects_certs" && (
           <div className="space-y-5">
             <ArraySection
-              icon={BadgeCheck} title="Certificates" section="certificates"
-              items={profile.certificates || []} isOwn={isOwn}
-              onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+              icon={BadgeCheck}
+          title="Certificates"
+          section="certificates"
+              items={profile.certificates || []}
+          isOwn={isOwn}
+              onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
               onImageClick={(src) => setLightboxSrc(src)}
             />
 
             <ArraySection
-              icon={FolderGit2} title="Projects" section="projects"
-              items={profile.projects || []} isOwn={isOwn}
-              onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+              icon={FolderGit2}
+          title="Projects"
+          section="projects"
+              items={profile.projects || []}
+          isOwn={isOwn}
+              onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
               onImageClick={(src) => setLightboxSrc(src)}
             />
           </div>
@@ -440,9 +520,14 @@ export default function ApplicantProfilePage() {
 
         {activeTab === "volunteering" && (
           <ArraySection
-            icon={HeartHandshake} title="Volunteering" section="volunteering"
-            items={profile.volunteering || []} isOwn={isOwn}
-            onEdit={handleOpenEdit} onDelete={handleDeleteItem} onAdd={handleOpenAdd}
+            icon={HeartHandshake}
+          title="Volunteering"
+          section="volunteering"
+            items={profile.volunteering || []}
+          isOwn={isOwn}
+            onEdit={handleOpenEdit}
+          onDelete={handleDeleteItem}
+          onAdd={handleOpenAdd}
           />
         )}
       </div>
@@ -451,11 +536,18 @@ export default function ApplicantProfilePage() {
         <ItemDialog
           open
           onClose={handleCloseDialog}
-          title={dialog.index == null ? `Add ${dialog.section}` : `Edit ${dialog.section}`}
+          title={
+            dialog.index == null
+              ? `Add ${dialog.section}`
+              : `Edit ${dialog.section}`
+          }
           onSave={handleSaveDialog}
           saving={savingDialog}
         >
-          <DialogForms dialog={dialog} handleDialogChange={handleDialogChange} errors={errors} />
+          <DialogForms
+            dialog={dialog}
+            handleDialogChange={handleDialogChange} errors={errors}
+          />
         </ItemDialog>
       )}
 
@@ -469,7 +561,11 @@ export default function ApplicantProfilePage() {
       />
 
       {lightboxSrc && (
-        <ImageLightbox src={lightboxSrc} alt="" onClose={() => setLightboxSrc(null)} />
+        <ImageLightbox
+          src={lightboxSrc}
+          alt=""
+          onClose={() => setLightboxSrc(null)}
+        />
       )}
     </div>
   );
