@@ -54,7 +54,7 @@ export default function PipelineBuilderPage() {
       <div className="flex items-center justify-between px-4 md:px-6 py-3 border-b border-border bg-surface/95 backdrop-blur-md shrink-0">
         <div className="flex items-center gap-2 md:gap-3 min-w-0">
           <Link
-            to="/companies/pipelines"
+            to="/companies/jobs"
             className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-primary font-semibold transition-colors shrink-0"
           >
             <ArrowLeft className="w-4 h-4" />

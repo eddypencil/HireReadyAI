@@ -178,7 +178,7 @@ export default function SignUpPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.38, ease: "easeOut" }}
-          className="flex items-start gap-3 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"
+          className="flex items-start gap-3 text-xs text-muted-foreground dark:text-slate-300 leading-relaxed"
         >
           <input
             type="checkbox"
@@ -189,11 +189,11 @@ export default function SignUpPage() {
           />
           <label htmlFor="terms-privacy" className="leading-relaxed">
             {t("sign_in.terms_text")}{" "}
-            <Link to="/auth/terms" className="underline hover:text-accent font-semibold">
+            <Link to="/auth/terms" state={{ from: "sign-up" }} className="underline hover:text-accent font-semibold">
               {t("sign_in.terms")}
             </Link>{" "}
             {t("sign_in.and")}{" "}
-            <Link to="/auth/privacy" className="underline hover:text-accent font-semibold">
+            <Link to="/auth/privacy" state={{ from: "sign-up" }} className="underline hover:text-accent font-semibold">
               {t("sign_in.privacy")}
             </Link>
           </label>
