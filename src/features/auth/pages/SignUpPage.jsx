@@ -10,6 +10,7 @@ import RoleToggle from "../components/RoleToggle";
 import { signInWithGoogle } from "../services/auth.service";
 import SocialButton from "../components/SocialButton";
 import { useTranslation } from "react-i18next";
+
 export default function SignUpPage() {
   const { signUpUser, loading, profile } = useUser();
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function SignUpPage() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -50,6 +52,10 @@ export default function SignUpPage() {
     }
     if (password !== confirmPassword) {
       setError(t("sign_up.errors.password_match"));
+      return;
+    }
+    if (!acceptTerms) {
+      setError("You must accept the Terms of Service and Privacy Policy to continue.");
       return;
     }
     try {
@@ -168,6 +174,31 @@ export default function SignUpPage() {
           />
         </motion.div>
 
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.38, ease: "easeOut" }}
+          className="flex items-start gap-3 text-xs text-slate-700 dark:text-slate-300 leading-relaxed"
+        >
+          <input
+            type="checkbox"
+            id="terms-privacy"
+            checked={acceptTerms}
+            onChange={(e) => setAcceptTerms(e.target.checked)}
+            className="w-4 h-4 mt-0.5 rounded border-border text-accent focus:ring-accent shrink-0"
+          />
+          <label htmlFor="terms-privacy" className="leading-relaxed">
+            {t("sign_in.terms_text")}{" "}
+            <Link to="/auth/terms" className="underline hover:text-accent font-semibold">
+              {t("sign_in.terms")}
+            </Link>{" "}
+            {t("sign_in.and")}{" "}
+            <Link to="/auth/privacy" className="underline hover:text-accent font-semibold">
+              {t("sign_in.privacy")}
+            </Link>
+          </label>
+        </motion.div>
+
         {error && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -184,7 +215,7 @@ export default function SignUpPage() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.4, ease: "easeOut" }}
+          transition={{ duration: 0.4, delay: 0.42, ease: "easeOut" }}
         >
           <button
             type="submit"
@@ -208,7 +239,7 @@ export default function SignUpPage() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.45, ease: "easeOut" }}
+        transition={{ duration: 0.4, delay: 0.47, ease: "easeOut" }}
         className="flex items-center gap-3 my-5"
       >
         <span className="flex-1 h-px bg-border" />
@@ -219,7 +250,7 @@ export default function SignUpPage() {
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.5, ease: "easeOut" }}
+        transition={{ duration: 0.4, delay: 0.52, ease: "easeOut" }}
       >
         <SocialButton provider="google" onClick={handleGoogleSignIn} />
       </motion.div>
@@ -227,7 +258,7 @@ export default function SignUpPage() {
       <motion.p
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.4, delay: 0.55, ease: "easeOut" }}
+        transition={{ duration: 0.4, delay: 0.57, ease: "easeOut" }}
         className="text-center text-xs text-muted-foreground mt-6"
       >
         {t("sign_up.already_have")}{" "}

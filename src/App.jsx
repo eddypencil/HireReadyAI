@@ -25,6 +25,8 @@ import PublicCompanyProfile from "./features/companies/pages/PublicCompanyProfil
 import PremiumSuccessPage from "./features/premium/pages/PremiumSuccessPage";
 import PremiumCancelPage from "./features/premium/pages/PremiumCancelPage";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
+import TermsPage from "./features/auth/pages/TermsPage";
+import PrivacyPage from "./features/auth/pages/PrivacyPage";
 
 // eslint-disable-next-line no-unused-vars
 function RootRedirect() {
@@ -151,6 +153,9 @@ function App() {
         }
       />
       <Route path="/premium/cancel" element={<PremiumCancelPage />} />
+
+      <Route path="/auth/terms" element={<TermsPage />} />
+      <Route path="/auth/privacy" element={<PrivacyPage />} />
 
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

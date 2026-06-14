@@ -158,6 +158,7 @@ export default function SignInPage() {
   const { t } = useTranslation();
   const { signInUser, loading, user, profile } = useUser();
   const navigate = useNavigate();
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     if (!user || !profile) return;
@@ -189,6 +190,7 @@ export default function SignInPage() {
       setError(err.message || t("sign_in.errors.generic"));
     }
   }
+
 
   return (
     <AuthLayout
@@ -296,13 +298,13 @@ export default function SignInPage() {
         className="text-center text-xs text-muted-foreground mt-5"
       >
         {t("sign_in.terms_text")}{" "}
-        <a href="#" className="underline hover:text-accent">
+        <Link to="/auth/terms" className="underline hover:text-accent">
           {t("sign_in.terms")}
-        </a>{" "}
+        </Link>{" "}
         {t("sign_in.and")}{" "}
-        <a href="#" className="underline hover:text-accent">
+        <Link to="/auth/privacy" className="underline hover:text-accent">
           {t("sign_in.privacy")}
-        </a>
+        </Link>
       </motion.p>
 
       <motion.p
