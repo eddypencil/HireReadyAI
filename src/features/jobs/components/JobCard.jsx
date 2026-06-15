@@ -1,6 +1,7 @@
 //src\features\jobs\components\JobCard.jsx
 import { useNavigate, Link } from "react-router-dom";
-import { Briefcase, MapPin, Clock, TrendingUp, Bookmark, Building2 } from "lucide-react";
+import { Briefcase, MapPin, Clock, TrendingUp, Building2 } from "lucide-react";
+
 export default function JobCard({ job }) {
   const navigate = useNavigate();
   const company = job.companies;
@@ -12,40 +13,40 @@ export default function JobCard({ job }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
-              <Link
-                to={`/company/${company?.id}`}
-                className="shrink-0 hover:opacity-80 transition-opacity"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {company?.logo_url ? (
-                  <img
-                    src={company.logo_url}
-                    alt={company.name}
-                    className="w-11 h-11 rounded-xl border border-border object-contain p-1 shrink-0"
-                  />
-                ) : (
-                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center font-bold text-base shrink-0 shadow-sm">
-                    {company?.name?.[0] || "?"}
-                  </div>
-                )}
-              </Link>
+          <Link
+            to={`/company/${company?.id}`}
+            className="shrink-0 hover:opacity-80 transition-opacity"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {company?.logo_url ? (
+              <img
+                src={company.logo_url}
+                alt={company.name}
+                className="w-11 h-11 rounded-xl border border-border object-contain p-1 shrink-0"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-primary to-accent text-white flex items-center justify-center font-bold text-base shrink-0 shadow-sm">
+                {company?.name?.[0] || "?"}
+              </div>
+            )}
+          </Link>
 
-              <div className="flex-1 min-w-0">
-                <h2 className="text-sm font-bold text-foreground group-hover:text-primary transition truncate">
-                  {job.title}
-                </h2>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-sm font-bold text-foreground group-hover:text-primary transition truncate">
+              {job.title}
+            </h2>
 
-                <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
-                  {company?.name && (
-                    <Link
-                      to={`/company/${company.id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="text-xs text-muted-foreground font-medium flex items-center gap-1 hover:text-primary transition-colors"
-                    >
-                      <Building2 size={11} className="text-muted-foreground/60" />
-                      {company.name}
-                    </Link>
-                  )}
+            <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+              {company?.name && (
+                <Link
+                  to={`/company/${company.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="text-xs text-muted-foreground font-medium flex items-center gap-1 hover:text-primary transition-colors"
+                >
+                  <Building2 size={11} className="text-muted-foreground/60" />
+                  {company.name}
+                </Link>
+              )}
               {company?.location && (
                 <span className="text-xs text-muted-foreground flex items-center gap-1">
                   <MapPin size={11} className="text-accent/70" />
@@ -100,14 +101,8 @@ export default function JobCard({ job }) {
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2 shrink-0">
-          <button
-            onClick={(e) => e.stopPropagation()}
-            className="text-muted-foreground/40 hover:text-primary transition-colors"
-          >
-            <Bookmark size={15} />
-          </button>
-          <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+        <div className="flex flex-col items-end gap-2 shrink-0 justify-start">
+          <span className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
             <Clock size={10} className="text-muted-foreground/50" />
             {new Date(job.created_at).toLocaleDateString("en-US", {
               month: "short",

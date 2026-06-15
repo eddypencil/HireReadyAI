@@ -158,39 +158,38 @@ export default function AuthLayout({ children, headline, subheading }) {
       </div>
 
       {/* RIGHT SIDE */}
-      <div className="flex-1 flex items-start justify-center p-8 ml-[45%] xl:ml-[40%]">
-        <div className="w-full max-w-sm">
-          <div className="flex items-center gap-3 mb-10 lg:hidden">
-            <span
-              className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-white font-bold text-sm"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              H
-            </span>
-            <span
-              className="text-foreground text-lg font-bold"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              HireReadyAI
-            </span>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
+      <div className="flex-1 flex items-start justify-center p-8 lg:ml-[45%] xl:ml-[40%]">        <div className="w-full max-w-sm">
+        <div className="flex items-center gap-3 mb-10 lg:hidden">
+          <span
+            className="flex items-center justify-center w-9 h-9 rounded-lg bg-accent text-white font-bold text-sm"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
           >
-            <h2
-              className="text-foreground text-3xl font-bold mb-1"
-              style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
-            >
-              {headline}
-            </h2>
-            <p className="text-muted-foreground text-sm mb-8">{subheading}</p>
-
-            {children}
-          </motion.div>
+            H
+          </span>
+          <span
+            className="text-foreground text-lg font-bold"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            HireReadyAI
+          </span>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <h2
+            className="text-foreground text-3xl font-bold mb-1"
+            style={{ fontFamily: "'Plus Jakarta Sans', sans-serif" }}
+          >
+            {headline}
+          </h2>
+          <p className="text-muted-foreground text-sm mb-8">{subheading}</p>
+
+          {children}
+        </motion.div>
+      </div>
       </div>
     </div>
   );

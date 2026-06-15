@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Bookmark, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getFeaturedJobs } from "../../jobs/services/jobs.service";
@@ -160,9 +160,6 @@ export default function TopFeaturedJobs() {
                         </p>
                       </div>
                     </div>
-                    <button className="w-8 h-8 rounded-full flex items-center justify-center border border-border/60 hover:bg-surface-hover transition-colors">
-                      <Bookmark size={13} className="text-muted-foreground" />
-                    </button>
                   </div>
 
                   {/* Role */}

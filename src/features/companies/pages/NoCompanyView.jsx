@@ -131,34 +131,34 @@ export default function NoCompanyView({ onCompanyJoined }) {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="bg-background border-b border-border/60 px-5 py-3 flex items-center justify-between shrink-0 shadow-xs"
+        className="bg-background border-b border-border/60 px-6 py-4 flex items-center justify-between shrink-0 shadow-xs"
       >
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center">
-            <Building2 className="w-3.5 h-3.5 text-primary-foreground" />
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-primary rounded-xl flex items-center justify-center">
+            <Building2 className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="text-lg font-bold tracking-tight text-foreground">
+          <span className="text-xl font-bold tracking-tight text-foreground">
             HireReadyAI
           </span>
         </div>
         <button
           onClick={logOut}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-muted-foreground bg-background border border-border rounded-md hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-slate-800 dark:bg-slate-700 border border-border rounded-xl hover:opacity-90 transition-opacity cursor-pointer shadow-xs"
         >
-          <LogOut className="w-3.5 h-3.5" />
+          <LogOut className="w-4 h-4" />
           {t("no_company_view.sign_out")}
         </button>
       </motion.header>
 
       {/* Main Content */}
-      <main className="flex-1 p-6 overflow-y-auto">
-        <div className="max-w-4xl mx-auto">
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+        <div className="max-w-4xl mx-auto w-full">
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.25 }}
-              className="mb-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md text-destructive text-xs font-medium"
+              className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-xl text-destructive text-sm font-medium"
             >
               {error}
             </motion.div>
@@ -174,54 +174,54 @@ export default function NoCompanyView({ onCompanyJoined }) {
             >
               <button
                 onClick={() => setShowingPricing(false)}
-                className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground mb-4 transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground mb-6 transition-colors cursor-pointer"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
+                <ArrowLeft className="w-4 h-4" />
                 Back
               </button>
-              <div className="text-center mb-6">
-                <h1 className="text-xl font-bold text-foreground mb-1">
+              <div className="text-center mb-8">
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
                   Choose your plan
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Start with a free plan and upgrade anytime
                 </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Free Plan */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-background rounded-xl border border-border/60 p-6 shadow-xs flex flex-col"
+                  className="bg-card rounded-2xl border border-border/60 p-6 shadow-sm flex flex-col justify-between"
                 >
-                  <div className="mb-4">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3">
-                      <Check className="w-5 h-5 text-primary" />
+                  <div className="mb-6">
+                    <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-4">
+                      <Check className="w-6 h-6 text-primary" />
                     </div>
-                    <h3 className="text-base font-bold text-foreground">
+                    <h3 className="text-lg font-bold text-foreground">
                       Free
                     </h3>
-                    <p className="text-2xl font-bold text-foreground mt-1">
+                    <p className="text-3xl font-extrabold text-foreground mt-2">
                       $0
                       <span className="text-xs font-normal text-muted-foreground">
                         /forever
                       </span>
                     </p>
                   </div>
-                  <ul className="space-y-2 text-xs text-muted-foreground mb-6 flex-1">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                  <ul className="space-y-3 text-xs text-muted-foreground mb-8 flex-1">
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Up to 10 active job postings
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Basic candidate management
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Team collaboration (up to 5 members)
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Email support
                     </li>
                   </ul>
@@ -230,7 +230,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       setSelectedPlan("free");
                       setIsCreating(true);
                     }}
-                    className="w-full py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer"
+                    className="w-full py-3 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
                   >
                     Get Started Free
                   </button>
@@ -239,44 +239,44 @@ export default function NoCompanyView({ onCompanyJoined }) {
                 {/* Premium Plan */}
                 <motion.div
                   whileHover={{ scale: 1.02 }}
-                  className="bg-gradient-to-b from-primary/5 to-background rounded-xl border border-primary/30 p-6 shadow-xs flex flex-col relative overflow-hidden"
+                  className="bg-gradient-to-b from-primary/5 to-background rounded-2xl border border-primary/30 p-6 shadow-sm flex flex-col justify-between relative overflow-hidden"
                 >
-                  <div className="absolute top-3 right-3 bg-warning text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                  <div className="absolute top-4 right-4 bg-warning text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
                     One-time
                   </div>
-                  <div className="mb-4">
-                    <div className="w-10 h-10 bg-warning/20 rounded-lg flex items-center justify-center mb-3">
-                      <Crown className="w-5 h-5 text-warning" />
+                  <div className="mb-6">
+                    <div className="w-12 h-12 bg-warning/20 rounded-xl flex items-center justify-center mb-4">
+                      <Crown className="w-6 h-6 text-warning" />
                     </div>
-                    <h3 className="text-base font-bold text-foreground">
+                    <h3 className="text-lg font-bold text-foreground">
                       Premium
                     </h3>
-                    <p className="text-2xl font-bold text-foreground mt-1">
+                    <p className="text-3xl font-extrabold text-foreground mt-2">
                       $29
                       <span className="text-xs font-normal text-muted-foreground">
                         /one-time
                       </span>
                     </p>
                   </div>
-                  <ul className="space-y-2 text-xs text-muted-foreground mb-6 flex-1">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                  <ul className="space-y-3 text-xs text-muted-foreground mb-8 flex-1">
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Unlimited job postings
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       AI-powered candidate screening
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Advanced analytics & reports
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Priority support
                     </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-3.5 h-3.5 text-success shrink-0" />
+                    <li className="flex items-center gap-3">
+                      <Check className="w-4 h-4 text-success shrink-0" />
                       Custom branding
                     </li>
                   </ul>
@@ -285,7 +285,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       setSelectedPlan("premium");
                       setIsCreating(true);
                     }}
-                    className="w-full py-2 bg-warning text-white rounded-md text-xs font-medium hover:bg-warning/90 transition-colors cursor-pointer"
+                    className="w-full py-3 bg-warning text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
                   >
                     Buy Premium
                   </button>
@@ -300,26 +300,26 @@ export default function NoCompanyView({ onCompanyJoined }) {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35 }}
-              className="bg-background rounded-lg shadow-xs border border-border/60 max-w-xl mx-auto"
+              className="bg-card rounded-2xl shadow-sm border border-border/60 max-w-xl mx-auto w-full overflow-hidden"
             >
-              <div className="p-4 border-b border-border/60 flex items-center gap-3">
+              <div className="p-5 border-b border-border/60 flex items-center gap-4">
                 <button
                   onClick={() => {
                     setIsCreating(false);
                     setSelectedPlan(null);
                     setShowingPricing(true);
                   }}
-                  className="p-1.5 hover:bg-muted rounded-md transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
+                  className="p-2 hover:bg-muted rounded-xl transition-colors cursor-pointer text-muted-foreground hover:text-foreground"
                 >
-                  <ArrowLeft className="w-4 h-4" />
+                  <ArrowLeft className="w-5 h-5" />
                 </button>
-                <h2 className="text-base font-bold text-foreground">
+                <h2 className="text-lg font-bold text-foreground">
                   Create a New Company
                 </h2>
               </div>
-              <form onSubmit={handleCreateCompany} className="p-5 space-y-3.5">
+              <form onSubmit={handleCreateCompany} className="p-6 space-y-5">
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-1">
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                     Company Name
                   </label>
                   <input
@@ -329,12 +329,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     onChange={(e) =>
                       setNewCompany({ ...newCompany, name: e.target.value })
                     }
-                    className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                     placeholder="Acme Corp"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-1">
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                     Industry
                   </label>
                   <input
@@ -343,13 +343,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     onChange={(e) =>
                       setNewCompany({ ...newCompany, industry: e.target.value })
                     }
-                    className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                     placeholder="e.g. Technology, Healthcare"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Company Size
                     </label>
                     <input
@@ -358,12 +358,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       onChange={(e) =>
                         setNewCompany({ ...newCompany, size: e.target.value })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="Number of employees"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Location
                     </label>
                     <input
@@ -375,14 +375,14 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           location: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="City, Country"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Founded
                     </label>
                     <input
@@ -394,11 +394,11 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           founding_date: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Website
                     </label>
                     <input
@@ -410,13 +410,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           website_url: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://example.com"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-muted-foreground mb-1">
+                  <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                     About
                   </label>
                   <textarea
@@ -428,13 +428,13 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       })
                     }
                     rows={3}
-                    className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                     placeholder="Tell applicants about your company..."
                   />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Culture
                     </label>
                     <textarea
@@ -446,12 +446,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         })
                       }
                       rows={2}
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                       placeholder="Company values, culture..."
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Benefits
                     </label>
                     <textarea
@@ -463,14 +463,14 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         })
                       }
                       rows={2}
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                       placeholder="Perks, benefits..."
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       LinkedIn
                     </label>
                     <input
@@ -482,12 +482,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           linkedin_url: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://linkedin.com/company/..."
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
+                    <label className="block text-xs font-semibold text-muted-foreground mb-1.5">
                       Twitter
                     </label>
                     <input
@@ -499,12 +499,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           twitter_url: e.target.value,
                         })
                       }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://twitter.com/..."
                     />
                   </div>
                 </div>
-                <div className="pt-3 flex justify-end gap-2 border-t border-border/60 mt-4">
+                <div className="pt-4 flex items-center justify-end gap-3 border-t border-border/60">
                   <button
                     type="button"
                     onClick={() => {
@@ -512,14 +512,14 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       setSelectedPlan(null);
                       setShowingPricing(true);
                     }}
-                    className="px-3 py-1.5 text-xs font-medium text-muted-foreground bg-background border border-border rounded-md hover:bg-muted transition-colors cursor-pointer"
+                    className="px-5 py-2.5 text-xs font-semibold text-muted-foreground bg-background border border-border rounded-xl hover:bg-muted transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-3 py-1.5 bg-primary text-white rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
+                    className="px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer shadow-sm"
                   >
                     {isSubmitting ? "Creating..." : "Create Company"}
                   </button>
@@ -535,24 +535,23 @@ export default function NoCompanyView({ onCompanyJoined }) {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35 }}
-                className="text-center mb-8"
+                className="text-center mb-10"
               >
-                <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mx-auto mb-3">
-                  <Building2 className="w-6 h-6 text-primary" />
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Building2 className="w-8 h-8 text-primary" />
                 </div>
-                <h1 className="text-2xl font-bold text-foreground mb-1.5">
+                <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-3">
                   {t("no_company_view.join.title")}
                 </h1>
-                <p className="text-sm text-muted-foreground mb-4">
-                  Select a company to get started with HireReadyAI or create
-                  your own
+                <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
+                  Select a company to get started with HireReadyAI or create your own
                 </p>
                 {companies.length > 0 && (
                   <button
                     onClick={() => setShowingPricing(true)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4" />
                     Create a New Company
                   </button>
                 )}
@@ -563,16 +562,16 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   initial={{ opacity: 0, y: 15 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.35, delay: 0.1 }}
-                  className="text-center py-10 bg-background rounded-lg shadow-xs border border-border/60"
+                  className="text-center py-12 bg-card rounded-2xl shadow-sm border border-border/60 max-w-xl mx-auto"
                 >
-                  <p className="text-sm text-muted-foreground mb-4">
+                  <p className="text-sm text-muted-foreground mb-6">
                     No companies available to join.
                   </p>
                   <button
                     onClick={() => setShowingPricing(true)}
-                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors cursor-pointer shadow-xs"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl text-sm font-semibold hover:opacity-90 transition-opacity cursor-pointer shadow-sm"
                   >
-                    <Plus className="w-3.5 h-3.5" />
+                    <Plus className="w-4 h-4" />
                     Create a Company
                   </button>
                 </motion.div>
@@ -583,7 +582,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   variants={{
                     visible: { transition: { staggerChildren: 0.06 } },
                   }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
                 >
                   {companies.map((company) => (
                     <motion.div
@@ -592,12 +591,12 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         hidden: { opacity: 0, y: 20 },
                         visible: { opacity: 1, y: 0 },
                       }}
-                      className="bg-background rounded-lg border border-border/60 p-4 hover:shadow-xs transition-shadow flex flex-col justify-between"
+                      className="bg-card rounded-2xl border border-border/60 p-5 hover:shadow-md transition-shadow flex flex-col justify-between"
                     >
                       <div>
-                        <div className="flex items-start gap-2.5 mb-3">
-                          <div className="w-9 h-9 bg-primary/10 rounded-md flex items-center justify-center shrink-0">
-                            <span className="text-sm font-bold text-primary">
+                        <div className="flex items-start gap-3 mb-4">
+                          <div className="w-11 h-11 bg-primary/10 rounded-xl flex items-center justify-center shrink-0">
+                            <span className="text-base font-bold text-primary">
                               {company.name?.charAt(0).toUpperCase()}
                             </span>
                           </div>
@@ -612,7 +611,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         </div>
 
                         {company.size && (
-                          <p className="text-[11px] text-muted-foreground mb-3">
+                          <p className="text-xs text-muted-foreground mb-4">
                             {company.size.toLocaleString()} employees
                           </p>
                         )}
@@ -621,7 +620,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       <button
                         onClick={() => handleJoinCompany(company.id)}
                         disabled={joining === company.id}
-                        className="w-full mt-2 px-3 py-1.5 bg-secondary text-secondary-foreground rounded-md text-xs font-medium hover:bg-secondary/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        className="w-full mt-2 px-4 py-2.5 bg-primary text-white rounded-xl text-xs font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm"
                       >
                         {joining === company.id ? "Joining..." : "Join"}
                       </button>

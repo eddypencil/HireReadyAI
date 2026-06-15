@@ -16,10 +16,12 @@ export default function SignUpPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [role, setRole] = useState(USER_ROLE.applicant);
-  const [fullName, setFullName] = useState("");
-  const [headline, setHeadLine] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+
+  const [fullName, setFullName] = useState(() => sessionStorage.getItem("sign_up_fullName") || "");
+  const [headline, setHeadLine] = useState(() => sessionStorage.getItem("sign_up_headline") || "");
+  const [email, setEmail] = useState(() => sessionStorage.getItem("sign_up_email") || "");
+  const [phone, setPhone] = useState(() => sessionStorage.getItem("sign_up_phone") || "");
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [acceptTerms, setAcceptTerms] = useState(false);
@@ -27,6 +29,11 @@ export default function SignUpPage() {
 
   useEffect(() => {
     if (!loading && profile) {
+      sessionStorage.removeItem("sign_up_fullName");
+      sessionStorage.removeItem("sign_up_headline");
+      sessionStorage.removeItem("sign_up_email");
+      sessionStorage.removeItem("sign_up_phone");
+
       if (profile.role === USER_ROLE.recruiter) {
         navigate("/companies");
       } else {
@@ -34,6 +41,30 @@ export default function SignUpPage() {
       }
     }
   }, [profile, loading, navigate]);
+
+  const handleFullNameChange = (e) => {
+    const value = e.target.value;
+    setFullName(value);
+    sessionStorage.setItem("sign_up_fullName", value);
+  };
+
+  const handleHeadlineChange = (e) => {
+    const value = e.target.value;
+    setHeadLine(value);
+    sessionStorage.setItem("sign_up_headline", value);
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    sessionStorage.setItem("sign_up_email", value);
+  };
+
+  const handlePhoneChange = (e) => {
+    const value = e.target.value;
+    setPhone(value);
+    sessionStorage.setItem("sign_up_phone", value);
+  };
 
   async function handleGoogleSignIn() {
     try {
@@ -95,7 +126,7 @@ export default function SignUpPage() {
             placeholder="Enter Your Full Name"
             type="text"
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={handleFullNameChange}
             required
           />
         </motion.div>
@@ -110,7 +141,7 @@ export default function SignUpPage() {
             placeholder="e.g. HR Manager, Frontend Developer"
             type="text"
             value={headline}
-            onChange={(e) => setHeadLine(e.target.value)}
+            onChange={handleHeadlineChange}
             required
           />
         </motion.div>
@@ -125,7 +156,7 @@ export default function SignUpPage() {
             placeholder="you@gmail.com"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
             required
           />
         </motion.div>
@@ -140,7 +171,7 @@ export default function SignUpPage() {
             placeholder="+20 10 0000 0000"
             type="tel"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={handlePhoneChange}
           />
         </motion.div>
 

@@ -5,7 +5,6 @@ import { fetchJobById, fetchSimilarJobs } from "../services/jobs.service";
 import { useUser } from "@/features/auth/context/user.context";
 import { supabase } from "@/shared/services/supabase";
 import {
-  Bookmark,
   MapPin,
   FileText,
   Award,
@@ -111,19 +110,14 @@ export default function JobDetailsPage() {
                     if (hasApplied) return;
                     navigate("apply");
                   }}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all duration-150 ${
-                    hasApplied
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all duration-150 ${hasApplied
                       ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                       : "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_8px_rgba(15,41,74,0.15)]"
-                  }`}
+                    }`}
                 >
                   {hasApplied
                     ? t("job_details.applied")
                     : t("job_details.apply_now")}
-                </button>
-
-                <button className="size-8 rounded-lg border border-border bg-card flex items-center justify-center text-muted-foreground/60 hover:text-primary hover:bg-surface-hover transition-colors duration-150">
-                  <Bookmark size={15} />
                 </button>
               </div>
             </div>
@@ -290,12 +284,6 @@ export default function JobDetailsPage() {
                         <p className="text-xs font-bold text-foreground group-hover:text-primary transition-colors duration-150 truncate">
                           {sj.title}
                         </p>
-                        <button
-                          onClick={(e) => e.stopPropagation()}
-                          className="shrink-0 text-muted-foreground/40 hover:text-primary transition-colors duration-150"
-                        >
-                          <Bookmark size={13} />
-                        </button>
                       </div>
 
                       <div className="flex items-center gap-1 mt-0.5 flex-wrap text-[11px] text-muted-foreground font-medium">
