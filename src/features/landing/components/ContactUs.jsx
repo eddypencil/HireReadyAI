@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-const FORMSPREE_URL = "https://formspree.io/f/mlgkwakw";
 import { supabase } from "@/shared/services/supabase";
 
 export default function ContactUs() {
@@ -16,6 +15,7 @@ export default function ContactUs() {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState(null);
   const { t } = useTranslation();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -26,37 +26,26 @@ export default function ContactUs() {
     setIsSubmitting(true);
     setError(null);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setIsSubmitting(true);
-        try {
-            const { error } = await supabase.functions.invoke("send-contact-email", {
-                body: {
-                    name: formData.name,
-                    email: formData.email,
-                    company: formData.company,
-                    message: formData.message,
-                },
-            });
-            if (error) throw new Error(error.message);
-            setSubmitted(true);
-            setFormData({ name: "", email: "", company: "", message: "" });
-            setTimeout(() => setSubmitted(false), 5000);
-        } catch (err) {
-            console.error("Contact form error:", err);
-            alert("Failed to send message. Please try again or email us directly.");
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          message: formData.message,
+        },
+      });
 
-      setIsSubmitting(false);
+      if (error) throw new Error(error.message);
+
       setSubmitted(true);
       setFormData({ name: "", email: "", company: "", message: "" });
       setTimeout(() => setSubmitted(false), 5000);
     } catch (err) {
+      console.error("Contact form error:", err);
+      setError(err.message || "Failed to send message. Please try again.");
+    } finally {
       setIsSubmitting(false);
-      setError(err.message);
     }
   };
 
@@ -73,15 +62,13 @@ export default function ContactUs() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Contact Form */}
           <div className="lg:col-span-7 bg-card p-8 rounded-2xl border border-border/40 shadow-sm">
             <form onSubmit={handleSubmit} className="space-y-5">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                 <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-bold text-foreground"
-                    htmlFor="name"
-                  >
-                    Your name
+                  <label className="text-xs font-bold text-foreground" htmlFor="name">
+                    {t("landing.contact_us.your_name") || "Your name"}
                   </label>
                   <input
                     className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
@@ -95,11 +82,8 @@ export default function ContactUs() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label
-                    className="text-xs font-bold text-foreground"
-                    htmlFor="email"
-                  >
-                    Work email
+                  <label className="text-xs font-bold text-foreground" htmlFor="email">
+                    {t("landing.contact_us.work_email") || "Work email"}
                   </label>
                   <input
                     className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
@@ -115,11 +99,8 @@ export default function ContactUs() {
               </div>
 
               <div className="space-y-1.5">
-                <label
-                  className="text-xs font-bold text-foreground"
-                  htmlFor="company"
-                >
-                  Company
+                <label className="text-xs font-bold text-foreground" htmlFor="company">
+                  {t("landing.contact_us.company") || "Company"}
                 </label>
                 <input
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
@@ -134,11 +115,8 @@ export default function ContactUs() {
               </div>
 
               <div className="space-y-1.5">
-                <label
-                  className="text-xs font-bold text-foreground"
-                  htmlFor="message"
-                >
-                  Message
+                <label className="text-xs font-bold text-foreground" htmlFor="message">
+                  {t("landing.contact_us.message") || "Message"}
                 </label>
                 <textarea
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 h-32 resize-none"
@@ -151,7 +129,13 @@ export default function ContactUs() {
                 />
               </div>
 
-              <div className="flex justify-end pt-2">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                <p className="text-[9px] text-muted-foreground max-w-xs">
+                  {t("landing.contact_us.privacy_notice") || "By submitting, you agree to our"}{" "}
+                  <a href="/privacy" className="text-primary hover:underline">
+                    {t("landing.contact_us.privacy_policy") || "Privacy Policy"}
+                  </a>.
+                </p>
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -160,12 +144,12 @@ export default function ContactUs() {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Sending...
+                      {t("landing.contact_us.sending") || "Sending..."}
                     </>
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      Send message
+                      {t("landing.contact_us.send_message") || "Send message"}
                     </>
                   )}
                 </button>
@@ -178,20 +162,21 @@ export default function ContactUs() {
               )}
               {submitted && (
                 <div className="p-3 bg-success/10 border border-success/20 rounded-xl text-center text-xs text-success font-medium">
-                  Your message has been sent successfully!
+                  {t("landing.contact_us.success_message") || "Your message has been sent successfully!"}
                 </div>
               )}
             </form>
           </div>
 
+          {/* Contact Information */}
           <div className="lg:col-span-5">
             <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm space-y-6">
               <div>
                 <h3 className="text-base font-bold tracking-tight text-foreground">
-                  {t("landing.contact_us.title")}
+                  {t("landing.contact_us.title") || "Contact information"}
                 </h3>
                 <p className="text-[10px] text-muted-foreground mt-1">
-                  {t("landing.contact_us.description")}
+                  {t("landing.contact_us.description") || "Reach the team directly through any of the channels below."}
                 </p>
               </div>
 
@@ -202,156 +187,29 @@ export default function ContactUs() {
                   </div>
                   <div>
                     <h4 className="text-[10px] text-muted-foreground font-medium">
-                      EMAIL
+                      {t("landing.contact_us.email_label") || "EMAIL"}
                     </h4>
                     <a
-                      href="mailto:hello@hirereadyai.com"
+                      href="mailto:hirereadyaiplatform@gmail.com"
                       className="text-xs font-semibold text-foreground hover:underline mt-0.5 block"
                     >
-                      hello@hirereadyai.com
+                      hirereadyaiplatform@gmail.com
                     </a>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-                    <div className="lg:col-span-7 bg-card p-8 rounded-2xl border border-border/40 shadow-sm">
-                        <form onSubmit={handleSubmit} className="space-y-5">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-foreground" htmlFor="name">Your name</label>
-                                    <input
-                                        className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-                                        id="name"
-                                        type="text"
-                                        name="name"
-                                        placeholder="Jane Cooper"
-                                        value={formData.name}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-foreground" htmlFor="email">Work email</label>
-                                    <input
-                                        className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-                                        id="email"
-                                        type="email"
-                                        name="email"
-                                        placeholder="jane@company.com"
-                                        value={formData.email}
-                                        onChange={handleChange}
-                                        required
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-foreground" htmlFor="company">Company</label>
-                                <input
-                                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-                                    id="company"
-                                    type="text"
-                                    name="company"
-                                    placeholder="Acme Inc."
-                                    value={formData.company}
-                                    onChange={handleChange}
-                                />
-                            </div>
-
-                            <div className="space-y-1.5">
-                                <label className="text-xs font-bold text-foreground" htmlFor="message">Message</label>
-                                <textarea
-                                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 h-32 resize-none"
-                                    id="message"
-                                    name="message"
-                                    placeholder="Tell us a bit about what you're looking to solve..."
-                                    value={formData.message}
-                                    onChange={handleChange}
-                                    required
-                                />
-                            </div>
-
-                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-                                <p className="text-[9px] text-muted-foreground max-w-xs">
-                                    By submitting, you agree to our <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
-                                </p>
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="bg-foreground text-background font-bold rounded-xl px-6 py-3.5 text-xs flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-sm disabled:opacity-70"
-                                >
-                                    {isSubmitting ? (
-                                        <>
-                                            <Loader2 className="w-4 h-4 animate-spin" />
-                                            Sending...
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Send className="w-4 h-4" />
-                                            Send message
-                                        </>
-                                    )}
-                                </button>
-                            </div>
-
-                            {submitted && (
-                                <div className="p-3 bg-success/10 border border-success/20 rounded-xl text-center text-xs text-success font-medium">
-                                    Your message has been sent successfully!
-                                </div>
-                            )}
-                        </form>
-                    </div>
-
-
-                    <div className="lg:col-span-5">
-                        <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm space-y-6">
-                            <div>
-                                <h3 className="text-base font-bold tracking-tight text-foreground">Contact information</h3>
-                                <p className="text-[10px] text-muted-foreground mt-1">Reach the team directly through any of the channels below.</p>
-                            </div>
-
-                            <div className="space-y-5 pt-2">
-
-                                <div className="flex items-start gap-4">
-                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
-                                        <Mail className="w-4 h-4 text-foreground" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-[10px] text-muted-foreground font-medium">EMAIL</h4>
-                                        <a href="mailto:hello@hirereadyai.com" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
-                                            hirereadyaiplatform@gmail.com
-                                        </a>
-                                    </div>
-                                </div>
-
-
-                                <div className="flex items-start gap-4">
-                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
-                                        <Phone className="w-4 h-4 text-foreground" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-[10px] text-muted-foreground font-medium">PHONE</h4>
-                                        <a href="tel:+201227541128" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
-                                            +20 10 13767382
-                                        </a>
-                                    </div>
-                                </div>
-
-
-                                <div className="flex items-start gap-4">
-                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
-                                        <MapPin className="w-4 h-4 text-foreground" />
-                                    </div>
-                                    <div>
-                                        <h4 className="text-[10px] text-muted-foreground font-medium">OFFICE</h4>
-                                        <p className="text-xs font-semibold text-foreground mt-0.5">Smart Village, Cairo, Egypt</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            
-                        </div>
-                    </div>
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4 text-foreground" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] text-muted-foreground font-medium">
+                      {t("landing.contact_us.phone_label") || "PHONE"}
+                    </h4>
+                    <a href="tel:+201013767382" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
+                      +20 10 13767382
+                    </a>
+                  </div>
                 </div>
 
                 <div className="flex items-start gap-4">
@@ -360,10 +218,10 @@ export default function ContactUs() {
                   </div>
                   <div>
                     <h4 className="text-[10px] text-muted-foreground font-medium">
-                      OFFICE
+                      {t("landing.contact_us.office_label") || "OFFICE"}
                     </h4>
                     <p className="text-xs font-semibold text-foreground mt-0.5">
-                      Smart Village, Cairo, Egypt
+                      {t("landing.contact_us.office_address") || "Smart Village, Cairo, Egypt"}
                     </p>
                   </div>
                 </div>
@@ -371,10 +229,10 @@ export default function ContactUs() {
 
               <div className="border-t border-border/60 pt-4 mt-4">
                 <h5 className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold">
-                  Support Hours
+                  {t("landing.contact_us.support_hours") || "Support Hours"}
                 </h5>
                 <p className="text-[10px] text-foreground font-medium mt-0.5">
-                  Mon – Fri · 9:00 – 18:00 (GMT+2)
+                  {t("landing.contact_us.support_hours_value") || "Mon – Fri · 9:00 – 18:00 (GMT+2)"}
                 </p>
               </div>
             </div>
