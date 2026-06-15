@@ -9,6 +9,27 @@ export default function AppSelector({ applications, selectedId, onSelect }) {
         const sel = app.id === selectedId;
         const isRejected =
           app.current_stage === "rejected" || app.is_rejected === true;
+        const isOffer =
+          app.current_stage === "offer" ||
+          app.current_recruitment_stage?.stage_type === "offer";
+
+        const statusLabel = isRejected
+          ? t("app_selector.rejected")
+          : isOffer
+            ? t("app_selector.offer")
+            : t("app_selector.hired");
+
+        const statusStyle = isRejected
+          ? sel
+            ? "bg-white/20 text-white"
+            : "bg-destructive/10 text-destructive"
+          : isOffer
+            ? sel
+              ? "bg-white/20 text-white"
+              : "bg-amber-500/10 text-amber-600"
+            : sel
+              ? "bg-white/20 text-white"
+              : "bg-success/10 text-success";
 
         return (
           <button
@@ -24,19 +45,9 @@ export default function AppSelector({ applications, selectedId, onSelect }) {
               {job?.title || t("app_selector.unknown_job")}
             </span>
             <span
-              className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
-                isRejected
-                  ? sel
-                    ? "bg-white/20 text-white"
-                    : "bg-destructive/10 text-destructive"
-                  : sel
-                    ? "bg-white/20 text-white"
-                    : "bg-success/10 text-success"
-              }`}
+              className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${statusStyle}`}
             >
-              {isRejected
-                ? t("app_selector.rejected")
-                : t("app_selector.hired")}
+              {statusLabel}
             </span>
           </button>
         );

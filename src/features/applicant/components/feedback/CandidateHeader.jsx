@@ -58,6 +58,13 @@ export default function CandidateHeader({ app, percentile, percentileTag }) {
                 {t("candidate.status.hired")}
               </span>
             )}
+            {!isRejected &&
+              (app?.current_stage === "offer" ||
+                app?.current_recruitment_stage?.stage_type === "offer") && (
+              <span className="px-2.5 py-0.5 rounded-md text-xs font-bold bg-amber-500/10 text-amber-600 border border-amber-500/20">
+                {t("candidate.status.offer")}
+              </span>
+            )}
           </div>
           {candidate.headline && (
             <p className="text-sm text-muted-foreground mt-1">

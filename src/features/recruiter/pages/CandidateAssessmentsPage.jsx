@@ -85,6 +85,7 @@ function ExpandableQuestion({ question }) {
   const options = context.options || [];
   const language = context.language || null;
   const Icon = QUESTION_TYPE_ICONS[question.question_type] || FileText;
+  const { t } = useTranslation();
 
   const typeLabel =
     QUESTION_TYPE_LABELS[question.question_type] || question.question_type;
@@ -167,7 +168,7 @@ function ExpandableQuestion({ question }) {
 
             {question.question_type === "video" && (
               <div className="space-y-3">
-                {(context?.video_url || context?.recording_url) ? (
+                {context?.video_url || context?.recording_url ? (
                   <video
                     src={context.video_url || context.recording_url}
                     controls

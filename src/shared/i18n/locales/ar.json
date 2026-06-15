@@ -111,13 +111,15 @@
       "all": "كل العمليات",
       "active": "المقابلات النشطة",
       "completed": "المكتملة",
-      "rejected": "المرفوضة"
+      "rejected": "المرفوضة",
+      "offer": "عرض"
     },
 
     "buttons": {
       "start_ai_interview": "ابدأ المقابلة الذكية",
       "start_stage_interview": "ابدأ {{stage}}",
-      "view_cv": "عرض السيرة الذاتية المرفوعة"
+      "view_cv": "عرض السيرة الذاتية المرفوعة",
+      "show_feedback": "عرض التقييم"
     },
 
     "fields": {
@@ -1457,7 +1459,8 @@
   "app_selector": {
     "unknown_job": "غير معروف",
     "rejected": "مرفوض",
-    "hired": "تم التوظيف"
+    "hired": "تم التوظيف",
+    "offer": "عرض"
   },
   "applicationTimeline": {
     "title": "الجدول الزمني للتقديم",
@@ -1493,7 +1496,8 @@
   "candidate": {
     "status": {
       "rejected": "مرفوض",
-      "hired": "تم التوظيف"
+      "hired": "تم التوظيف",
+      "offer": "عرض"
     },
     "appliedFor": "تم التقديم على"
   },

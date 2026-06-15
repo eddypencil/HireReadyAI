@@ -213,15 +213,7 @@ export default function ApplicationsList({ applications }) {
               {applications.length}
             </span>
           )}
-          {showViewAll && (
-            <button
-              onClick={() => navigate("/applications")}
-              className="flex items-center gap-1 text-xs font-semibold text-primary bg-transparent border border-border rounded-lg px-3 py-1.5 cursor-pointer"
-            >
-              {t("applications.view_all")}
-              <ArrowUpRight size={12} />
-            </button>
-          )}
+
         </div>
       </div>
 

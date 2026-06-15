@@ -111,13 +111,15 @@
       "all": "All Processes",
       "active": "Active Interviews",
       "completed": "Completed",
-      "rejected": "Rejected"
+      "rejected": "Rejected",
+      "offer": "Offer"
     },
 
     "buttons": {
       "start_ai_interview": "Start AI Interview",
       "start_stage_interview": "Start {{stage}}",
-      "view_cv": "View Submitted CV"
+      "view_cv": "View Submitted CV",
+      "show_feedback": "Show Feedback"
     },
 
     "fields": {
@@ -1470,7 +1472,8 @@
   "app_selector": {
     "unknown_job": "Unknown",
     "rejected": "Rejected",
-    "hired": "Hired"
+    "hired": "Hired",
+    "offer": "Offer"
   },
   "applicationTimeline": {
     "title": "Application Timeline",
@@ -1506,7 +1509,8 @@
   "candidate": {
     "status": {
       "rejected": "Rejected",
-      "hired": "Hired"
+      "hired": "Hired",
+      "offer": "Offer"
     },
     "appliedFor": "Applied for"
   },

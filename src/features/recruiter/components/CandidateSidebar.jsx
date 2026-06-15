@@ -106,43 +106,8 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
   const evalsRaw = lastEvalStage?.application_stage_evaluations;
   const currentEval = Array.isArray(evalsRaw) ? evalsRaw[0] : evalsRaw;
 
-  const cvReviewStage = sortedStages.find(
-    (s) => s.recruitment_stages?.stage_type === "cv_review",
-  );
-  let resumeScore = null;
-  let aiMatchScore = null;
-  let hasAppScore = false;
-  const cvDimKeys = [
-    "technical_skills",
-    "experience_match",
-    "education",
-    "soft_skills",
-  ];
-  if (cvReviewStage?.ai_feedback) {
-    try {
-      const feedback = JSON.parse(cvReviewStage.ai_feedback);
-      const dims = feedback.dimension_scores;
-      if (dims) {
-        hasAppScore = "application_score" in dims;
-        const cvValues = cvDimKeys
-          .map((k) => dims[k])
-          .filter((v) => typeof v === "number");
-        if (cvValues.length === cvDimKeys.length) {
-          resumeScore = Math.round(
-            cvValues.reduce((a, b) => a + b, 0) / cvDimKeys.length,
-          );
-        }
-        const allValues = Object.values(dims).filter(
-          (v) => typeof v === "number",
-        );
-        if (allValues.length > 0) {
-          aiMatchScore = Math.round(
-            allValues.reduce((a, b) => a + b, 0) / allValues.length,
-          );
-        }
-      }
-    } catch {}
-  }
+  
+
 
   const currentStageIndex = sortedStages.findIndex(
     (s) => s.recruitment_stages?.id === candidate.currentStageId,
@@ -304,33 +269,7 @@ export default function CandidateSidebar({ candidate, onClose, onUpdate }) {
           className="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-8 bg-background/40"
         >
           {/* Top Section */}
-          <div className="flex flex-col gap-6">
-            {/* Metric Cards */}
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: false, margin: "-30px" }}
-              transition={{ duration: 0.4, delay: 0.2, ease: "easeOut" }}
-              className="flex gap-3"
-            >
-              <MetricCard
-                title={t("candidate_sidebar.metrics.resume")}
-                score={resumeScore}
-                colorClass="bg-muted-foreground/60"
-              />
-              {hasAppScore && (
-                <MetricCard
-                  title={t("candidate_sidebar.metrics.ai_match")}
-                  score={aiMatchScore}
-                  colorClass="bg-primary"
-                />
-              )}
-              <MetricCard
-                title={t("candidate_sidebar.metrics.stage")}
-                score={candidate.score}
-                colorClass="bg-accent"
-              />
-            </motion.div>
+          <div className="flex flex-col gap-6">            
 
             {/* AI Recommendation Card */}
             <motion.div

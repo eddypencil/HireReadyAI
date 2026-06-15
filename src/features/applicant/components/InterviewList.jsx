@@ -245,7 +245,7 @@ export default function InterviewList({ applications }) {
   const interviewProcesses =
     applications?.filter((app) => {
       const stageStatus = getStageStatus(app);
-      return stageStatus !== null;
+      return stageStatus !== null || app.current_recruitment_stage?.stage_type === APPLICATION_STAGE.offer;
     }) || [];
 
   // ── Empty state ──
@@ -268,7 +268,12 @@ export default function InterviewList({ applications }) {
     (app) => getStageStatus(app)?.status === "completed",
   ).length;
   const countRejected = interviewProcesses.filter(
-    (app) => app.current_stage === APPLICATION_STAGE.rejected,
+    (app) =>
+      app.is_rejected || app.current_stage === APPLICATION_STAGE.rejected,
+  ).length;
+  const countOffer = interviewProcesses.filter(
+    (app) =>
+      app.current_recruitment_stage?.stage_type === APPLICATION_STAGE.offer,
   ).length;
 
   const filteredInterviews = interviewProcesses.filter((app) => {
@@ -278,6 +283,8 @@ export default function InterviewList({ applications }) {
     if (activeTab === "completed") return stageStatus?.status === "completed";
     if (activeTab === "rejected")
       return app.current_stage === APPLICATION_STAGE.rejected;
+    if (activeTab === "offer")
+      return app.current_recruitment_stage?.stage_type === APPLICATION_STAGE.offer;
     return true;
   });
 
@@ -286,6 +293,7 @@ export default function InterviewList({ applications }) {
     { key: "interview", label: "Active Interviews", count: countInterviews },
     { key: "completed", label: "Completed", count: countCompleted },
     { key: "rejected", label: "Rejected", count: countRejected },
+    { key: "offer", label: "Offer", count: countOffer },
   ];
 
   return (
@@ -369,6 +377,9 @@ export default function InterviewList({ applications }) {
                 const type = stageStatus.stageType;
                 stageCfg = stageConfig[type] || defaultStage;
                 displayLabel = stageStatus.label;
+              } else if (app.current_recruitment_stage?.stage_type === APPLICATION_STAGE.offer) {
+                stageCfg = stageConfig[APPLICATION_STAGE.offer] || defaultStage;
+                displayLabel = t(stageCfg.labelKey);
               } else {
                 const type = app.current_stage;
                 stageCfg = stageConfig[type] || defaultStage;
@@ -438,6 +449,30 @@ export default function InterviewList({ applications }) {
                         {t("interview_list.buttons.start_stage_interview", {
                           stage: stageStatus?.label || "Interview",
                         })}
+                      </button>
+                    )}
+
+                    {app.current_recruitment_stage?.stage_type === APPLICATION_STAGE.offer && (
+                      <button
+                        onClick={() =>
+                          navigate(`/applicant/feedback?appId=${app.id}`)
+                        }
+                        className="flex items-center gap-1.5 bg-emerald-600 text-white border-none rounded-lg px-3.5 py-[7px] text-[11px] font-bold cursor-pointer whitespace-nowrap font-sans transition-opacity duration-150 hover:opacity-[0.88]"
+                      >
+                        <svg
+                          width="10"
+                          height="10"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        >
+                          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                          <polyline points="14 2 14 8 20 8" />
+                        </svg>
+                        {t("interview_list.buttons.show_feedback")}
                       </button>
                     )}
 

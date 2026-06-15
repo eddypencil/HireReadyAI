@@ -41,7 +41,7 @@ export default function ApplicantFeedbackPage() {
     supabase
       .from("applications")
       .select(
-        `id, current_stage, is_rejected, applied_at, job_postings ( id, title, companies ( id, name ) )`,
+        `id, current_stage, is_rejected, applied_at, current_recruitment_stage:recruitment_stages!current_stage_id ( stage_type ), job_postings ( id, title, companies ( id, name ) )`,
       )
       .eq("candidate_profile_id", user.id)
       .order("applied_at", { ascending: false })
@@ -51,7 +51,8 @@ export default function ApplicantFeedbackPage() {
             (a) =>
               a.current_stage === "rejected" ||
               a.is_rejected === true ||
-              a.current_stage === "hired",
+              a.current_stage === "hired" ||
+              a.current_recruitment_stage?.stage_type === "offer",
           );
           setApplications(filtered);
           const urlAppId = searchParams.get("appId");
