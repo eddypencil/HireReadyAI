@@ -329,17 +329,14 @@ export default function JDGeneratorPage({ company, profile }) {
           </h1>
         </div>
         <div className="flex items-center gap-2">
-          <button className="px-4 h-9 rounded-xl text-xs font-semibold border border-border text-muted-foreground hover:bg-secondary/40 transition bg-background cursor-pointer select-none">
-            {t("jd_generator.header.save_draft")}
-          </button>
+
           <button
             onClick={handlePublish}
             disabled={!generated || publishing}
             className={`px-4 h-9 rounded-xl text-xs font-semibold text-white flex items-center gap-1.5 transition select-none
-              ${
-                generated && !publishing
-                  ? "bg-primary hover:bg-primary-hover cursor-pointer shadow-xs"
-                  : "bg-muted text-muted-foreground/60 cursor-not-allowed border border-border/40"
+              ${generated && !publishing
+                ? "bg-primary hover:bg-primary-hover cursor-pointer shadow-xs"
+                : "bg-muted text-muted-foreground/60 cursor-not-allowed border border-border/40"
               }`}
             style={
               generated ? { boxShadow: "0 2px 12px rgba(132,0,255,0.2)" } : {}
