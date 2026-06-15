@@ -294,7 +294,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
             </motion.div>
           )}
 
-          {/* Create Company Form */}
+          {/* Create Company Form - Fixed Version */}
           {isCreating && (selectedPlan === "free" || selectedPlan === "premium") && (
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -506,6 +506,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                 </div>
                 <div className="pt-4 flex items-center justify-end gap-3 border-t border-border/60">
                   <button
+                    type="button"
                     onClick={() => {
                       setIsCreating(false);
                       setSelectedPlan(null);
@@ -522,226 +523,8 @@ export default function NoCompanyView({ onCompanyJoined }) {
                   >
                     {isSubmitting ? "Creating..." : "Create Company"}
                   </button>
-                  <h2 className="text-base font-bold text-foreground">
-                    {t("no_company_view.create.title")}
-                  </h2>
                 </div>
-                <form
-                  onSubmit={handleCreateCompany}
-                  className="p-5 space-y-3.5"
-                >
-                  <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newCompany.name}
-                      onChange={(e) =>
-                        setNewCompany({ ...newCompany, name: e.target.value })
-                      }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                      placeholder="Acme Corp"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
-                      Industry
-                    </label>
-                    <input
-                      type="text"
-                      value={newCompany.industry}
-                      onChange={(e) =>
-                        setNewCompany({
-                          ...newCompany,
-                          industry: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                      placeholder="e.g. Technology, Healthcare"
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Company Size
-                      </label>
-                      <input
-                        type="number"
-                        value={newCompany.size}
-                        onChange={(e) =>
-                          setNewCompany({ ...newCompany, size: e.target.value })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                        placeholder="Number of employees"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Location
-                      </label>
-                      <input
-                        type="text"
-                        value={newCompany.location}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            location: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                        placeholder="City, Country"
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Founded
-                      </label>
-                      <input
-                        type="date"
-                        value={newCompany.founding_date}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            founding_date: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Website
-                      </label>
-                      <input
-                        type="url"
-                        value={newCompany.website_url}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            website_url: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                        placeholder="https://example.com"
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-muted-foreground mb-1">
-                      About
-                    </label>
-                    <textarea
-                      value={newCompany.description}
-                      onChange={(e) =>
-                        setNewCompany({
-                          ...newCompany,
-                          description: e.target.value,
-                        })
-                      }
-                      rows={3}
-                      className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
-                      placeholder="Tell applicants about your company..."
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Culture
-                      </label>
-                      <textarea
-                        value={newCompany.culture}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            culture: e.target.value,
-                          })
-                        }
-                        rows={2}
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
-                        placeholder="Company values, culture..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Benefits
-                      </label>
-                      <textarea
-                        value={newCompany.benefits}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            benefits: e.target.value,
-                          })
-                        }
-                        rows={2}
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring resize-none"
-                        placeholder="Perks, benefits..."
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        LinkedIn
-                      </label>
-                      <input
-                        type="url"
-                        value={newCompany.linkedin_url}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            linkedin_url: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                        placeholder="https://linkedin.com/company/..."
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-medium text-muted-foreground mb-1">
-                        Twitter
-                      </label>
-                      <input
-                        type="url"
-                        value={newCompany.twitter_url}
-                        onChange={(e) =>
-                          setNewCompany({
-                            ...newCompany,
-                            twitter_url: e.target.value,
-                          })
-                        }
-                        className="w-full px-3 py-1.5 bg-background border border-border rounded-md text-sm focus:outline-hidden focus:ring-1 focus:ring-ring"
-                        placeholder="https://twitter.com/..."
-                      />
-                    </div>
-                  </div>
-                  <div className="pt-3 flex justify-end gap-2 border-t border-border/60 mt-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCreating(false);
-                        setSelectedPlan(null);
-                        setShowingPricing(true);
-                      }}
-                      className="px-3 py-1.5 text-xs font-medium text-muted-foreground bg-background border border-border rounded-md hover:bg-muted transition-colors cursor-pointer"
-                    >
-                      {t("avatar_modal.cancel")}
-                    </button>
-                    <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="px-3 py-1.5 bg-primary text-white rounded-md text-xs font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 cursor-pointer"
-                    >
-                      {isSubmitting
-                        ? t("no_company_view.create.buttons.creating")
-                        : t("no_company_view.create.buttons.create")}
-                    </button>
-                  </div>
-                </form>
+              </form>
             </motion.div>
           )}
 
