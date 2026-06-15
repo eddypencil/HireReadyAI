@@ -2,6 +2,9 @@
   "logout": "تسجيل الخروج",
   "dark_mode": "الوضع المظلم",
   "light_mode": "الوضع الفاتح",
+  "notifications": "الإشعارات",
+  "mark_all_read": "تحديد الكل كمقروء",
+  "no_notifications": "لا توجد إشعارات بعد",
   "nav": {
     "dashboard": "لوحة التحكم",
     "explore_jobs": "استكشف الوظائف",

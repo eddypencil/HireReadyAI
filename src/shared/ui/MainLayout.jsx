@@ -22,12 +22,19 @@ import {
   User,
   Sun,
   Moon,
+  Bell,
 } from "lucide-react";
 
 
 import { supabase } from "@/shared/services/supabase";
 import ToastNotification from "@/features/applications/components/apply/ToastNotification";
 import { useRealtimeApplicant, useRealtimeRecruiter } from "@/shared/hooks/useRealtime";
+import {
+  getNotifications,
+  getUnreadCount,
+  markAsRead,
+  markAllAsRead,
+} from "@/shared/services/notifications";
 
 export default function MainLayout() {
   const { profile, signOutUser } = useUser();
@@ -38,6 +45,11 @@ export default function MainLayout() {
   // Realtime notification state
   const [toast, setToast] = useState(null);
   const [companyId, setCompanyId] = useState(null);
+
+  // In-app notification state
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   // Auto-dismiss toast
   useEffect(() => {
@@ -62,6 +74,51 @@ export default function MainLayout() {
         });
     }
   }, [profile, isApplicant]);
+
+  // Fetch notifications on mount / when profile changes
+  useEffect(() => {
+    if (!profile?.id) return;
+    getNotifications(profile.id).then(setNotifications);
+    getUnreadCount(profile.id).then(setUnreadCount);
+  }, [profile?.id]);
+
+  // Realtime subscriptions for notifications table
+  useEffect(() => {
+    if (!profile?.id) return;
+
+    const channel = supabase
+      .channel(`notifications-${profile.id}-${Date.now()}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "INSERT",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${profile.id}`,
+        },
+        (payload) => {
+          setNotifications((prev) => [payload.new, ...prev]);
+          setUnreadCount((c) => c + 1);
+        }
+      )
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "notifications",
+          filter: `user_id=eq.${profile.id}`,
+        },
+        () => {
+          getUnreadCount(profile.id).then(setUnreadCount);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [profile?.id]);
 
   // Realtime subscriptions
   useRealtimeApplicant(isApplicant ? profile?.id : null, setToast);
@@ -188,6 +245,85 @@ export default function MainLayout() {
           </div>
 
           <div className="px-3 py-2 border-t border-white/10 mt-auto space-y-1">
+            <div className="relative">
+              <button
+                onClick={() => setShowNotifications(!showNotifications)}
+                className="w-full flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white transition-colors py-2 cursor-pointer"
+              >
+                <Bell className="w-4 h-4" />
+                {t("notifications")}
+                {unreadCount > 0 && (
+                  <span className="ml-auto bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[20px] text-center font-bold">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {showNotifications && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setShowNotifications(false)}
+                  />
+                  <div className="absolute bottom-full left-0 right-0 mb-2 bg-card border-border rounded-xl shadow-2xl border z-50 max-h-96 overflow-y-auto">
+                    <div className="sticky top-0 bg-card border-b border-border px-3 py-2 flex items-center justify-between">
+                      <span className="text-xs font-semibold text-muted-foreground">
+                        {t("notifications")}
+                      </span>
+                      {unreadCount > 0 && (
+                        <button
+                          onClick={async () => {
+                            await markAllAsRead(profile.id);
+                            setNotifications((prev) =>
+                              prev.map((n) => ({ ...n, is_read: true }))
+                            );
+                            setUnreadCount(0);
+                          }}
+                          className="text-xs text-primary hover:text-primary-hover font-medium"
+                        >
+                          {t("mark_all_read")}
+                        </button>
+                      )}
+                    </div>
+                    {notifications.length === 0 ? (
+                      <div className="px-3 py-6 text-center text-xs text-muted-foreground">
+                        {t("no_notifications")}
+                      </div>
+                    ) : (
+                      notifications.map((n) => (
+                        <button
+                          key={n.id}
+                          onClick={async () => {
+                            if (!n.is_read) {
+                              await markAsRead(n.id);
+                              setNotifications((prev) =>
+                                prev.map((nn) =>
+                                  nn.id === n.id ? { ...nn, is_read: true } : nn
+                                )
+                              );
+                              setUnreadCount((c) => Math.max(0, c - 1));
+                            }
+                          }}
+                          className={`w-full text-left px-3 py-2.5 border-b border-border last:border-0 hover:bg-muted transition-colors ${
+                            n.is_read ? "opacity-60" : ""
+                          }`}
+                        >
+                          <p className="text-sm font-semibold text-foreground">
+                            {n.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-0.5 line-clamp-3">
+                            {n.message}
+                          </p>
+                          <p className="text-xs text-muted-foreground/60 mt-1">
+                            {new Date(n.created_at).toLocaleDateString()}
+                          </p>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
             <button
               onClick={toggleTheme}
               className="w-full flex items-center gap-3 text-sm font-medium text-white/80 hover:text-white transition-colors py-2 cursor-pointer"
