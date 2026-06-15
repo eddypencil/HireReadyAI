@@ -1,14 +1,87 @@
 import { supabase } from "./supabase";
 
-/**
- * Sends a push notification by invoking the Supabase Edge Function.
- *
- * @param {Object} params
- * @param {string} params.token   - Expo push token of the recipient
- * @param {string} params.title   - Notification title
- * @param {string} params.body    - Notification body
- * @param {Object} [params.data]  - Optional payload data
- */
+export async function createInAppNotification({
+  userId,
+  title,
+  message,
+  type,
+  relatedApplicationId = null,
+  relatedJobId = null,
+}) {
+  try {
+    const { error } = await supabase.from("notifications").insert({
+      user_id: userId,
+      title,
+      message,
+      type,
+      related_application_id: relatedApplicationId,
+      related_job_id: relatedJobId,
+    });
+
+    if (error) {
+      console.warn("[Notifications] createInAppNotification error:", error.message);
+    }
+  } catch (err) {
+    console.warn("[Notifications] createInAppNotification failed:", err.message);
+  }
+}
+
+export async function getNotifications(userId, limit = 50) {
+  if (!userId) return [];
+  const { data, error } = await supabase
+    .from("notifications")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  if (error) {
+    console.warn("[Notifications] getNotifications error:", error.message);
+    return [];
+  }
+  return data || [];
+}
+
+export async function getUnreadCount(userId) {
+  if (!userId) return 0;
+  const { count, error } = await supabase
+    .from("notifications")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .eq("is_read", false);
+
+  if (error) {
+    console.warn("[Notifications] getUnreadCount error:", error.message);
+    return 0;
+  }
+  return count || 0;
+}
+
+export async function markAsRead(notificationId) {
+  const { error } = await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("id", notificationId);
+
+  if (error) {
+    console.warn("[Notifications] markAsRead error:", error.message);
+  }
+}
+
+export async function markAllAsRead(userId) {
+  const { error } = await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("user_id", userId)
+    .eq("is_read", false);
+
+  if (error) {
+    console.warn("[Notifications] markAllAsRead error:", error.message);
+  }
+}
+
+/* ── Push notification helpers (kept for mobile Expo support) ── */
+
 export async function sendPushNotification({ token, title, body, data = {} }) {
   if (!token) return;
 
@@ -25,47 +98,51 @@ export async function sendPushNotification({ token, title, body, data = {} }) {
   }
 }
 
-/**
- * Notifies a candidate when their application is moved to a new stage.
- *
- * @param {string} applicationId
- * @param {string} targetStageId
- */
 export async function notifyStageChange(applicationId, targetStageId) {
   try {
-    // 1. Fetch the application, applicant profile, and job details
     const { data: app } = await supabase
       .from("applications")
       .select(`
         candidate_profile_id,
         profiles ( expo_push_token, full_name ),
-        job_postings ( title )
+        job_postings ( id, title )
       `)
       .eq("id", applicationId)
       .single();
 
+    if (!app) return;
+
     const pushToken = app?.profiles?.expo_push_token;
     const jobTitle = app?.job_postings?.title ?? "your application";
+    const applicantId = app.candidate_profile_id;
 
-    if (!pushToken) return; // No token registered
-
-    // 2. Fetch the target stage name and type
     const { data: stage } = await supabase
       .from("recruitment_stages")
       .select("name, stage_type")
       .eq("id", targetStageId)
       .single();
 
-    if (stage) {
-      const stageMessages = {
-        shortlist: `Great news! You have been shortlisted for "${jobTitle}"`,
-        offer:     `Congratulations! You have received an offer for "${jobTitle}"`,
-      };
+    if (!stage) return;
 
-      const body =
-        stageMessages[stage.stage_type] ??
-        `Your application for "${jobTitle}" has moved to the ${stage.name} stage.`;
+    const stageMessages = {
+      shortlist: `Great news! You have been shortlisted for "${jobTitle}"`,
+      offer:     `Congratulations! You have received an offer for "${jobTitle}"`,
+    };
 
+    const body =
+      stageMessages[stage.stage_type] ??
+      `Your application for "${jobTitle}" has moved to the ${stage.name} stage.`;
+
+    await createInAppNotification({
+      userId: applicantId,
+      title: "Application Update",
+      message: body,
+      type: "stage_update",
+      relatedApplicationId: applicationId,
+      relatedJobId: app?.job_postings?.id,
+    });
+
+    if (pushToken) {
       await sendPushNotification({
         token: pushToken,
         title: "Application Update",
@@ -83,16 +160,10 @@ export async function notifyStageChange(applicationId, targetStageId) {
   }
 }
 
-/**
- * Notifies all recruiters of a company when a candidate applies to a job.
- *
- * @param {Object} application - The newly created application object
- */
 export async function notifyNewApplication(application) {
   try {
     if (!application?.id || !application?.job_id) return;
 
-    // 1. Fetch the job details and company ID
     const { data: job } = await supabase
       .from("job_postings")
       .select("title, company_id")
@@ -101,19 +172,13 @@ export async function notifyNewApplication(application) {
 
     if (!job?.company_id) return;
 
-    // 2. Fetch up to 5 recruiters associated with the company who have push tokens
     const { data: members } = await supabase
       .from("company_memberships")
-      .select(`
-        profile_id,
-        profiles ( expo_push_token )
-      `)
-      .eq("company_id", job.company_id)
-      .limit(5);
+      .select("profile_id")
+      .eq("company_id", job.company_id);
 
     if (!members || members.length === 0) return;
 
-    // 3. Fetch the applicant's name
     const { data: applicantProfile } = await supabase
       .from("profiles")
       .select("full_name")
@@ -122,20 +187,41 @@ export async function notifyNewApplication(application) {
 
     const applicantName = applicantProfile?.full_name ?? "A candidate";
 
-    // 4. Send the push notification to each recruiter with a token
     for (const member of members) {
-      const token = member.profiles?.expo_push_token;
-      if (token) {
-        sendPushNotification({
-          token,
-          title: "New Application Received",
-          body: `${applicantName} applied for "${job.title}"`,
-          data: {
-            type: "new_application",
-            application_id: application.id,
-            job_id: application.job_id,
-          },
-        });
+      await createInAppNotification({
+        userId: member.profile_id,
+        title: "New Application Received",
+        message: `${applicantName} applied for "${job.title}"`,
+        type: "new_application",
+        relatedApplicationId: application.id,
+        relatedJobId: application.job_id,
+      });
+    }
+
+    const { data: membersWithTokens } = await supabase
+      .from("company_memberships")
+      .select(`
+        profile_id,
+        profiles ( expo_push_token )
+      `)
+      .eq("company_id", job.company_id)
+      .limit(5);
+
+    if (membersWithTokens) {
+      for (const member of membersWithTokens) {
+        const token = member.profiles?.expo_push_token;
+        if (token) {
+          sendPushNotification({
+            token,
+            title: "New Application Received",
+            body: `${applicantName} applied for "${job.title}"`,
+            data: {
+              type: "new_application",
+              application_id: application.id,
+              job_id: application.job_id,
+            },
+          });
+        }
       }
     }
   } catch (err) {

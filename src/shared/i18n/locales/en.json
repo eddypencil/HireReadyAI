@@ -2,6 +2,9 @@
   "logout": "Logout",
   "dark_mode": "Dark Mode",
   "light_mode": "Light Mode",
+  "notifications": "Notifications",
+  "mark_all_read": "Mark all as read",
+  "no_notifications": "No notifications yet",
 
   "nav": {
     "dashboard": "Dashboard",
