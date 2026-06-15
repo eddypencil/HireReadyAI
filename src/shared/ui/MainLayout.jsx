@@ -27,8 +27,6 @@ import {
 
 
 import { supabase } from "@/shared/services/supabase";
-import ToastNotification from "@/features/applications/components/apply/ToastNotification";
-import { useRealtimeApplicant, useRealtimeRecruiter } from "@/shared/hooks/useRealtime";
 import {
   getNotifications,
   getUnreadCount,
@@ -42,38 +40,10 @@ export default function MainLayout() {
   const location = useLocation();
   const isApplicant = profile?.role === USER_ROLE.applicant;
 
-  // Realtime notification state
-  const [toast, setToast] = useState(null);
-  const [companyId, setCompanyId] = useState(null);
-
   // In-app notification state
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
-
-  // Auto-dismiss toast
-  useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => setToast(null), 4000);
-      return () => clearTimeout(timer);
-    }
-  }, [toast]);
-
-  // Fetch company ID for recruiters
-  useEffect(() => {
-    if (profile && !isApplicant) {
-      supabase
-        .from("company_memberships")
-        .select("company_id")
-        .eq("profile_id", profile.id)
-        .maybeSingle()
-        .then(({ data }) => {
-          if (data?.company_id) {
-            setCompanyId(data.company_id);
-          }
-        });
-    }
-  }, [profile, isApplicant]);
 
   // Fetch notifications on mount / when profile changes
   useEffect(() => {
@@ -119,10 +89,6 @@ export default function MainLayout() {
       supabase.removeChannel(channel);
     };
   }, [profile?.id]);
-
-  // Realtime subscriptions
-  useRealtimeApplicant(isApplicant ? profile?.id : null, setToast);
-  useRealtimeRecruiter(isApplicant ? null : companyId, setToast);
 
   const links = isApplicant
     ? [
@@ -189,7 +155,6 @@ export default function MainLayout() {
 
   return (
     <div className="flex h-screen bg-secondary/50 font-sans relative overflow-hidden">
-      <ToastNotification toast={toast} onDismiss={() => setToast(null)} />
       {isSidebarOpen && (
         <div
           className="fixed inset-0 bg-black/40 backdrop-blur-xs z-40 md:hidden transition-opacity duration-200"

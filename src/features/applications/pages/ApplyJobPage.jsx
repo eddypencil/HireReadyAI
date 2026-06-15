@@ -11,7 +11,6 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 import { supabase } from "@/shared/services/supabase";
 import { useTranslation } from "react-i18next";
 
-import ToastNotification from "../components/apply/ToastNotification";
 import FormHeader from "../components/apply/FormHeader";
 import PersonalInfoStep from "../components/apply/PersonalInfoStep";
 import ResumeUploadStep from "../components/apply/ResumeUploadStep";
@@ -41,17 +40,7 @@ export default function ApplyJobPage() {
     t("apply_job.steps.questions"),
   ];
   const progress = ((step + 1) / steps.length) * 100;
-  const [toast, setToast] = useState(null);
 
-  useEffect(() => {
-    if (!toast) return;
-
-    const timer = setTimeout(() => {
-      setToast(null);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, [toast]);
 
   const clearFieldError = (field) => {
     setErrors((prev) => {
@@ -175,10 +164,6 @@ export default function ApplyJobPage() {
   const handleSubmit = async () => {
     try {
       if (!validateForm()) {
-        setToast({
-          type: "error",
-          message: "Please complete all required fields",
-        });
         return;
       }
 
@@ -218,11 +203,6 @@ export default function ApplyJobPage() {
         .maybeSingle();
 
       if (existing) {
-        setToast({
-          type: "error",
-          message: "You have already applied for this job",
-        });
-
         return;
       }
       const payload = {
@@ -246,87 +226,67 @@ export default function ApplyJobPage() {
 
       triggerCvReview(application.id, cvText.trim());
 
-      setToast({
-        type: "success",
-        message: t("apply_job.toast.success"),
-      });
-
       setTimeout(() => {
         navigate("/jobs");
       }, 2000);
     } catch (err) {
       console.error(" Submit error:", err);
-      setToast({
-        type: "error",
-        message: t("apply_job.errors.something_wrong"),
-      });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <>
-      <ToastNotification toast={toast} />
+    <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
+      <div className="w-full max-w-2xl bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <FormHeader
+          title={t("apply_job.title")}
+          steps={steps}
+          currentStep={step}
+          progress={progress}
+        />
 
-      <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-2xl bg-card rounded-xl border border-border shadow-xs overflow-hidden">
-          <FormHeader
-            title={t("apply_job.title")}
-            steps={steps}
-            currentStep={step}
-            progress={progress}
-          />
+        <div className="p-5 space-y-4">
+          {step === 0 && (
+            <PersonalInfoStep
+              form={form}
+              errors={errors}
+              onChange={handleFormChange}
+              clearFieldError={clearFieldError}
+            />
+          )}
 
-          <div className="p-5 space-y-4">
-            {step === 0 && (
-              <PersonalInfoStep
-                form={form}
-                errors={errors}
-                onChange={handleFormChange}
-                clearFieldError={clearFieldError}
-              />
-            )}
+          {step === 1 && (
+            <ResumeUploadStep
+              form={form}
+              errors={errors}
+              onChange={handleFormChange}
+              clearFieldError={clearFieldError}
+            />
+          )}
 
-            {step === 1 && (
-              <ResumeUploadStep
-                form={form}
-                errors={errors}
-                onChange={handleFormChange}
-                clearFieldError={clearFieldError}
-              />
-            )}
-
-            {step === 2 && (
-              <QuestionsStep
-                questions={questions}
-                answers={form.answers}
-                errors={errors}
-                onAnswer={handleAnswer}
-              />
-            )}
-          </div>
-
-          <FormFooter
-            currentStep={step}
-            totalSteps={steps.length}
-            onBack={() => setStep(step - 1)}
-            onNext={() => {
-              const isValid = validateStep();
-              if (!isValid) {
-                setToast({
-                  type: "error",
-                  message: "Please fix errors before continuing",
-                });
-                return;
-              }
-              setStep(step + 1);
-            }}
-            onSubmit={handleSubmit}
-            loading={loading}
-          />
+          {step === 2 && (
+            <QuestionsStep
+              questions={questions}
+              answers={form.answers}
+              errors={errors}
+              onAnswer={handleAnswer}
+            />
+          )}
         </div>
+
+        <FormFooter
+          currentStep={step}
+          totalSteps={steps.length}
+          onBack={() => setStep(step - 1)}
+          onNext={() => {
+            if (!validateStep()) return;
+            setStep(step + 1);
+          }}
+          onSubmit={handleSubmit}
+          loading={loading}
+        />
       </div>
-    </>
+    </div>
   );
 }
