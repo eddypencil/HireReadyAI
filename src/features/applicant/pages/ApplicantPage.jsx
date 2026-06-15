@@ -83,7 +83,7 @@ export default function ApplicantPage() {
             </div>
           ) : (
             <>
-              {/* ── STATS ──────────────────────────────── */}
+              
               <motion.div
                 className="mb-4"
                 initial={{ opacity: 0, y: 30 }}

@@ -20,6 +20,7 @@ import {
   updateStageMinScore,
 } from "../services/candidatesPipline.service";
 import { useTranslation } from "react-i18next";
+import { useUser } from "@/features/auth/context/user.context";
 import CandidateSidebar from "../components/CandidateSidebar";
 import { supabase } from "@/shared/services/supabase";
 
@@ -431,6 +432,10 @@ const PipelineColumn = ({
 
 export default function PipelineCandidatesPage({ company, jobs = [] }) {
   const { t } = useTranslation();
+  const { user } = useUser();
+  const recruiterName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "";
+  const recruiterEmail = user?.email || "";
+  const companyName = company?.name || "";
   const [candidates, setCandidates] = useState([]);
   const [stages, setStages] = useState([]);
   const [selectedJobId, setSelectedJobId] = useState(null);
@@ -1111,6 +1116,17 @@ export default function PipelineCandidatesPage({ company, jobs = [] }) {
           candidate={selectedCandidate}
           onClose={() => setSelectedCandidate(null)}
           allStages={stages}
+          recruiterName={recruiterName}
+          recruiterEmail={recruiterEmail}
+          companyName={companyName}
+          onUpdate={(applicationId, updates) => {
+            setCandidates((prev) =>
+              prev.map((c) => c.id === applicationId ? { ...c, ...updates } : c)
+            );
+            setSelectedCandidate((prev) =>
+              prev?.id === applicationId ? { ...prev, ...updates } : prev
+            );
+          }}
         />
       )}
 

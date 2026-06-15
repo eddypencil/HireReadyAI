@@ -158,10 +158,50 @@ export default function ShortlistDetailPanel({
 
   const handleReject = async () => {
     setRejecting(true);
-    await onReject(app.id, rejectReason.trim());
-    setRejecting(false);
-    setShowRejectInput(false);
+    try {
+      //Send rejection email silently before updating DB
+      const candidateEmail = app.answers?.info?.email;
+      if (candidateEmail) {
+        const rejectionSubject = `Update on Your Application — ${companyName || 'Our Company'}`;
+        const rejectionBody = `Dear ${candidate?.full_name || 'Candidate'},
+
+        Thank you for your interest in joining ${companyName || 'our company'} and for taking the time to go through our hiring process.
+
+        After careful consideration, we have decided to move forward with other candidates whose qualifications more closely match the requirements of the role.
+        ${rejectReason ? `\nFeedback: ${rejectReason}` : ''}
+        We appreciate your effort and wish you the very best in your future endeavors.
+
+        Sincerely,
+        ${recruiterName || 'The Hiring Team'}`;
+
+        
+        supabase.functions.invoke('send-offer-email', {
+          body: {
+            to: candidateEmail,
+            fromName: recruiterName || 'Hiring Team',
+            fromEmail: recruiterEmail || '',
+            subject: rejectionSubject,
+            body: rejectionBody,
+            applicationId: app.id,
+            jobId: app.job_id,
+            action: 'reject',
+          },
+        }).catch(err => console.warn('Rejection email failed:', err));
+      }
+
+      await onReject(app.id, rejectReason.trim());
+      setShowRejectInput(false);
+    } finally {
+      setRejecting(false);
+    }
   };
+
+  // const handleReject = async () => {
+  //   setRejecting(true);
+  //   await onReject(app.id, rejectReason.trim());
+  //   setRejecting(false);
+  //   setShowRejectInput(false);
+  // };
 
   return (
     <>

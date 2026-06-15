@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 const FORMSPREE_URL = "https://formspree.io/f/mlgkwakw";
+import { supabase } from "@/shared/services/supabase";
 
 export default function ContactUs() {
   const [formData, setFormData] = useState({
@@ -25,14 +26,29 @@ export default function ContactUs() {
     setIsSubmitting(true);
     setError(null);
 
-    try {
-      const res = await fetch(FORMSPREE_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, _replyto: formData.email }),
-      });
-
-      if (!res.ok) throw new Error("Failed to send message");
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        try {
+            const { error } = await supabase.functions.invoke("send-contact-email", {
+                body: {
+                    name: formData.name,
+                    email: formData.email,
+                    company: formData.company,
+                    message: formData.message,
+                },
+            });
+            if (error) throw new Error(error.message);
+            setSubmitted(true);
+            setFormData({ name: "", email: "", company: "", message: "" });
+            setTimeout(() => setSubmitted(false), 5000);
+        } catch (err) {
+            console.error("Contact form error:", err);
+            alert("Failed to send message. Please try again or email us directly.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
       setIsSubmitting(false);
       setSubmitted(true);
@@ -197,21 +213,145 @@ export default function ContactUs() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
-                    <Phone className="w-4 h-4 text-foreground" />
-                  </div>
-                  <div>
-                    <h4 className="text-[10px] text-muted-foreground font-medium">
-                      PHONE
-                    </h4>
-                    <a
-                      href="tel:+201227541128"
-                      className="text-xs font-semibold text-foreground hover:underline mt-0.5 block"
-                    >
-                      +20 122 754 1128
-                    </a>
-                  </div>
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+                    <div className="lg:col-span-7 bg-card p-8 rounded-2xl border border-border/40 shadow-sm">
+                        <form onSubmit={handleSubmit} className="space-y-5">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-foreground" htmlFor="name">Your name</label>
+                                    <input
+                                        className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                        id="name"
+                                        type="text"
+                                        name="name"
+                                        placeholder="Jane Cooper"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-foreground" htmlFor="email">Work email</label>
+                                    <input
+                                        className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        placeholder="jane@company.com"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-foreground" htmlFor="company">Company</label>
+                                <input
+                                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                                    id="company"
+                                    type="text"
+                                    name="company"
+                                    placeholder="Acme Inc."
+                                    value={formData.company}
+                                    onChange={handleChange}
+                                />
+                            </div>
+
+                            <div className="space-y-1.5">
+                                <label className="text-xs font-bold text-foreground" htmlFor="message">Message</label>
+                                <textarea
+                                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 h-32 resize-none"
+                                    id="message"
+                                    name="message"
+                                    placeholder="Tell us a bit about what you're looking to solve..."
+                                    value={formData.message}
+                                    onChange={handleChange}
+                                    required
+                                />
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                                <p className="text-[9px] text-muted-foreground max-w-xs">
+                                    By submitting, you agree to our <a href="/privacy" className="text-primary hover:underline">Privacy Policy</a>.
+                                </p>
+                                <button
+                                    type="submit"
+                                    disabled={isSubmitting}
+                                    className="bg-foreground text-background font-bold rounded-xl px-6 py-3.5 text-xs flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-sm disabled:opacity-70"
+                                >
+                                    {isSubmitting ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 animate-spin" />
+                                            Sending...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Send className="w-4 h-4" />
+                                            Send message
+                                        </>
+                                    )}
+                                </button>
+                            </div>
+
+                            {submitted && (
+                                <div className="p-3 bg-success/10 border border-success/20 rounded-xl text-center text-xs text-success font-medium">
+                                    Your message has been sent successfully!
+                                </div>
+                            )}
+                        </form>
+                    </div>
+
+
+                    <div className="lg:col-span-5">
+                        <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm space-y-6">
+                            <div>
+                                <h3 className="text-base font-bold tracking-tight text-foreground">Contact information</h3>
+                                <p className="text-[10px] text-muted-foreground mt-1">Reach the team directly through any of the channels below.</p>
+                            </div>
+
+                            <div className="space-y-5 pt-2">
+
+                                <div className="flex items-start gap-4">
+                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                                        <Mail className="w-4 h-4 text-foreground" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[10px] text-muted-foreground font-medium">EMAIL</h4>
+                                        <a href="mailto:hello@hirereadyai.com" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
+                                            hirereadyaiplatform@gmail.com
+                                        </a>
+                                    </div>
+                                </div>
+
+
+                                <div className="flex items-start gap-4">
+                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                                        <Phone className="w-4 h-4 text-foreground" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[10px] text-muted-foreground font-medium">PHONE</h4>
+                                        <a href="tel:+201227541128" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
+                                            +20 10 13767382
+                                        </a>
+                                    </div>
+                                </div>
+
+
+                                <div className="flex items-start gap-4">
+                                    <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                                        <MapPin className="w-4 h-4 text-foreground" />
+                                    </div>
+                                    <div>
+                                        <h4 className="text-[10px] text-muted-foreground font-medium">OFFICE</h4>
+                                        <p className="text-xs font-semibold text-foreground mt-0.5">Smart Village, Cairo, Egypt</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex items-start gap-4">
