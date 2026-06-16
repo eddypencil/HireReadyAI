@@ -1047,7 +1047,27 @@
       "contactus": "اتصل بنا",
       "get_in_touch": "تواصل معنا",
       "title": "معلومات الاتصال",
-      "description": "تواصل مع الفريق مباشرة عبر أي من القنوات أدناه."
+      "description": "تواصل مع الفريق مباشرة عبر أي من القنوات أدناه.",
+      "your_name": "الاسم",
+      "work_email": "البريد الإلكتروني للعمل",
+      "company": "الشركة",
+      "message": "الرسالة",
+
+      "privacy_notice": "بإرسال هذا النموذج، فإنك توافق على",
+      "privacy_policy": "سياسة الخصوصية",
+
+      "sending": "جاري الإرسال...",
+      "send_message": "إرسال الرسالة",
+      "success_message": "تم إرسال رسالتك بنجاح!",
+
+      "email_label": "البريد الإلكتروني",
+      "phone_label": "الهاتف",
+      "office_label": "المكتب",
+
+      "office_address": "القرية الذكية، القاهرة، مصر",
+
+      "support_hours": "ساعات الدعم",
+      "support_hours_value": "من الإثنين إلى الجمعة · 9:00 ص – 6:00 م (GMT+2)"
     },
     "customers": {
       "testimonials": "شهادات العملاء",

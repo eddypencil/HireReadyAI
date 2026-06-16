@@ -1054,7 +1054,28 @@
       "contactus": "Contact Us",
       "get_in_touch": "Get in touch",
       "title": "Contact information",
-      "description": "Reach the team directly through any of the channels below."
+      "description": "Reach the team directly through any of the channels below.",
+
+      "your_name": "Your Name",
+      "work_email": "Work Email",
+      "company": "Company",
+      "message": "Message",
+
+      "privacy_notice": "By submitting, you agree to our",
+      "privacy_policy": "Privacy Policy",
+
+      "sending": "Sending...",
+      "send_message": "Send Message",
+      "success_message": "Your message has been sent successfully!",
+
+      "email_label": "EMAIL",
+      "phone_label": "PHONE",
+      "office_label": "OFFICE",
+
+      "office_address": "Smart Village, Cairo, Egypt",
+
+      "support_hours": "Support Hours",
+      "support_hours_value": "Mon – Fri · 9:00 – 18:00 (GMT+2)"
     },
     "customers": {
       "testimonials": "Testimonials",
