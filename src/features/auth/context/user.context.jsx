@@ -22,6 +22,7 @@ export const UserProvider = ({ children }) => {
     return {
       id: data.id,
       fullName: data.full_name,
+      email: data.email,
       role: data.role,
       phone: data.phone,
       isActive: data.is_active,
@@ -31,6 +32,10 @@ export const UserProvider = ({ children }) => {
       location: data.location,
       linkedin_url: data.linkedin_url,
       isPremium: data.is_premium ?? false,
+      account_status: data.account_status ?? "active",
+      frozen_until: data.frozen_until,
+      suspension_reason: data.suspension_reason,
+      severity_score: data.severity_score ?? 0,
       created_at: new Date().toISOString(),
     };
   };
@@ -38,6 +43,13 @@ export const UserProvider = ({ children }) => {
   const fetchAndSetProfile = async (userId) => {
     try {
       const userProfile = await getProfile(userId);
+      if (userProfile && !userProfile.email) {
+        const { data: { user: authUser } } = await supabase.auth.getUser();
+        if (authUser?.email) {
+          await supabase.from("profiles").update({ email: authUser.email }).eq("id", userId);
+          userProfile.email = authUser.email;
+        }
+      }
       setProfile(toUserModel(userProfile));
     } catch (err) {
       console.error("Failed to load user profile:", err.message);
@@ -72,7 +84,7 @@ export const UserProvider = ({ children }) => {
     setLoading(true);
     try {
       const registeredUser = await signUp(email, password);
-      await makeProfile(userProfile);
+      await makeProfile({ ...userProfile, email });
       await fetchAndSetProfile(registeredUser.id);
       return registeredUser;
     } catch (err) {

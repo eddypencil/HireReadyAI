@@ -17,7 +17,12 @@
     "candidate_pipeline": "خط أنابيب المرشحين",
     "jd_generator": "مولد الوصف الوظيفي",
     "add_job": "إضافة وظيفة",
-    "search_jobs": "ابحث عن وظائف حسب العنوان أو القسم..."
+    "search_jobs": "ابحث عن وظائف حسب العنوان أو القسم...",
+    "admin_dashboard": "لوحة تحكم المشرف",
+    "reports": "البلاغات",
+    "companies": "الشركات",
+    "appeals": "الاستئنافات",
+    "technical_issues": "المشكلات الفنية"
   },
 
   "applicant_dashboard": {
@@ -1799,5 +1804,98 @@
       "in_progress": "قيد التنفيذ",
       "pending": "معلق"
     }
+  },
+
+  "admin": {
+    "title": "لوحة تحكم المشرف",
+    "auth_title": "دخول المشرف",
+    "auth_subtitle": "تسجيل الدخول بحساب مشرف",
+    "sign_in": "تسجيل الدخول كمشرف",
+    "signing_in": "جارٍ تسجيل الدخول...",
+    "users": "المستخدمين",
+    "total_users": "إجمالي المستخدمين",
+    "recruiters": "المسؤولين عن التوظيف",
+    "applicants": "المتقدمين",
+    "flagged": "مميز للمراجعة",
+    "create_admin": "إنشاء مشرف",
+    "violations": "المخالفات",
+    "no_violations": "لا توجد مخالفات",
+    "actions": "الإجراءات",
+    "warn": "تحذير",
+    "freeze": "تجميد",
+    "ban": "حظر",
+    "active": "تنشيط",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "reason": "السبب",
+    "duration": "المدة",
+    "days": "أيام",
+    "hours": "ساعات",
+    "email": "البريد الإلكتروني",
+    "full_name": "الاسم الكامل",
+    "password": "كلمة المرور",
+    "creating": "جارٍ الإنشاء...",
+    "created_success": "تم إنشاء المشرف بنجاح!",
+
+    "suspended": {
+      "banned_title": "الحساب معلق",
+      "banned_desc": "تم تعليق حسابك بسبب انتهاك الشروط.",
+      "frozen_title": "الحساب مجمد",
+      "frozen_desc": "تم تجميد حسابك مؤقتًا.",
+      "time_remaining": "{{time}} متبقية",
+      "reason_label": "السبب:",
+      "contact_admin": "اتصل بالمشرف",
+      "sign_out": "تسجيل الخروج",
+      "subject": "الموضوع",
+      "message": "الرسالة",
+      "submit_report": "إرسال البلاغ",
+      "submitting": "جارٍ الإرسال...",
+      "submitted": "تم إرسال البلاغ. سنراجعه قريبًا."
+    },
+
+    "reports": {
+      "title": "البلاغات",
+      "pending": "معلق",
+      "investigating": "قيد التحقيق",
+      "resolved": "تم الحل",
+      "dismissed": "مرفوض",
+      "all_types": "جميع الأنواع",
+      "company": "شركة",
+      "user": "مستخدم",
+      "interview": "مقابلة",
+      "question": "سؤال",
+      "severity": "الخطورة",
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "critical": "حرج",
+      "target": "الهدف",
+      "reporter": "المبلغ",
+      "date": "التاريخ",
+      "resolve": "حل",
+      "dismiss": "رفض",
+      "resolution_notes": "ملاحظات الحل",
+      "action_taken": "الإجراء المتخذ",
+      "platform_issue": "مشكلة منصة (إنشاء بطاقة فنية)"
+    },
+
+    "technical_issues": {
+      "title": "المشكلات الفنية",
+      "pending": "معلق",
+      "under_development": "قيد التطوير",
+      "resolved": "تم الحل",
+      "show_resolved": "إظهار المُحلّة",
+      "hide_resolved": "إخفاء المُحلّة",
+      "issue_type": "نوع المشكلة",
+      "ai_evaluation": "تقييم الذكاء الاصطناعي",
+      "wrong_question": "سؤال خاطئ",
+      "system_bug": "خلل في النظام",
+      "ui_issue": "مشكلة واجهة",
+      "performance": "أداء",
+      "other": "أخرى",
+      "assign_to": "تعيين لـ",
+      "update_status": "تحديث الحالة"
+    }
+
   }
 }

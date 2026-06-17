@@ -23,6 +23,7 @@ import {
 } from "../services/candidateProfile.service";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import { useTranslation } from "react-i18next";
+import ReportButton from "@/features/admin/components/ReportButton";
 const QUESTION_TYPE_ICONS = {
   video: Video,
   text: FileText,
@@ -133,7 +134,7 @@ function ExpandableQuestion({ question }) {
             {question.question_text}
           </p>
         </div>
-        <div className="flex items-center gap-3 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           {answerData?.score != null && (
             <span
               className={`px-2 py-0.5 rounded-md text-xs font-bold ${
@@ -149,6 +150,12 @@ function ExpandableQuestion({ question }) {
               {Math.round(answerData.score)}
             </span>
           )}
+          <ReportButton
+            reportType="question"
+            targetId={question.id}
+            targetDetails={{ question_text: question.question_text }}
+            variant="icon"
+          />
           {expanded ? (
             <ChevronDown className="w-4 h-4 text-muted-foreground/60" />
           ) : (

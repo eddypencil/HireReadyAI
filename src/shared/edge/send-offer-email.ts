@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.208.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.45.0";
+import { SMTPClient } from "https://deno.land/x/denomailer@1.6.0/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -8,9 +9,9 @@ const corsHeaders = {
     "Content-Type, Authorization, x-client-info, apikey, x-region",
 };
 
-const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY") ?? "";
-const RESEND_FROM_EMAIL = Deno.env.get("RESEND_FROM_EMAIL") ?? "onboarding@resend.dev";
-const RESEND_FROM_NAME = Deno.env.get("RESEND_FROM_NAME") ?? "HireReadyAI";
+const GMAIL_USER = Deno.env.get("GMAIL_USER") ?? "";
+const GMAIL_APP_PASSWORD = Deno.env.get("GMAIL_APP_PASSWORD") ?? "";
+const FROM_NAME = Deno.env.get("RESEND_FROM_NAME") ?? "HireReadyAI";
 
 const EMAIL_TEMPLATE = (body: string) => `
 <!DOCTYPE html>
@@ -62,16 +63,23 @@ serve(async (req) => {
 
   const { to, fromName, fromEmail, subject, body, applicationId, jobId, action } = await req.json();
 
-  if (!to || !fromEmail || !subject || !body || !applicationId || !jobId || !action) {
+  // ── jobId is only required for 'offer' action (used to find the offer stage).
+  // For 'reject' action it is not needed, so we only validate it for offers.
+  const missingBase = !to || !fromEmail || !subject || !body || !applicationId || !action;
+  const missingJobId = action === "offer" && !jobId;
+
+  if (missingBase || missingJobId) {
     return new Response(
-      JSON.stringify({ error: "to, fromEmail, subject, body, applicationId, jobId, and action are required" }),
+      JSON.stringify({
+        error: "to, fromEmail, subject, body, applicationId, and action are required. jobId is required for offer action.",
+      }),
       { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
 
-  if (!RESEND_API_KEY) {
+  if (!GMAIL_USER || !GMAIL_APP_PASSWORD) {
     return new Response(
-      JSON.stringify({ error: "RESEND_API_KEY not configured" }),
+      JSON.stringify({ error: "GMAIL_USER / GMAIL_APP_PASSWORD not configured" }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
@@ -82,31 +90,34 @@ serve(async (req) => {
   );
 
   try {
-    const htmlBody = EMAIL_TEMPLATE(body);
+    const htmlBody = EMAIL_TEMPLATE(body.replace(/\n/g, "<br>"));
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
+    // ── Send via Gmail SMTP ───────────────────────────────────────────────
+    const client = new SMTPClient({
+      connection: {
+        hostname: "smtp.gmail.com",
+        port: 465,
+        tls: true,
+        auth: {
+          username: GMAIL_USER,
+          password: GMAIL_APP_PASSWORD,
+        },
       },
-      body: JSON.stringify({
-        from: `${RESEND_FROM_NAME} <${RESEND_FROM_EMAIL}>`,
-        reply_to: `${fromName} <${fromEmail}>`,
-        to: [to],
-        subject,
-        html: htmlBody,
-      }),
     });
 
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error(`Resend error (${res.status}): ${err}`);
-    }
+    await client.send({
+      from: `${FROM_NAME} <${GMAIL_USER}>`,
+      to: [to],
+      replyTo: `${fromName} <${fromEmail}>`,
+      subject,
+      html: htmlBody,
+    });
 
-    const emailResult = await res.json();
+    await client.close();
 
+    // ── Post-send DB actions ──────────────────────────────────────────────
     if (action === "offer") {
+      // jobId is guaranteed non-null here (validated above)
       const { data: offerStage, error: stageErr } = await supabase
         .from("recruitment_stages")
         .select("id")
@@ -139,16 +150,14 @@ serve(async (req) => {
         if (upsertErr) throw new Error(`Failed to upsert stage: ${upsertErr.message}`);
       }
     } else if (action === "reject") {
-      const { error: rejectErr } = await supabase
-        .from("applications")
-        .update({ is_rejected: true })
-        .eq("id", applicationId);
-
-      if (rejectErr) throw new Error(`Failed to reject: ${rejectErr.message}`);
+      // For reject: email already sent above, DB update is handled
+      // by the client (rejectApplication service call) so we skip it here
+      // to avoid double-updating is_rejected. The email is the only purpose
+      // of invoking this function for rejections from CandidateSidebar.
     }
 
     return new Response(
-      JSON.stringify({ success: true, id: emailResult.id }),
+      JSON.stringify({ success: true }),
       { headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (err) {

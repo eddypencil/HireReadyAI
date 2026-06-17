@@ -27,6 +27,13 @@ import PremiumCancelPage from "./features/premium/pages/PremiumCancelPage";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import TermsPage from "./features/auth/pages/TermsPage";
 import PrivacyPage from "./features/auth/pages/PrivacyPage";
+import AdminAuthPage from "@/features/admin/pages/AdminAuthPage";
+import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
+import AdminReportsPage from "@/features/admin/pages/AdminReportsPage";
+import AdminTechnicalIssuesPage from "@/features/admin/pages/AdminTechnicalIssuesPage";
+import AdminCompaniesPage from "@/features/admin/pages/AdminCompaniesPage";
+import AdminAppealsPage from "@/features/admin/pages/AdminAppealsPage";
+import AccountSuspended from "@/shared/ui/AccountSuspended";
 
 // eslint-disable-next-line no-unused-vars
 function RootRedirect() {
@@ -42,6 +49,14 @@ function RootRedirect() {
 
   if (!profile) {
     return <LandingPage />;
+  }
+
+  if (profile.account_status && profile.account_status !== "active") {
+    return <Navigate to="/suspended" replace />;
+  }
+
+  if (profile.role === USER_ROLE.admin) {
+    return <Navigate to="/admin" replace />;
   }
 
   if (profile.role === USER_ROLE.applicant) {
@@ -124,6 +139,51 @@ function App() {
         />
 
         <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/technical-issues"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminTechnicalIssuesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/companies"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminCompaniesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/appeals"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminAppealsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/recruiter"
           element={
             <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>
@@ -153,6 +213,9 @@ function App() {
         }
       />
       <Route path="/premium/cancel" element={<PremiumCancelPage />} />
+
+      <Route path="/admin/auth" element={<AdminAuthPage />} />
+      <Route path="/suspended" element={<AccountSuspended />} />
 
       <Route path="/auth/terms" element={<TermsPage />} />
       <Route path="/auth/privacy" element={<PrivacyPage />} />

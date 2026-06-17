@@ -18,7 +18,12 @@
     "candidate_pipeline": "Candidate Pipeline",
     "jd_generator": "JD Generator",
     "add_job": "Add Job",
-    "search_jobs": "Search jobs by title or department..."
+    "search_jobs": "Search jobs by title or department...",
+    "admin_dashboard": "Admin Dashboard",
+    "reports": "Reports",
+    "companies": "Companies",
+    "appeals": "Appeals",
+    "technical_issues": "Technical Issues"
   },
 
   "applicant_dashboard": {
@@ -1812,5 +1817,98 @@
       "in_progress": "In Progress",
       "pending": "Pending"
     }
+  },
+
+  "admin": {
+    "title": "Admin Dashboard",
+    "auth_title": "Admin Access",
+    "auth_subtitle": "Sign in with an admin account",
+    "sign_in": "Sign in as Admin",
+    "signing_in": "Signing in...",
+    "users": "Users",
+    "total_users": "Total Users",
+    "recruiters": "Recruiters",
+    "applicants": "Applicants",
+    "flagged": "Flagged for Review",
+    "create_admin": "Create Admin",
+    "violations": "Violations",
+    "no_violations": "No violations",
+    "actions": "Actions",
+    "warn": "Warn",
+    "freeze": "Freeze",
+    "ban": "Ban",
+    "active": "Set Active",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "reason": "Reason",
+    "duration": "Duration",
+    "days": "Days",
+    "hours": "Hours",
+    "email": "Email",
+    "full_name": "Full Name",
+    "password": "Password",
+    "creating": "Creating...",
+    "created_success": "Admin user created successfully!",
+
+    "suspended": {
+      "banned_title": "Account Suspended",
+      "banned_desc": "Your account has been suspended due to a violation of our terms.",
+      "frozen_title": "Account Frozen",
+      "frozen_desc": "Your account has been temporarily frozen.",
+      "time_remaining": "{{time}} remaining",
+      "reason_label": "Reason:",
+      "contact_admin": "Contact Admin",
+      "sign_out": "Sign Out",
+      "subject": "Subject",
+      "message": "Message",
+      "submit_report": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted. We'll review it shortly."
+    },
+
+    "reports": {
+      "title": "Reports",
+      "pending": "Pending",
+      "investigating": "Investigating",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed",
+      "all_types": "All Types",
+      "company": "Company",
+      "user": "User",
+      "interview": "Interview",
+      "question": "Question",
+      "severity": "Severity",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical",
+      "target": "Target",
+      "reporter": "Reporter",
+      "date": "Date",
+      "resolve": "Resolve",
+      "dismiss": "Dismiss",
+      "resolution_notes": "Resolution Notes",
+      "action_taken": "Action Taken",
+      "platform_issue": "Platform Issue (creates technical ticket)"
+    },
+
+    "technical_issues": {
+      "title": "Technical Issues",
+      "pending": "Pending",
+      "under_development": "Under Development",
+      "resolved": "Resolved",
+      "show_resolved": "Show Resolved",
+      "hide_resolved": "Hide Resolved",
+      "issue_type": "Issue Type",
+      "ai_evaluation": "AI Evaluation",
+      "wrong_question": "Wrong Question",
+      "system_bug": "System Bug",
+      "ui_issue": "UI Issue",
+      "performance": "Performance",
+      "other": "Other",
+      "assign_to": "Assign To",
+      "update_status": "Update Status"
+    }
+
   }
 }

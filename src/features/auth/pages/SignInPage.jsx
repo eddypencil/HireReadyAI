@@ -164,6 +164,8 @@ export default function SignInPage() {
     if (!user || !profile) return;
     if (profile.role === USER_ROLE.applicant) {
       navigate("/applicant", { replace: true });
+    } else if (profile.role === USER_ROLE.admin) {
+      navigate("/admin", { replace: true });
     } else {
       navigate("/companies", { replace: true });
     }

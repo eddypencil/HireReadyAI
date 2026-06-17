@@ -2,6 +2,48 @@ export const USER_ROLE = Object.freeze({
   applicant: "applicant",
   recruiter: "recruiter",
   hrManager: "hr_manager",
+  admin: "admin",
+});
+
+export const ACCOUNT_STATUS = Object.freeze({
+  active: "active",
+  frozen: "frozen",
+  banned: "banned",
+  flaggedForReview: "flagged_for_review",
+});
+
+export const USER_ACTION_TYPE = Object.freeze({
+  warn: "warn",
+  freeze: "freeze",
+  ban: "ban",
+  active: "active",
+});
+
+export const REPORT_TYPE = Object.freeze({
+  company: "company",
+  user: "user",
+  interview: "interview",
+  question: "question",
+});
+
+export const REPORT_SEVERITY = Object.freeze({
+  low: "low",
+  medium: "medium",
+  high: "high",
+  critical: "critical",
+});
+
+export const REPORT_STATUS = Object.freeze({
+  pending: "pending",
+  investigating: "investigating",
+  resolved: "resolved",
+  dismissed: "dismissed",
+});
+
+export const TECHNICAL_ISSUE_STATUS = Object.freeze({
+  pending: "pending",
+  underDevelopment: "under_development",
+  resolved: "resolved",
 });
 
 export const MEMBERSHIP_PERMISSION = Object.freeze({

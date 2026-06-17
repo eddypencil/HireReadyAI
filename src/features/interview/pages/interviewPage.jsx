@@ -11,6 +11,7 @@ import {
   generateNextQuestion,
 } from "../services/interview.service";
 import { useTranslation } from "react-i18next";
+import ReportButton from "@/features/admin/components/ReportButton";
 import {
   Loader2,
   ChevronLeft,
@@ -23,6 +24,7 @@ import {
   Video,
   List,
   FileText,
+  Flag,
 } from "lucide-react";
 
 const PHASE = {
@@ -315,6 +317,44 @@ export default function InterviewPage() {
             <span className="rounded-full border px-3 py-0.5 text-[11px] font-medium bg-primary/10 text-primary border-primary/20 whitespace-nowrap">
               {stageLabel}
             </span>
+            <div className="relative group">
+              <button className="size-8 rounded-lg border border-border flex items-center justify-center hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-colors text-muted-foreground cursor-pointer">
+                <Flag className="size-4" />
+              </button>
+              <div className="absolute right-0 top-full mt-1 w-48 bg-card border border-border rounded-xl shadow-2xl z-50 hidden group-hover:block">
+                <div className="py-1">
+                  {applicationStage && (
+                    <div className="px-1">
+                      <ReportButton
+                        reportType="interview"
+                        targetId={applicationStage.id}
+                        targetDetails={{ stage_name: stage?.name }}
+                        variant="text"
+                        label="Report this Interview"
+                        className="w-full text-left"
+                      />
+                    </div>
+                  )}
+                  {currentQuestion && (
+                    <div className="px-1">
+                      <ReportButton
+                        reportType="question"
+                        targetId={currentQuestion.id}
+                        targetDetails={{ question_text: currentQuestion.text }}
+                        variant="text"
+                        label="Report this Question"
+                        className="w-full text-left"
+                      />
+                    </div>
+                  )}
+                  {!applicationStage && !currentQuestion && (
+                    <p className="px-3 py-2 text-[11px] text-muted-foreground">
+                      No active content to report
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </header>

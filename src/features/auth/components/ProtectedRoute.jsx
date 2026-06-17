@@ -14,6 +14,10 @@ export function ProtectedRoute({ children, allowedRoles }) {
     return <Navigate to="/auth/sign-in" replace />;
   }
 
+  if (profile?.account_status && profile.account_status !== "active") {
+    return <Navigate to="/suspended" replace />;
+  }
+
   if (allowedRoles && profile?.role && !allowedRoles.includes(profile.role)) {
     if (profile.role === USER_ROLE.applicant) {
       return <Navigate to="/applicant" replace />;

@@ -11,6 +11,7 @@ import {
   BadgeCheck, MapPin, Calendar, Camera,
 } from "lucide-react";
 import { useUser } from "@/features/auth/context/user.context";
+import ReportButton from "@/features/admin/components/ReportButton";
 import {
   fetchApplicantProfile,
   updateApplicantProfile,
@@ -362,7 +363,7 @@ export default function ApplicantProfilePage() {
                 </div>
               )}
             </div>
-            <div>
+            <div className="flex-1">
               <h1 className="text-xl font-bold">{profile.full_name}</h1>
               {profile.headline && <p className="text-sm text-white/70 mt-0.5">{profile.headline}</p>}
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-2 text-xs text-white/60">
@@ -377,6 +378,14 @@ export default function ApplicantProfilePage() {
                 )}
               </div>
             </div>
+            {!viewingOwn && (
+              <ReportButton
+                reportType="user"
+                targetId={profile.id}
+                targetDetails={{ full_name: profile.full_name }}
+                variant="icon"
+              />
+            )}
           </div>
         </div>
 

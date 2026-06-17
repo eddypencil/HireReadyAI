@@ -24,6 +24,7 @@ import {
 } from "../services/candidateProfile.service";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import { useTranslation } from "react-i18next";
+import ReportButton from "@/features/admin/components/ReportButton";
 
 function getInitials(name = "") {
   return (
@@ -244,6 +245,14 @@ export default function CandidateProfilePage() {
                 {t("candidate_profile.show_profile")}{" "}
                 <ExternalLink className="w-3 h-3" />
               </Link>
+              <div className="ml-auto">
+                <ReportButton
+                  reportType="user"
+                  targetId={candidate.id}
+                  targetDetails={{ full_name: candidate.full_name }}
+                  variant="icon"
+                />
+              </div>
             </div>
             {candidate.headline && (
               <p className="text-sm text-muted-foreground mt-1">

@@ -8,6 +8,7 @@ import {
 import { fetchCompanyById, fetchJobsByCompanyId } from "../services/companies.service";
 import LoadingSpinner from "@/shared/ui/LoadingSpinner";
 import JobCard from "@/features/jobs/components/JobCard";
+import ReportButton from "@/features/admin/components/ReportButton";
 
 export default function PublicCompanyProfile() {
   const { id } = useParams();
@@ -105,6 +106,14 @@ export default function PublicCompanyProfile() {
                     {company.industry}
                   </span>
                 )}
+              </div>
+              <div className="ml-auto">
+                <ReportButton
+                  reportType="company"
+                  targetId={company.id}
+                  targetDetails={{ name: company.name }}
+                  variant="icon"
+                />
               </div>
             </div>
 

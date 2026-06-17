@@ -20,7 +20,8 @@ export const makeProfile = async (userProfile) => {
     full_name: userProfile.fullName,
     role: userProfile.role,
     phone: userProfile.phone,
-    is_active: userProfile.isActive
+    is_active: userProfile.isActive,
+    email: userProfile.email || null,
   }]);
 
   if (error) {

@@ -42,6 +42,7 @@ export default function GoogleRoleSelect() {
           full_name: user.user_metadata?.full_name || user.email,
           role,
           is_active: true,
+          email: user.email,
         },
       ]);
       if (profileError) throw profileError;
