@@ -1,11 +1,13 @@
 import { useState, useEffect, useRef } from "react";
 import { useUser } from "@/features/auth/context/user.context";
+import { useTranslation } from "react-i18next";
 import { getAppealMessages, sendAppealMessage, resolveAppeal } from "../services/admin.service";
 import { supabase } from "@/shared/services/supabase";
 import { Send, Loader2, Check, X } from "lucide-react";
 
 export default function AppealChat({ entityType, entity, onClose, onResolved }) {
   const { profile } = useUser();
+  const { t } = useTranslation();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(true);
@@ -77,7 +79,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
         entityId: entity.id,
         adminId: profile?.id,
         approved,
-        adminNote: approved ? "Appeal approved. Account reinstated." : "Appeal rejected.",
+        adminNote: approved ? t("admin.appeals.approved_note") : t("admin.appeals.rejected_note"),
       });
       onResolved?.();
     } catch (err) {
@@ -89,13 +91,13 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
-          <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col shadow-sm">
+      <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-2xl mx-4 max-h-[85vh] flex flex-col shadow-sm">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
           <div>
             <h3 className="text-sm font-bold text-foreground">{displayName}</h3>
             <p className="text-[10px] text-muted-foreground capitalize">
-              {entityType} appeal — {entity.suspension_reason || "No reason provided"}
+              {entityType} — {entity.suspension_reason || t("admin.appeals.no_reason")}
             </p>
           </div>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer">
@@ -110,7 +112,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
               <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
             </div>
           ) : messages.length === 0 ? (
-            <p className="text-xs text-muted-foreground text-center py-8">No messages yet</p>
+            <p className="text-xs text-muted-foreground text-center py-8">{t("admin.appeals.no_messages")}</p>
           ) : (
             messages.map((msg) => {
               const isAdmin = msg.sender_id === profile?.id;
@@ -125,7 +127,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
                     }`}
                   >
                     <p className="font-semibold text-[10px] opacity-70 mb-0.5">
-                      {isAdmin ? "Admin" : displayName}
+                      {isAdmin ? t("admin.appeals.you") : displayName}
                     </p>
                     <p>{msg.message}</p>
                     <p className="text-[9px] opacity-50 mt-1">
@@ -146,7 +148,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type a message..."
+              placeholder={t("admin.appeals.message_placeholder")}
               className="flex-1 bg-background border border-border rounded-xl px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
             />
             <button
@@ -166,7 +168,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
               className="flex-1 h-9 rounded-xl text-xs font-semibold bg-success text-white hover:bg-success/90 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Check className="w-3.5 h-3.5" />
-              Approve Appeal
+              {t("admin.appeals.approve")}
             </button>
             <button
               type="button"
@@ -174,7 +176,7 @@ export default function AppealChat({ entityType, entity, onClose, onResolved }) 
               className="flex-1 h-9 rounded-xl text-xs font-semibold bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
-              Reject
+              {t("admin.appeals.reject")}
             </button>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@/features/auth/context/user.context";
+import { useTranslation } from "react-i18next";
 import {
   getAllCompaniesWithStats,
   applyCompanyAction,
@@ -18,6 +19,7 @@ const statusColors = {
 
 export default function AdminCompaniesPage() {
   const { profile } = useUser();
+  const { t } = useTranslation();
   const [companies, setCompanies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -68,16 +70,16 @@ export default function AdminCompaniesPage() {
   );
 
   const statusLabel = (status) => {
-    if (status === "closing_warning") return "Closing";
+    if (status === "closing_warning") return t("admin.companies.closing_label");
     return status || "active";
   };
 
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Companies</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("admin.companies.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Manage companies and apply actions
+          {t("admin.companies.subtitle")}
         </p>
       </div>
 
@@ -87,25 +89,25 @@ export default function AdminCompaniesPage() {
           <p className="text-2xl font-bold text-foreground">
             {loading ? "..." : stats.total}
           </p>
-          <p className="text-xs text-muted-foreground">Total Companies</p>
+          <p className="text-xs text-muted-foreground">{t("admin.companies.total")}</p>
         </div>
         <div className="bg-card rounded-xl border border-border p-4">
           <p className="text-2xl font-bold text-success">
             {loading ? "..." : stats.active}
           </p>
-          <p className="text-xs text-muted-foreground">Active</p>
+          <p className="text-xs text-muted-foreground">{t("admin.companies.active")}</p>
         </div>
         <div className="bg-card rounded-xl border border-border p-4">
           <p className="text-2xl font-bold text-warning">
             {loading ? "..." : stats.closing}
           </p>
-          <p className="text-xs text-muted-foreground">Closing Warning</p>
+          <p className="text-xs text-muted-foreground">{t("admin.companies.closing_warning")}</p>
         </div>
         <div className="bg-card rounded-xl border border-border p-4">
           <p className="text-2xl font-bold text-destructive">
             {loading ? "..." : stats.banned}
           </p>
-          <p className="text-xs text-muted-foreground">Banned</p>
+          <p className="text-xs text-muted-foreground">{t("admin.companies.banned")}</p>
         </div>
       </div>
 
@@ -116,7 +118,7 @@ export default function AdminCompaniesPage() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search companies..."
+          placeholder={t("admin.companies.search_placeholder")}
           className="w-full bg-card border border-border rounded-xl pl-10 pr-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
@@ -127,8 +129,8 @@ export default function AdminCompaniesPage() {
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
         </div>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-muted-foreground text-center py-12">
-          No companies found
+          <p className="text-sm text-muted-foreground text-center py-12">
+          {t("admin.companies.no_results")}
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -163,10 +165,10 @@ export default function AdminCompaniesPage() {
                       )}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {c.activeJobs}/{c.totalJobs} jobs
+                      {t("admin.companies.jobs_count", { active: c.activeJobs, total: c.totalJobs })}
                     </span>
                     <span className="text-[10px] text-muted-foreground">
-                      {c.memberCount} members
+                      {t("admin.companies.members_count", { count: c.memberCount })}
                     </span>
                   </div>
                 </div>
@@ -188,7 +190,7 @@ export default function AdminCompaniesPage() {
           >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-foreground">
-                Company Details
+                {t("admin.companies.details_title")}
               </h3>
               <button
                 onClick={() => setSelected(null)}
@@ -217,9 +219,7 @@ export default function AdminCompaniesPage() {
                   {statusLabel(selected.account_status)}
                   {selected.closing_deadline && (
                     <span className="ml-0.5 opacity-70">
-                      (by{" "}
-                      {new Date(selected.closing_deadline).toLocaleDateString()}
-                      )
+                      {t("admin.companies.deadline", { date: new Date(selected.closing_deadline).toLocaleDateString() })}
                     </span>
                   )}
                 </span>
@@ -231,19 +231,19 @@ export default function AdminCompaniesPage() {
                 <p className="font-bold text-foreground text-sm">
                   {selected.activeJobs}
                 </p>
-                <p>Active Jobs</p>
+                <p>{t("admin.companies.active_jobs")}</p>
               </div>
               <div className="bg-surface rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground text-center">
                 <p className="font-bold text-foreground text-sm">
                   {selected.totalJobs}
                 </p>
-                <p>Total Jobs</p>
+                <p>{t("admin.companies.total_jobs")}</p>
               </div>
               <div className="bg-surface rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground text-center">
                 <p className="font-bold text-foreground text-sm">
                   {selected.memberCount}
                 </p>
-                <p>Members</p>
+                <p>{t("admin.companies.members")}</p>
               </div>
               <div className="bg-surface rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground text-center">
                 <p
@@ -255,7 +255,7 @@ export default function AdminCompaniesPage() {
                 >
                   {selected.severity_score ?? 0}
                 </p>
-                <p>Score</p>
+                <p>{t("admin.companies.score")}</p>
               </div>
             </div>
 
@@ -269,7 +269,7 @@ export default function AdminCompaniesPage() {
                 className="h-9 rounded-xl text-xs font-semibold bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <AlertTriangle className="w-3.5 h-3.5" />
-                Warn
+                {t("admin.companies.warn")}
               </button>
               <button
                 onClick={() => {
@@ -280,7 +280,7 @@ export default function AdminCompaniesPage() {
                 className="h-9 rounded-xl text-xs font-semibold bg-orange-500/10 text-orange-500 border border-orange-500/20 hover:bg-orange-500/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <ShieldAlert className="w-3.5 h-3.5" />
-                Close
+                {t("admin.companies.close")}
               </button>
               <button
                 onClick={() => {
@@ -291,7 +291,7 @@ export default function AdminCompaniesPage() {
                 className="h-9 rounded-xl text-xs font-semibold bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Ban className="w-3.5 h-3.5" />
-                Ban
+                {t("admin.companies.ban")}
               </button>
               {selected.account_status !== "active" && (
                 <button
@@ -303,7 +303,7 @@ export default function AdminCompaniesPage() {
                   className="h-9 rounded-xl text-xs font-semibold bg-success/10 text-success border border-success/20 hover:bg-success/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <ShieldAlert className="w-3.5 h-3.5" />
-                  Active
+                  {t("admin.companies.restore")}
                 </button>
               )}
             </div>

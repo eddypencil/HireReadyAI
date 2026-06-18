@@ -1,14 +1,16 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { X, Loader2, ShieldAlert } from "lucide-react";
 
 const actionOptions = [
-  { value: "warn", label: "Warn" },
-  { value: "closing_warning", label: "Schedule Closure (7 days)" },
-  { value: "ban", label: "Ban" },
-  { value: "active", label: "Set Active" },
+  { value: "warn", labelKey: "admin.companies.warn" },
+  { value: "closing_warning", labelKey: "admin.companies.close" },
+  { value: "ban", labelKey: "admin.companies.ban" },
+  { value: "active", labelKey: "admin.companies.restore" },
 ];
 
 export default function CompanyActionDialog({ company, onClose, onApply, initialActionType = "" }) {
+  const { t } = useTranslation();
   const [actionType, setActionType] = useState(initialActionType);
   const [reason, setReason] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -33,7 +35,7 @@ export default function CompanyActionDialog({ company, onClose, onApply, initial
         <div className="flex items-center justify-between p-4 border-b border-border">
           <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
             <ShieldAlert className="w-4 h-4" />
-            Company Action — {company?.name}
+            {t("admin.company_action.title", { name: company?.name })}
           </h3>
           <button onClick={onClose} className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer">
             <X className="w-4 h-4" />
@@ -42,43 +44,43 @@ export default function CompanyActionDialog({ company, onClose, onApply, initial
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Action Type</label>
+            <label className="text-xs font-semibold text-foreground">{t("admin.company_action.action_type")}</label>
             <select
               value={actionType}
               onChange={(e) => setActionType(e.target.value)}
               required
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
             >
-              <option value="">Select action...</option>
+              <option value="">{t("admin.company_action.select_action")}</option>
               {actionOptions.map((opt) => (
                 <option key={opt.value} value={opt.value}>
-                  {opt.label}
+                  {t(opt.labelKey)}
                 </option>
               ))}
             </select>
             {actionType === "closing_warning" && (
               <p className="text-[10px] text-warning">
-                Sets closing_deadline = now + 7 days. Company members will see a warning banner.
+                {t("admin.company_action.closing_hint")}
               </p>
             )}
             {actionType === "ban" && (
               <p className="text-[10px] text-destructive">
-                Immediately bans the company and closes all active job postings.
+                {t("admin.company_action.ban_hint")}
               </p>
             )}
             {actionType === "active" && (
               <p className="text-[10px] text-success">
-                Reinstates the company to active status and clears warning/ban state.
+                {t("admin.company_action.active_hint")}
               </p>
             )}
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Reason</label>
+            <label className="text-xs font-semibold text-foreground">{t("admin.reason")}</label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="Reason for this action..."
+              placeholder={t("admin.company_action.reason_placeholder")}
               rows={3}
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
             />
@@ -90,7 +92,7 @@ export default function CompanyActionDialog({ company, onClose, onApply, initial
               onClick={onClose}
               className="flex-1 h-10 rounded-xl text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer"
             >
-              Cancel
+              {t("admin.company_action.cancel")}
             </button>
             <button
               type="submit"
@@ -102,7 +104,7 @@ export default function CompanyActionDialog({ company, onClose, onApply, initial
               ) : (
                 <ShieldAlert className="w-3.5 h-3.5" />
               )}
-              {submitting ? "Applying..." : "Apply"}
+              {submitting ? t("admin.company_action.applying") : t("admin.company_action.apply")}
             </button>
           </div>
         </form>

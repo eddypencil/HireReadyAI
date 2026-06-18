@@ -34,7 +34,9 @@ export default function SignUpPage() {
       sessionStorage.removeItem("sign_up_email");
       sessionStorage.removeItem("sign_up_phone");
 
-      if (profile.role === USER_ROLE.recruiter) {
+      if (profile.role === USER_ROLE.admin) {
+        navigate("/admin");
+      } else if (profile.role === USER_ROLE.recruiter || profile.role === USER_ROLE.hrManager) {
         navigate("/companies");
       } else {
         navigate("/applicant");

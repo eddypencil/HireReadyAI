@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { getPendingAppeals } from "../services/admin.service";
+import { useTranslation } from "react-i18next";
+import { getPendingAppeals, getResolvedAppeals } from "../services/admin.service";
 import { supabase } from "@/shared/services/supabase";
 import AppealChat from "../components/AppealChat";
-import { MessageCircle, Loader2 } from "lucide-react";
+import { MessageCircle, Loader2, Clock } from "lucide-react";
 
 const statusColors = {
   pending_review: "bg-warning/10 text-warning border-warning/20",
@@ -11,9 +12,12 @@ const statusColors = {
 };
 
 export default function AdminAppealsPage() {
+  const { t } = useTranslation();
   const [tab, setTab] = useState("users");
+  const [view, setView] = useState("pending"); // "pending" | "history"
   const [users, setUsers] = useState([]);
   const [companies, setCompanies] = useState([]);
+  const [historyData, setHistoryData] = useState({ users: [], companies: [] });
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState(null);
 
@@ -29,6 +33,26 @@ export default function AdminAppealsPage() {
       setLoading(false);
     }
   };
+
+  const loadHistory = async () => {
+    setLoading(true);
+    try {
+      const data = await getResolvedAppeals();
+      setHistoryData(data);
+    } catch (err) {
+      console.error("Failed to load appeal history:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (view === "pending") {
+      loadAppeals();
+    } else {
+      loadHistory();
+    }
+  }, [view]);
 
   useEffect(() => {
     loadAppeals();
@@ -62,46 +86,113 @@ export default function AdminAppealsPage() {
     };
   }, []);
 
-  const list = tab === "users" ? users : companies;
+  const list = view === "history"
+    ? (tab === "users" ? historyData.users : historyData.companies)
+    : (tab === "users" ? users : companies);
 
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Appeals</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("admin.appeals.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Review and respond to ban appeals and company closure appeals
+          {t("admin.appeals.subtitle")}
         </p>
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <button
           onClick={() => {
+            setView("pending");
             setTab("users");
             setSelected(null);
           }}
           className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
-            tab === "users"
+            view === "pending"
               ? "bg-primary/10 border-primary/30 text-primary"
               : "bg-background border-border text-muted-foreground hover:border-primary/30"
           }`}
         >
-          User Appeals {users.length > 0 && `(${users.length})`}
+          {t("admin.appeals.pending_tab")} {users.length + companies.length > 0 && `(${users.length + companies.length})`}
         </button>
         <button
           onClick={() => {
-            setTab("companies");
+            setView("history");
+            setTab("users");
             setSelected(null);
           }}
-          className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
-            tab === "companies"
+          className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer flex items-center gap-1.5 ${
+            view === "history"
               ? "bg-primary/10 border-primary/30 text-primary"
               : "bg-background border-border text-muted-foreground hover:border-primary/30"
           }`}
         >
-          Company Appeals {companies.length > 0 && `(${companies.length})`}
+          <Clock className="w-3 h-3" />
+          {t("admin.appeals.history_tab")}
         </button>
       </div>
+
+      {view === "pending" && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setTab("users");
+              setSelected(null);
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+              tab === "users"
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/30"
+            }`}
+          >
+            {t("admin.appeals.user_appeals")} {users.length > 0 && `(${users.length})`}
+          </button>
+          <button
+            onClick={() => {
+              setTab("companies");
+              setSelected(null);
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+              tab === "companies"
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/30"
+            }`}
+          >
+            {t("admin.appeals.company_appeals")} {companies.length > 0 && `(${companies.length})`}
+          </button>
+        </div>
+      )}
+
+      {view === "history" && (
+        <div className="flex gap-2">
+          <button
+            onClick={() => {
+              setTab("users");
+              setSelected(null);
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+              tab === "users"
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/30"
+            }`}
+          >
+            {t("admin.appeals.user_appeals")} {historyData.users.length > 0 && `(${historyData.users.length})`}
+          </button>
+          <button
+            onClick={() => {
+              setTab("companies");
+              setSelected(null);
+            }}
+            className={`px-4 py-2 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
+              tab === "companies"
+                ? "bg-primary/10 border-primary/30 text-primary"
+                : "bg-background border-border text-muted-foreground hover:border-primary/30"
+            }`}
+          >
+            {t("admin.appeals.company_appeals")} {historyData.companies.length > 0 && `(${historyData.companies.length})`}
+          </button>
+        </div>
+      )}
 
       {/* List */}
       {loading ? (
@@ -111,7 +202,7 @@ export default function AdminAppealsPage() {
       ) : list.length === 0 ? (
         <div className="text-center py-12">
           <MessageCircle className="w-8 h-8 text-muted-foreground mx-auto mb-2 opacity-40" />
-          <p className="text-sm text-muted-foreground">No pending appeals</p>
+          <p className="text-sm text-muted-foreground">{t("admin.appeals.no_pending")}</p>
         </div>
       ) : (
         <div className="space-y-2">
@@ -127,7 +218,7 @@ export default function AdminAppealsPage() {
                     entity: item,
                   })
                 }
-                className="w-full text-left bg-card rounded-xl border border-border shadow-sm p-4 hover:shadow-md transition-all cursor-pointer"
+                className="w-full text-start bg-card rounded-xl border border-border shadow-sm p-4 hover:shadow-md transition-all cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div className="flex-1 min-w-0">
@@ -136,26 +227,26 @@ export default function AdminAppealsPage() {
                         {displayName}
                       </span>
                       <span
-                        className={`px-2 py-0.5 rounded text-[10px] font-bold border ${statusColors.pending_review}`}
+                        className={`px-2 py-0.5 rounded text-[10px] font-bold border ${statusColors[item.appeal_status] || statusColors.pending_review}`}
                       >
                         {item.appeal_status}
                       </span>
                     </div>
                     {item.suspension_reason && (
                       <p className="text-xs text-muted-foreground line-clamp-1">
-                        Reason: {item.suspension_reason}
+                        {t("admin.appeals.reason", { reason: item.suspension_reason })}
                       </p>
                     )}
                     {item.appeal_message && (
                       <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
-                        Appeal: {item.appeal_message}
+                        {t("admin.appeals.appeal_text", { message: item.appeal_message })}
                       </p>
                     )}
                   </div>
-                  <div className="text-right shrink-0">
+                  <div className="text-end shrink-0">
                     {deadline && (
                       <p className="text-[10px] text-muted-foreground">
-                        Deadline: {new Date(deadline).toLocaleDateString()}
+                        {t("admin.appeals.deadline", { date: new Date(deadline).toLocaleDateString() })}
                       </p>
                     )}
                     <p className="text-[10px] text-muted-foreground mt-0.5">

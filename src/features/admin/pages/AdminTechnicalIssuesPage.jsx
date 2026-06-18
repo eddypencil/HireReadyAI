@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@/features/auth/context/user.context";
+import { useTranslation } from "react-i18next";
 import { getTechnicalIssues, updateTechnicalIssueStatus } from "../services/admin.service";
 import { X, Loader2, Bug } from "lucide-react";
 
@@ -12,21 +13,22 @@ const severityColors = {
 
 const statusColors = {
   pending: "bg-muted text-muted-foreground border-border",
-  under_development: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+  in_progress: "bg-blue-500/10 text-blue-500 border-blue-500/20",
   resolved: "bg-success/10 text-success border-success/20",
-};
-
-const typeLabels = {
-  ai_evaluation: "AI Evaluation",
-  wrong_question: "Wrong Question",
-  system_bug: "System Bug",
-  ui_issue: "UI Issue",
-  performance: "Performance",
-  other: "Other",
 };
 
 export default function AdminTechnicalIssuesPage() {
   const { profile } = useUser();
+  const { t } = useTranslation();
+
+  const typeLabels = {
+    ai_evaluation: t("admin.technical_issues.ai_evaluation"),
+    wrong_question: t("admin.technical_issues.wrong_question"),
+    system_bug: t("admin.technical_issues.system_bug"),
+    ui_issue: t("admin.technical_issues.ui_issue"),
+    performance: t("admin.technical_issues.performance"),
+    other: t("admin.technical_issues.other"),
+  };
   const [issues, setIssues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showResolved, setShowResolved] = useState(false);
@@ -79,15 +81,15 @@ export default function AdminTechnicalIssuesPage() {
   return (
     <div className="min-h-screen bg-background p-6 space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Technical Issues</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("admin.technical_issues.title")}</h1>
         <p className="text-sm text-muted-foreground mt-1">
-          Platform bugs, AI evaluation errors, and system issues
+          {t("admin.technical_issues.subtitle")}
         </p>
       </div>
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3">
-        {["", "pending", "under_development", "resolved"].map((s) => (
+        {["", "pending", "in_progress", "resolved"].map((s) => (
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
@@ -97,7 +99,7 @@ export default function AdminTechnicalIssuesPage() {
                 : "bg-background border-border text-muted-foreground hover:border-primary/30"
             }`}
           >
-            {s.replace("_", " ") || "All"}
+            {s ? t(`admin.technical_issues.${s}`) : t("admin.technical_issues.all")}
           </button>
         ))}
         <div className="w-px h-6 bg-border" />
@@ -109,7 +111,7 @@ export default function AdminTechnicalIssuesPage() {
               : "bg-background border-border text-muted-foreground hover:border-success/30"
           }`}
         >
-          {showResolved ? "Hide Resolved" : "Show Resolved"}
+          {showResolved ? t("admin.technical_issues.hide_resolved") : t("admin.technical_issues.show_resolved")}
         </button>
       </div>
 
@@ -117,11 +119,11 @@ export default function AdminTechnicalIssuesPage() {
       <div className="space-y-2">
         {loading ? (
           <p className="text-sm text-muted-foreground text-center py-8">
-            Loading...
+            {t("admin.technical_issues.loading")}
           </p>
         ) : filtered.length === 0 ? (
           <p className="text-sm text-muted-foreground text-center py-8">
-            No issues found
+            {t("admin.technical_issues.empty")}
           </p>
         ) : (
           filtered.map((issue) => (
@@ -132,7 +134,7 @@ export default function AdminTechnicalIssuesPage() {
                 setEditStatus(issue.status);
                 setEditNotes(issue.resolution_notes || "");
               }}
-              className={`w-full text-left bg-card rounded-xl border p-4 transition-all hover:shadow-sm cursor-pointer ${
+              className={`w-full text-start bg-card rounded-xl border p-4 transition-all hover:shadow-sm cursor-pointer ${
                 selected?.id === issue.id
                   ? "border-primary ring-1 ring-primary/30"
                   : "border-border"
@@ -149,14 +151,14 @@ export default function AdminTechnicalIssuesPage() {
                         severityColors[issue.severity] || severityColors.medium
                       }`}
                     >
-                      {issue.severity}
+                      {t("admin.reports." + issue.severity)}
                     </span>
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold border ${
                         statusColors[issue.status] || statusColors.pending
                       }`}
                     >
-                      {issue.status.replace("_", " ")}
+                      {t("admin.technical_issues." + issue.status)}
                     </span>
                   </div>
                   <p className="text-sm font-semibold text-foreground truncate">
@@ -183,7 +185,7 @@ export default function AdminTechnicalIssuesPage() {
               <div className="flex items-center gap-2">
                 <Bug className="w-4 h-4 text-destructive" />
                 <h3 className="text-sm font-bold text-foreground">
-                  Edit Issue
+                  {t("admin.technical_issues.edit_title")}
                 </h3>
               </div>
               <button
@@ -206,29 +208,29 @@ export default function AdminTechnicalIssuesPage() {
 
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
-                  Status
+                  {t("admin.technical_issues.status_label")}
                 </label>
                 <select
                   value={editStatus}
                   onChange={(e) => setEditStatus(e.target.value)}
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
                 >
-                  <option value="pending">Pending</option>
-                  <option value="under_development">Under Development</option>
-                  <option value="resolved">Resolved</option>
+                  <option value="pending">{t("admin.technical_issues.pending")}</option>
+                  <option value="in_progress">{t("admin.technical_issues.in_progress")}</option>
+                  <option value="resolved">{t("admin.technical_issues.resolved")}</option>
                 </select>
               </div>
 
               <div className="space-y-1.5">
                 <label className="text-xs font-semibold text-foreground">
-                  Resolution Notes
+                  {t("admin.reports.resolution_notes")}
                 </label>
                 <textarea
                   value={editNotes}
                   onChange={(e) => setEditNotes(e.target.value)}
                   rows={4}
                   className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
-                  placeholder="Notes on how this was resolved..."
+                  placeholder={t("admin.technical_issues.resolution_notes_placeholder")}
                 />
               </div>
 
@@ -237,7 +239,7 @@ export default function AdminTechnicalIssuesPage() {
                   onClick={() => setSelected(null)}
                   className="flex-1 h-10 rounded-xl text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer"
                 >
-                  Cancel
+                  {t("admin.technical_issues.cancel")}
                 </button>
                 <button
                   onClick={handleSave}
@@ -245,7 +247,7 @@ export default function AdminTechnicalIssuesPage() {
                   className="flex-1 h-10 rounded-xl text-xs font-semibold text-white bg-primary hover:bg-primary-hover transition-colors disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {saving && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-                  {saving ? "Saving..." : "Save"}
+                  {saving ? t("admin.technical_issues.saving") : t("admin.technical_issues.save")}
                 </button>
               </div>
             </div>

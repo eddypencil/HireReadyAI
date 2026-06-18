@@ -1,5 +1,22 @@
 import { supabase } from "@/shared/services/supabase";
-import { createInAppNotification } from "@/shared/services/notifications";
+import { createInAppNotification, sendPushNotification } from "@/shared/services/notifications";
+
+async function notifyAdmins(title, body, data = {}) {
+  const { data: admins } = await supabase
+    .from("profiles")
+    .select("expo_push_token")
+    .eq("role", "admin")
+    .not("expo_push_token", "is", null);
+  if (admins) {
+    const seenTokens = new Set();
+    for (const a of admins) {
+      if (!seenTokens.has(a.expo_push_token)) {
+        seenTokens.add(a.expo_push_token);
+        sendPushNotification({ token: a.expo_push_token, title, body, data });
+      }
+    }
+  }
+}
 
 export const getUserCountsByRole = async () => {
   const { data, error } = await supabase
@@ -134,11 +151,11 @@ export const applyUserAction = async ({
     .insert([action]);
   if (actionError) throw actionError;
 
-  // Email for warn / ban / freeze / active
+  // Email + push for warn / ban / freeze / active
   if (["warn", "ban", "freeze", "active"].includes(actionType)) {
     const { data: userProfile } = await supabase
       .from("profiles")
-      .select("full_name, email")
+      .select("full_name, email, expo_push_token")
       .eq("id", userId)
       .single();
 
@@ -150,6 +167,15 @@ export const applyUserAction = async ({
         body: `Dear ${userProfile?.full_name || "User"},\n\nYour account has been ${labels[actionType].toLowerCase()}.${reason ? `\nReason: ${reason}` : ""}${actionType === "ban" ? "\nYou have 7 days to submit an appeal." : ""}${actionType === "freeze" && durationDays ? `\nDuration: ${durationDays} day(s)` : ""}`,
       },
     }).catch(err => console.warn("Admin email failed:", err));
+
+    if (userProfile?.expo_push_token) {
+      sendPushNotification({
+        token: userProfile.expo_push_token,
+        title: `Account ${labels[actionType]}`,
+        body: `Your account has been ${labels[actionType].toLowerCase()}.${reason ? ` Reason: ${reason}` : ""}${actionType === "ban" ? " You have 7 days to submit an appeal." : ""}${actionType === "freeze" && durationDays ? ` Duration: ${durationDays} day(s).` : ""}`,
+        data: { type: "admin_action", actionType },
+      });
+    }
   }
 };
 
@@ -213,7 +239,25 @@ export const getReports = async (filters = {}) => {
 
   const { data, error } = await query.order("created_at", { ascending: false });
   if (error) throw error;
-  return data;
+  if (!data) return data;
+
+  const userIds = data.filter((r) => r.report_type === "user").map((r) => r.target_id);
+  const companyIds = data.filter((r) => r.report_type === "company").map((r) => r.target_id);
+
+  const [profilesResult, companiesResult] = await Promise.all([
+    userIds.length ? supabase.from("profiles").select("id, full_name").in("id", userIds) : { data: [] },
+    companyIds.length ? supabase.from("companies").select("id, name").in("id", companyIds) : { data: [] },
+  ]);
+
+  const profileMap = Object.fromEntries((profilesResult.data || []).map((p) => [p.id, p]));
+  const companyMap = Object.fromEntries((companiesResult.data || []).map((c) => [c.id, c]));
+
+  return data.map((r) => {
+    let targetDetails = null;
+    if (r.report_type === "user") targetDetails = profileMap[r.target_id] || null;
+    else if (r.report_type === "company") targetDetails = companyMap[r.target_id] || null;
+    return { ...r, target_details: targetDetails };
+  });
 };
 
 export const getReportById = async (id) => {
@@ -434,13 +478,30 @@ export const applyCompanyAction = async ({
         ? `Your company (${company?.name}) has been scheduled for closure in 7 days. Contact support to resolve this.`
         : `Your company (${company?.name}) has received a warning from the admin team.${reason ? ` Reason: ${reason}` : ""}`;
 
-      for (const member of members) {
+      const uniqueMemberIds = [...new Set(members.map((m) => m.profile_id))];
+
+      for (const userId of uniqueMemberIds) {
         await createInAppNotification({
-          userId: member.profile_id,
+          userId,
           title,
           message: msg,
           type: "admin_action",
         });
+      }
+
+      const { data: memberProfiles } = await supabase
+        .from("profiles")
+        .select("expo_push_token")
+        .in("id", uniqueMemberIds)
+        .not("expo_push_token", "is", null);
+      if (memberProfiles) {
+        const seenTokens = new Set();
+        for (const mp of memberProfiles) {
+          if (!seenTokens.has(mp.expo_push_token)) {
+            seenTokens.add(mp.expo_push_token);
+            sendPushNotification({ token: mp.expo_push_token, title, body: msg, data: { type: "admin_action", actionType } });
+          }
+        }
       }
     }
   }
@@ -456,8 +517,8 @@ export const applyCompanyAction = async ({
     .insert([action]);
   if (actionError) throw actionError;
 
-  // Email for ban / closing_warning / active — send to all HR managers
-  if (["ban", "closing_warning", "active"].includes(actionType)) {
+  // Email for warn / ban / closing_warning / active — send to all HR managers
+  if (["warn", "ban", "closing_warning", "active"].includes(actionType)) {
     const { data: company } = await supabase
       .from("companies")
       .select("name")
@@ -471,14 +532,15 @@ export const applyCompanyAction = async ({
       .eq("recruiter_permissions", "hr_manager");
 
     if (hrMembers?.length) {
-      const hrIds = hrMembers.map((m) => m.profile_id);
+      const hrIds = [...new Set(hrMembers.map((m) => m.profile_id))];
       const { data: hrProfiles } = await supabase
         .from("profiles")
-        .select("full_name, email")
+        .select("full_name, email, expo_push_token")
         .in("id", hrIds);
 
-      const labels = { ban: "Banned", closing_warning: "Closing Warning", active: "Reactivated" };
+      const labels = { warn: "Warned", ban: "Banned", closing_warning: "Closing Warning", active: "Reactivated" };
       if (hrProfiles) {
+        const seenPushTokens = new Set();
         for (const hr of hrProfiles) {
           await supabase.functions.invoke("send-admin-notification", {
             body: {
@@ -487,6 +549,17 @@ export const applyCompanyAction = async ({
               body: `Dear ${hr.full_name || "HR Manager"},\n\nYour company (${company?.name || "Unknown"}) has been ${labels[actionType].toLowerCase()}.${reason ? `\nReason: ${reason}` : ""}`,
             },
           }).catch(err => console.warn("Company admin email failed:", err));
+
+          // Skip push for warn / closing_warning — already sent to all members above
+          if (hr.expo_push_token && actionType !== "warn" && actionType !== "closing_warning" && !seenPushTokens.has(hr.expo_push_token)) {
+            seenPushTokens.add(hr.expo_push_token);
+            sendPushNotification({
+              token: hr.expo_push_token,
+              title: `Company ${labels[actionType]}`,
+              body: `Your company (${company?.name || "Unknown"}) has been ${labels[actionType].toLowerCase()}.${reason ? ` Reason: ${reason}` : ""}`,
+              data: { type: "admin_action", actionType },
+            });
+          }
         }
       }
     }
@@ -514,6 +587,24 @@ export const closeCompanyJobs = async (companyId) => {
 };
 
 // ─── Appeals ────────────────────────────────────────────────────────
+
+export const getResolvedAppeals = async () => {
+  const { data: users, error: userErr } = await supabase
+    .from("profiles")
+    .select("id, full_name, email, role, appeal_message, appeal_status, appeal_deadline, banned_at, suspension_reason")
+    .in("appeal_status", ["approved", "rejected"])
+    .order("banned_at", { ascending: false });
+  if (userErr) throw userErr;
+
+  const { data: companies, error: compErr } = await supabase
+    .from("companies")
+    .select("id, name, appeal_message, appeal_status, closing_deadline, banned_at, suspension_reason")
+    .in("appeal_status", ["approved", "rejected"])
+    .order("banned_at", { ascending: false });
+  if (compErr) throw compErr;
+
+  return { users: users || [], companies: companies || [] };
+};
 
 export const getPendingAppeals = async () => {
   const { data: users, error: userErr } = await supabase
@@ -545,6 +636,18 @@ export const submitAppeal = async ({ entityType, entityId, senderId, message }) 
     { entity_type: entityType, entity_id: entityId, sender_id: senderId, message },
   ]);
   if (msgError) throw msgError;
+
+  // Notify all admins
+  const { data: userProfile } = await supabase
+    .from("profiles")
+    .select("full_name")
+    .eq("id", senderId)
+    .single();
+  notifyAdmins(
+    "New Appeal Submitted",
+    `${userProfile?.full_name || "A user"} submitted an appeal: "${message.slice(0, 100)}"`,
+    { type: "appeal", entityType, entityId }
+  );
 };
 
 export const getAppealMessages = async ({ entityType, entityId }) => {
@@ -564,7 +667,7 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
   ]);
   if (error) throw error;
 
-  // Send email notification
+  // Send email + push notification
   const isAdmin = senderId !== entityId;
   try {
     if (isAdmin) {
@@ -572,7 +675,7 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
       if (entityType === "profile") {
         const { data: userProfile } = await supabase
           .from("profiles")
-          .select("full_name, email")
+          .select("full_name, email, expo_push_token")
           .eq("id", entityId)
           .single();
         if (userProfile?.email) {
@@ -583,6 +686,14 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
               body: `Dear ${userProfile.full_name || "User"},\n\nAn admin has replied to your appeal:\n\n"${message}"\n\nPlease check your account status for updates.`,
             },
           }).catch(err => console.warn("Appeal email (user) failed:", err));
+        }
+        if (userProfile?.expo_push_token) {
+          sendPushNotification({
+            token: userProfile.expo_push_token,
+            title: "New Reply to Your Appeal",
+            body: `An admin replied: "${message.slice(0, 120)}"`,
+            data: { type: "appeal", entityType, entityId },
+          });
         }
       } else {
         const { data: company } = await supabase
@@ -598,9 +709,10 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
         if (hrMembers?.length) {
           const { data: hrProfiles } = await supabase
             .from("profiles")
-            .select("full_name, email")
+            .select("full_name, email, expo_push_token")
             .in("id", hrMembers.map((m) => m.profile_id));
           if (hrProfiles) {
+            const seenAppealTokens = new Set();
             for (const hr of hrProfiles) {
               await supabase.functions.invoke("send-admin-notification", {
                 body: {
@@ -609,12 +721,21 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
                   body: `Dear ${hr.full_name || "HR Manager"},\n\nAn admin has replied to ${company?.name || "your company"}'s appeal:\n\n"${message}"\n\nPlease check your company status for updates.`,
                 },
               }).catch(err => console.warn("Appeal email (company) failed:", err));
+              if (hr.expo_push_token && !seenAppealTokens.has(hr.expo_push_token)) {
+                seenAppealTokens.add(hr.expo_push_token);
+                sendPushNotification({
+                  token: hr.expo_push_token,
+                  title: "New Reply to Your Company Appeal",
+                  body: `An admin replied: "${message.slice(0, 120)}"`,
+                  data: { type: "appeal", entityType, entityId },
+                });
+              }
             }
           }
         }
       }
     } else {
-      // User replied → notify admin via contact-email
+      // User replied → notify admin via email + push
       const { data: userProfile } = await supabase
         .from("profiles")
         .select("full_name, email")
@@ -628,6 +749,11 @@ export const sendAppealMessage = async ({ entityType, entityId, senderId, messag
           message: `Appeal reply from ${userProfile?.full_name || "User"}:\n\n"${message}"`,
         },
       }).catch(err => console.warn("Appeal email (admin) failed:", err));
+      notifyAdmins(
+        "New Appeal Reply",
+        `${userProfile?.full_name || "A user"} replied to their appeal: "${message.slice(0, 120)}"`,
+        { type: "appeal", entityType, entityId }
+      );
     }
   } catch (emailErr) {
     console.warn("Appeal email notification failed:", emailErr);
@@ -673,6 +799,42 @@ export const resolveAppeal = async ({ entityType, entityId, adminId, approved, a
       { entity_type: entityType, entity_id: entityId, sender_id: adminId, message: adminNote },
     ]);
     if (msgError) throw msgError;
+  }
+
+  // Push notification to user / company
+  const pushTitle = approved ? "Appeal Approved" : "Appeal Rejected";
+  const pushBody = approved ? "Your appeal has been approved. Your account has been reinstated." : "Your appeal has been reviewed and rejected. This decision is final.";
+  if (entityType === "profile") {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("expo_push_token")
+      .eq("id", entityId)
+      .single();
+    if (profile?.expo_push_token) {
+      sendPushNotification({ token: profile.expo_push_token, title: pushTitle, body: pushBody, data: { type: "appeal_resolved", entityType, entityId, approved } });
+    }
+  } else {
+    const { data: hrMembers } = await supabase
+      .from("company_memberships")
+      .select("profile_id")
+      .eq("company_id", entityId)
+      .eq("recruiter_permissions", "hr_manager");
+    if (hrMembers?.length) {
+      const { data: hrProfiles } = await supabase
+        .from("profiles")
+        .select("expo_push_token")
+        .in("id", hrMembers.map((m) => m.profile_id))
+        .not("expo_push_token", "is", null);
+      if (hrProfiles) {
+        const seenResolveTokens = new Set();
+        for (const hr of hrProfiles) {
+          if (!seenResolveTokens.has(hr.expo_push_token)) {
+            seenResolveTokens.add(hr.expo_push_token);
+            sendPushNotification({ token: hr.expo_push_token, title: pushTitle, body: pushBody, data: { type: "appeal_resolved", entityType, entityId, approved } });
+          }
+        }
+      }
+    }
   }
 };
 
@@ -726,4 +888,33 @@ export const processExpiredDeadlines = async () => {
     usersExpired: expiredUsers?.length || 0,
     companiesClosed: expiredCompanies?.length || 0,
   };
+};
+
+export const getQuestionWithAnswer = async (questionId) => {
+  const { data, error } = await supabase
+    .from("application_questions")
+    .select(`
+      *,
+      application_answers (
+        id, answer_text, score, feedback, recording_url, transcript, strengths, weaknesses, created_at
+      )
+    `)
+    .eq("id", questionId)
+    .single();
+  if (error) throw error;
+  return data;
+};
+
+export const getStageWithEvaluation = async (stageId) => {
+  const { data, error } = await supabase
+    .from("application_stages")
+    .select(`
+      *,
+      recruitment_stages ( id, name, stage_type, order_index ),
+      application_stage_evaluations ( ai_score, confidence, recommendation, reasoning, strengths, weaknesses )
+    `)
+    .eq("id", stageId)
+    .single();
+  if (error) throw error;
+  return data;
 };

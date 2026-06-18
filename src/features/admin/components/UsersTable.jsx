@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Search, X, AlertTriangle, Snowflake, Ban, ShieldAlert, UserCheck, Loader2 } from "lucide-react";
 import { getAllUsers } from "../services/admin.service";
 import UserActionDialog from "./UserActionDialog";
@@ -11,6 +12,7 @@ const statusColors = {
 };
 
 export default function UsersTable() {
+  const { t } = useTranslation();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -60,7 +62,7 @@ export default function UsersTable() {
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search users by name or email..."
+          placeholder={t("admin.users_table.search_placeholder")}
           className="w-full h-10 pl-10 pr-4 rounded-xl bg-card border border-border text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
         />
       </div>
@@ -71,7 +73,7 @@ export default function UsersTable() {
           <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
         </div>
       ) : filtered.length === 0 ? (
-        <p className="text-sm text-muted-foreground text-center py-12">No users found</p>
+        <p className="text-sm text-muted-foreground text-center py-12">{t("admin.users_table.no_results")}</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {filtered.map((user) => (
@@ -101,7 +103,7 @@ export default function UsersTable() {
                       {user.account_status || "active"}
                     </span>
                     <span className="text-[10px] text-muted-foreground ml-auto">
-                      {user.violationCount || 0} violations
+                      {t("admin.users_table.violations_count", { count: user.violationCount || 0 })}
                     </span>
                   </div>
                 </div>
@@ -122,7 +124,7 @@ export default function UsersTable() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-bold text-foreground">User Details</h3>
+              <h3 className="text-sm font-bold text-foreground">{t("admin.users_table.details_title")}</h3>
               <button
                 onClick={() => setSelectedUser(null)}
                 className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer"
@@ -152,11 +154,11 @@ export default function UsersTable() {
             </div>
 
             <div className="bg-surface rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground flex items-center justify-between mb-2">
-              <span>Severity Score</span>
+              <span>{t("admin.users_table.severity_score")}</span>
               <span className="font-bold text-foreground">{selectedUser.severity_score ?? 0}</span>
             </div>
             <div className="bg-surface rounded-xl border border-border px-3 py-2 text-xs text-muted-foreground flex items-center justify-between mb-4">
-              <span>Violations</span>
+              <span>{t("admin.users_table.violations")}</span>
               <span className="font-bold text-foreground">{selectedUser.violationCount || 0}</span>
             </div>
 
@@ -166,21 +168,21 @@ export default function UsersTable() {
                 className="h-9 rounded-xl text-xs font-semibold bg-warning/10 text-warning border border-warning/20 hover:bg-warning/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <AlertTriangle className="w-3.5 h-3.5" />
-                Warn
+                {t("admin.users_table.warn")}
               </button>
               <button
                 onClick={() => handleActionClick(selectedUser, "freeze")}
                 className="h-9 rounded-xl text-xs font-semibold bg-blue-500/10 text-blue-500 border border-blue-500/20 hover:bg-blue-500/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Snowflake className="w-3.5 h-3.5" />
-                Freeze
+                {t("admin.users_table.freeze")}
               </button>
               <button
                 onClick={() => handleActionClick(selectedUser, "ban")}
                 className="h-9 rounded-xl text-xs font-semibold bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 <Ban className="w-3.5 h-3.5" />
-                Ban
+                {t("admin.users_table.ban")}
               </button>
               {(selectedUser.account_status === "banned" || selectedUser.account_status === "frozen") && (
                 <button
@@ -188,7 +190,7 @@ export default function UsersTable() {
                   className="h-9 rounded-xl text-xs font-semibold bg-success/10 text-success border border-success/20 hover:bg-success/20 transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
-                  Active
+                  {t("admin.users_table.restore")}
                 </button>
               )}
             </div>

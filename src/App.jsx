@@ -184,6 +184,15 @@ function App() {
         />
 
         <Route
+          path="/admin/users/:id"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <ApplicantProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/recruiter"
           element={
             <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>

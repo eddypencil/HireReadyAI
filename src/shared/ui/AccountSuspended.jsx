@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
-import { ShieldAlert, Clock, LogOut, Send, Loader2, MessageCircle } from "lucide-react";
+import { ShieldAlert, Clock, LogOut, Send, Loader2 } from "lucide-react";
 import { supabase } from "@/shared/services/supabase";
 import { submitAppeal, getAppealMessages, sendAppealMessage } from "@/features/admin/services/admin.service";
 

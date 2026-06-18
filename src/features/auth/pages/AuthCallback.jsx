@@ -23,6 +23,8 @@ export default function AuthCallback() {
         navigate("/auth/select-role", { state: { user } });
       } else if (profile.role === "applicant") {
         navigate("/applicant");
+      } else if (profile.role === "admin") {
+        navigate("/admin");
       } else {
         navigate("/companies");
       }

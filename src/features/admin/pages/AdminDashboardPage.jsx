@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useUser } from "@/features/auth/context/user.context";
+import { useTranslation } from "react-i18next";
 import { Shield, Users, Briefcase, AlertTriangle, Building2, MessageCircle } from "lucide-react";
 import { getUserCountsByRole, getFlaggedEntities, getAllCompaniesWithStats, getPendingAppeals } from "../services/admin.service";
 import UsersTable from "../components/UsersTable";
@@ -7,6 +8,7 @@ import CreateAdminDialog from "../components/CreateAdminDialog";
 
 export default function AdminDashboardPage() {
   const { profile } = useUser();
+  const { t } = useTranslation();
   const [stats, setStats] = useState({ recruiter: 0, applicant: 0 });
   const [flagged, setFlagged] = useState({ users: [], companies: [] });
   const [companyCount, setCompanyCount] = useState(0);
@@ -41,10 +43,10 @@ export default function AdminDashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-foreground">
-            Admin Dashboard
+            {t("admin.title")}
           </h1>
           <p className="text-sm text-muted-foreground mt-1">
-            Welcome, {profile?.fullName || "Admin"}
+            {t("admin.welcome", { name: profile?.fullName || t("admin.unknown_user") })}
           </p>
         </div>
         <button
@@ -52,7 +54,7 @@ export default function AdminDashboardPage() {
           className="h-10 px-4 rounded-xl bg-primary text-white text-sm font-semibold hover:bg-primary-hover transition-colors flex items-center gap-2 cursor-pointer"
         >
           <Shield className="w-4 h-4" />
-          Create Admin
+          {t("admin.create_admin.title")}
         </button>
       </div>
 
@@ -67,7 +69,7 @@ export default function AdminDashboardPage() {
               <p className="text-xl font-bold text-foreground">
                 {loading ? "..." : stats.applicant + stats.recruiter}
               </p>
-              <p className="text-[10px] text-muted-foreground">Total Users</p>
+              <p className="text-[10px] text-muted-foreground">{t("admin.total_users")}</p>
             </div>
           </div>
         </div>
@@ -81,7 +83,7 @@ export default function AdminDashboardPage() {
               <p className="text-xl font-bold text-foreground">
                 {loading ? "..." : stats.recruiter}
               </p>
-              <p className="text-[10px] text-muted-foreground">Recruiters</p>
+              <p className="text-[10px] text-muted-foreground">{t("admin.recruiters")}</p>
             </div>
           </div>
         </div>
@@ -95,7 +97,7 @@ export default function AdminDashboardPage() {
               <p className="text-xl font-bold text-foreground">
                 {loading ? "..." : stats.applicant}
               </p>
-              <p className="text-[10px] text-muted-foreground">Applicants</p>
+              <p className="text-[10px] text-muted-foreground">{t("admin.applicants")}</p>
             </div>
           </div>
         </div>
@@ -111,7 +113,7 @@ export default function AdminDashboardPage() {
                   ? "..."
                   : flagged.users.length + flagged.companies.length}
               </p>
-              <p className="text-[10px] text-muted-foreground">Flagged</p>
+              <p className="text-[10px] text-muted-foreground">{t("admin.flagged")}</p>
             </div>
           </div>
         </div>
@@ -125,7 +127,7 @@ export default function AdminDashboardPage() {
               <p className="text-xl font-bold text-foreground">
                 {loading ? "..." : companyCount}
               </p>
-              <p className="text-[10px] text-muted-foreground">Companies</p>
+              <p className="text-[10px] text-muted-foreground">{t("admin.companies.title")}</p>
             </div>
           </div>
         </div>
@@ -140,7 +142,7 @@ export default function AdminDashboardPage() {
                 {loading ? "..." : appealCount}
               </p>
               <p className="text-[10px] text-muted-foreground">
-                Pending Appeals
+                {t("admin.pending_appeals")}
               </p>
             </div>
           </div>

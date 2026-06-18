@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { useUser } from "@/features/auth/context/user.context";
+import { useTranslation } from "react-i18next";
 import { applyUserAction } from "../services/admin.service";
 import { X, Loader2 } from "lucide-react";
 
 const actionConfig = {
-  warn: { label: "Warn User", color: "bg-warning" },
-  freeze: { label: "Freeze User", color: "bg-blue-500" },
-  ban: { label: "Ban User", color: "bg-destructive" },
-  active: { label: "Restore User", color: "bg-success" },
+  warn: { label: "admin.warn_user", color: "bg-warning" },
+  freeze: { label: "admin.freeze_user", color: "bg-blue-500" },
+  ban: { label: "admin.ban_user", color: "bg-destructive" },
+  active: { label: "admin.restore_user", color: "bg-success" },
 };
 
 export default function UserActionDialog({ user, actionType, onClose, onComplete }) {
   const { profile } = useUser();
+  const { t } = useTranslation();
   const [reason, setReason] = useState("");
   const [days, setDays] = useState("");
   const [hours, setHours] = useState("");
@@ -36,7 +38,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
       });
       onComplete();
     } catch (err) {
-      setError(err.message || "Failed to apply action");
+      setError(err.message || t("admin.admin_error"));
     } finally {
       setSubmitting(false);
     }
@@ -46,7 +48,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
       <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-md mx-4">
         <div className="flex items-center justify-between p-4 border-b border-border">
-          <h3 className="text-sm font-bold text-foreground">{config.label}</h3>
+          <h3 className="text-sm font-bold text-foreground">{t(config.label)}</h3>
           <button
             onClick={onClose}
             className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer"
@@ -58,17 +60,17 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
         <form onSubmit={handleSubmit} className="p-4 space-y-4">
           <div className="bg-muted rounded-xl p-3 space-y-1">
             <p className="text-xs font-semibold text-foreground">
-              {user.full_name || "Unknown User"}
+              {user.full_name || t("admin.unknown_user")}
             </p>
             <p className="text-[10px] text-muted-foreground">{user.email}</p>
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-semibold text-foreground">Reason</label>
+            <label className="text-xs font-semibold text-foreground">{t("admin.reason")}</label>
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              placeholder="Reason for this action..."
+              placeholder={t("admin.reason_placeholder")}
               rows={3}
               required
               className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
@@ -78,7 +80,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
           {actionType === "freeze" && (
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">Days</label>
+                <label className="text-xs font-semibold text-foreground">{t("admin.days")}</label>
                 <input
                   type="number"
                   min="0"
@@ -89,7 +91,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
                 />
               </div>
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground">Hours</label>
+                <label className="text-xs font-semibold text-foreground">{t("admin.hours")}</label>
                 <input
                   type="number"
                   min="0"
@@ -114,7 +116,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
               onClick={onClose}
               className="flex-1 h-10 rounded-xl text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer"
             >
-              Cancel
+              {t("admin.cancel")}
             </button>
             <button
               type="submit"
@@ -122,7 +124,7 @@ export default function UserActionDialog({ user, actionType, onClose, onComplete
               className={`flex-1 h-10 rounded-xl text-xs font-semibold text-white ${config.color} hover:opacity-90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer`}
             >
               {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-              {submitting ? "Applying..." : "Confirm"}
+              {submitting ? t("admin.applying") : t("admin.confirm")}
             </button>
           </div>
         </form>

@@ -22,6 +22,9 @@ export function ProtectedRoute({ children, allowedRoles }) {
     if (profile.role === USER_ROLE.applicant) {
       return <Navigate to="/applicant" replace />;
     }
+    if (profile.role === USER_ROLE.admin) {
+      return <Navigate to="/admin" replace />;
+    }
     return <Navigate to="/companies" replace />;
   }
 
