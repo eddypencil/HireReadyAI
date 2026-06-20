@@ -329,7 +329,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     onChange={(e) =>
                       setNewCompany({ ...newCompany, name: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     placeholder="Acme Corp"
                   />
                 </div>
@@ -343,7 +343,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                     onChange={(e) =>
                       setNewCompany({ ...newCompany, industry: e.target.value })
                     }
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     placeholder="e.g. Technology, Healthcare"
                   />
                 </div>
@@ -358,7 +358,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       onChange={(e) =>
                         setNewCompany({ ...newCompany, size: e.target.value })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="Number of employees"
                     />
                   </div>
@@ -375,7 +375,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           location: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="City, Country"
                     />
                   </div>
@@ -394,7 +394,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           founding_date: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                     />
                   </div>
                   <div>
@@ -410,7 +410,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           website_url: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://example.com"
                     />
                   </div>
@@ -428,7 +428,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                       })
                     }
                     rows={3}
-                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
+                    className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                     placeholder="Tell applicants about your company..."
                   />
                 </div>
@@ -446,7 +446,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         })
                       }
                       rows={2}
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                       placeholder="Company values, culture..."
                     />
                   </div>
@@ -463,7 +463,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                         })
                       }
                       rows={2}
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring resize-none"
                       placeholder="Perks, benefits..."
                     />
                   </div>
@@ -482,7 +482,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           linkedin_url: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://linkedin.com/company/..."
                     />
                   </div>
@@ -499,7 +499,7 @@ export default function NoCompanyView({ onCompanyJoined }) {
                           twitter_url: e.target.value,
                         })
                       }
-                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm focus:outline-hidden focus:ring-2 focus:ring-ring"
+                      className="w-full px-4 py-2.5 bg-background border border-border rounded-xl text-sm text-foreground focus:outline-hidden focus:ring-2 focus:ring-ring"
                       placeholder="https://twitter.com/..."
                     />
                   </div>
