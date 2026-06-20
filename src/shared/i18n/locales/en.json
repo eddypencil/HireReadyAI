@@ -717,6 +717,18 @@
       "transcribing_sub": "This may take a few seconds",
 
       "max_time": "max 3 min"
+    },
+
+    "security": {
+      "shortcut_blocked": "Keyboard shortcuts are disabled during the interview.",
+      "tab_switch": "You switched away from the interview window. Please stay on this tab.",
+      "window_blur": "The interview window lost focus. Please keep the window active.",
+      "fullscreen_exited": "Fullscreen mode was exited. Please remain in fullscreen for the interview.",
+      "devtools_detected": "Developer tools appear to be open. Please close them to continue.",
+      "violation_count": "Violation {{count}} of {{max}}",
+      "continue": "Continue Interview",
+      "max_reached": "Interview Terminated",
+      "max_reached_desc": "Your interview has been terminated due to repeated security violations."
     }
   },
 

@@ -26,6 +26,8 @@ import {
   FileText,
   Flag,
 } from "lucide-react";
+import useInterviewSecurity from "../hooks/useInterviewSecurity";
+import SecurityViolationModal from "../components/SecurityViolationModal";
 
 const PHASE = {
   INIT: "init",
@@ -103,6 +105,32 @@ export default function InterviewPage() {
   const [maxTime, setMaxTime] = useState(null);
   const [timeExceeded, setTimeExceeded] = useState(false);
   const generatingRef = useRef(false);
+
+  // ── Interview Security ───────────────────────────────────────────────────
+  // Activates on ANSWERING / UPLOADING phases to:
+  //  - Block copy/cut/paste/selection/right-click
+  //  - Block Ctrl+C/V/X/A/S/P
+  //  - Detect tab-switch, blur, fullscreen-exit, possible devtools
+  //  - Force fullscreen
+  //  - Track violations with local persistence + optional backend sync
+  // When max violations (3) is reached the interview is terminated.
+  const {
+    violationCount,
+    showWarning,
+    currentViolation,
+    securityRef,
+    dismissWarning,
+  } = useInterviewSecurity({
+    stageId: applicationStage?.id ?? null,
+    isActive: phase === PHASE.ANSWERING || phase === PHASE.UPLOADING,
+    maxViolations: 3,
+    onMaxReached: () => {
+      setPhase(PHASE.ERROR);
+      setErrorMsg(
+        "Your interview has been terminated due to repeated security violations.",
+      );
+    },
+  });
 
   const requestNextQuestion = async (
     stageId,
@@ -256,7 +284,7 @@ export default function InterviewPage() {
   };
 
   return (
-    <div className="min-h-screen bg-secondary/40 flex flex-col">
+    <div className="min-h-screen bg-secondary/40 flex flex-col" ref={securityRef}>
       {/* ── Top bar ─────────────────────────────────────────────────── */}
       <header className="sticky top-0 z-30 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="flex items-center justify-between h-14 px-4 sm:px-6">
@@ -360,7 +388,7 @@ export default function InterviewPage() {
       </header>
 
       {/* ── Content ─────────────────────────────────────────────────── */}
-      <main className="flex-1 flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10">
+      <main className="flex-1 flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10 bg-muted ">
         <div className="w-full max-w-4xl space-y-5">
           {/* INIT / LOADING */}
           {(phase === PHASE.INIT || phase === PHASE.LOADING) && (
@@ -449,13 +477,12 @@ export default function InterviewPage() {
                   <div className="flex items-center gap-2 flex-1 max-w-xs">
                     <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
                       <div
-                        className={`h-full rounded-full transition-all ${
-                          elapsed >= maxTime
-                            ? "bg-destructive"
-                            : elapsed >= maxTime * 0.8
-                              ? "bg-warning"
-                              : "bg-primary"
-                        }`}
+                        className={`h-full rounded-full transition-all ${elapsed >= maxTime
+                          ? "bg-destructive"
+                          : elapsed >= maxTime * 0.8
+                            ? "bg-warning"
+                            : "bg-primary"
+                          }`}
                         style={{
                           width: `${Math.min((elapsed / maxTime) * 100, 100)}%`,
                         }}
@@ -471,8 +498,8 @@ export default function InterviewPage() {
                 <span className="text-xs text-muted-foreground text-right">
                   {maxQuestions - questionNumber > 0
                     ? t("interview_page.progress.remaining", {
-                        count: maxQuestions - questionNumber,
-                      })
+                      count: maxQuestions - questionNumber,
+                    })
                     : t("interview_page.progress.final")}
                 </span>
               </div>
@@ -533,6 +560,15 @@ export default function InterviewPage() {
           )}
         </div>
       </main>
+
+      {/* Security violation warning modal */}
+      <SecurityViolationModal
+        open={showWarning}
+        onDismiss={dismissWarning}
+        violation={currentViolation}
+        violationCount={violationCount}
+        maxViolations={3}
+      />
     </div>
   );
 }
