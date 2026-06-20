@@ -1,0 +1,244 @@
+// src/features/landing-page/components/ContactUs.jsx
+import { useState } from "react";
+import { Mail, Phone, MapPin, Send, Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { supabase } from "@/shared/services/supabase";
+
+export default function ContactUs() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(null);
+  const { t } = useTranslation();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          company: formData.company,
+          message: formData.message,
+        },
+      });
+
+      if (error) throw new Error(error.message);
+
+      setSubmitted(true);
+      setFormData({ name: "", email: "", company: "", message: "" });
+      setTimeout(() => setSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Contact form error:", err);
+      setError(err.message || "Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="contact" className="bg-background px-6 py-24 lg:px-8">
+      <div className="max-w-6xl mx-auto space-y-12">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="inline-block text-[10px] font-extrabold tracking-[0.2em] text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/10 uppercase">
+            {t("landing.contact_us.contactus")}
+          </span>
+          <h2 className="text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl">
+            {t("landing.contact_us.get_in_touch")}
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          {/* Contact Form */}
+          <div className="lg:col-span-7 bg-card p-8 rounded-2xl border border-border/40 shadow-sm">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground" htmlFor="name">
+                    {t("landing.contact_us.your_name") || "Your name"}
+                  </label>
+                  <input
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    id="name"
+                    type="text"
+                    name="name"
+                    placeholder="Jane Cooper"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-foreground" htmlFor="email">
+                    {t("landing.contact_us.work_email") || "Work email"}
+                  </label>
+                  <input
+                    className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    id="email"
+                    type="email"
+                    name="email"
+                    placeholder="jane@company.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground" htmlFor="company">
+                  {t("landing.contact_us.company") || "Company"}
+                </label>
+                <input
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  id="company"
+                  type="text"
+                  name="company"
+                  placeholder="Acme Inc."
+                  value={formData.company}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-foreground" htmlFor="message">
+                  {t("landing.contact_us.message") || "Message"}
+                </label>
+                <textarea
+                  className="w-full bg-background border border-border rounded-xl px-4 py-3 text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 h-32 resize-none"
+                  id="message"
+                  name="message"
+                  placeholder="Tell us a bit about what you're looking to solve..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+                <p className="text-[9px] text-muted-foreground max-w-xs">
+                  {t("landing.contact_us.privacy_notice") || "By submitting, you agree to our"}{" "}
+                  <a href="/privacy" className="text-primary hover:underline">
+                    {t("landing.contact_us.privacy_policy") || "Privacy Policy"}
+                  </a>.
+                </p>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-foreground text-background font-bold rounded-xl px-6 py-3.5 text-xs flex items-center justify-center gap-2 transition-all hover:opacity-90 shadow-sm disabled:opacity-70"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t("landing.contact_us.sending") || "Sending..."}
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      {t("landing.contact_us.send_message") || "Send message"}
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {error && (
+                <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-xl text-center text-xs text-destructive font-medium">
+                  {error}
+                </div>
+              )}
+              {submitted && (
+                <div className="p-3 bg-success/10 border border-success/20 rounded-xl text-center text-xs text-success font-medium">
+                  {t("landing.contact_us.success_message") || "Your message has been sent successfully!"}
+                </div>
+              )}
+            </form>
+          </div>
+
+          {/* Contact Information */}
+          <div className="lg:col-span-5">
+            <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm space-y-6">
+              <div>
+                <h3 className="text-base font-bold tracking-tight text-foreground">
+                  {t("landing.contact_us.title") || "Contact information"}
+                </h3>
+                <p className="text-[10px] text-muted-foreground mt-1">
+                  {t("landing.contact_us.description") || "Reach the team directly through any of the channels below."}
+                </p>
+              </div>
+
+              <div className="space-y-5 pt-2">
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                    <Mail className="w-4 h-4 text-foreground" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] text-muted-foreground font-medium">
+                      {t("landing.contact_us.email_label") || "EMAIL"}
+                    </h4>
+                    <a
+                      href="mailto:hirereadyaiplatform@gmail.com"
+                      className="text-xs font-semibold text-foreground hover:underline mt-0.5 block"
+                    >
+                      hirereadyaiplatform@gmail.com
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                    <Phone className="w-4 h-4 text-foreground" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] text-muted-foreground font-medium">
+                      {t("landing.contact_us.phone_label") || "PHONE"}
+                    </h4>
+                    <a href="tel:+201013767382" className="text-xs font-semibold text-foreground hover:underline mt-0.5 block">
+                      +20 10 13767382
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="w-9 h-9 bg-secondary rounded-xl flex items-center justify-center shrink-0">
+                    <MapPin className="w-4 h-4 text-foreground" />
+                  </div>
+                  <div>
+                    <h4 className="text-[10px] text-muted-foreground font-medium">
+                      {t("landing.contact_us.office_label") || "OFFICE"}
+                    </h4>
+                    <p className="text-xs font-semibold text-foreground mt-0.5">
+                      {t("landing.contact_us.office_address") || "Smart Village, Cairo, Egypt"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-border/60 pt-4 mt-4">
+                <h5 className="text-[9px] text-muted-foreground uppercase tracking-wider font-bold">
+                  {t("landing.contact_us.support_hours") || "Support Hours"}
+                </h5>
+                <p className="text-[10px] text-foreground font-medium mt-0.5">
+                  {t("landing.contact_us.support_hours_value") || "Mon – Fri · 9:00 – 18:00 (GMT+2)"}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

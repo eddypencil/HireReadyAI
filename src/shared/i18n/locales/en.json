@@ -1,0 +1,2072 @@
+{
+  "logout": "Logout",
+  "dark_mode": "Dark Mode",
+  "light_mode": "Light Mode",
+  "notifications": "Notifications",
+  "mark_all_read": "Mark all as read",
+  "no_notifications": "No notifications yet",
+
+  "nav": {
+    "dashboard": "Dashboard",
+    "explore_jobs": "Explore Jobs",
+    "my_feedback": "My Feedback",
+    "my_applications": "My Applications",
+    "my_profile": "My Profile",
+    "company_profile": "Company Profile",
+    "job_postings": "Job Postings",
+    "shortlists": "Shortlists",
+    "candidate_pipeline": "Candidate Pipeline",
+    "jd_generator": "JD Generator",
+    "add_job": "Add Job",
+    "search_jobs": "Search jobs by title or department...",
+    "admin_dashboard": "Admin Dashboard",
+    "reports": "Reports",
+    "companies": "Companies",
+    "appeals": "Appeals",
+    "technical_issues": "Technical Issues"
+  },
+
+  "applicant_dashboard": {
+    "title": "Applicant",
+    "joined_since": "Joined since",
+    "loading": "Loading applications…",
+
+    "stats": {
+      "applications": "Applications",
+      "interviews": "Interviews",
+      "offers": "Offers"
+    },
+
+    "active_applications": {
+      "title": "Active Applications",
+      "subtitle": "Roles you're currently being considered for",
+      "empty": "No applications yet"
+    },
+
+    "status_management": {
+      "title": "Status Management",
+      "subtitle": "Track your interview stages and process results",
+      "empty": "No interview processes or status update records found yet."
+    },
+
+    "feedback": {
+      "title": "Feedback & Tips",
+      "subtitle": "From your last submission — {{role}} @ {{company}}",
+
+      "insights": {
+        "strong_pattern": "Strong pattern recognition",
+        "strong_pattern_desc": "You scored in the top 15% for logical sequences.",
+
+        "pacing": "Pacing could improve",
+        "pacing_desc": "Try not to spend more than 90s per question on the next test.",
+
+        "cv_tip": "Add 2 measurable wins to your CV",
+        "cv_tip_desc": "Quantified impact bumps recruiter reply-rate by ~30%."
+      }
+    }
+  },
+
+  "applications": {
+    "title": "Active Applications",
+    "subtitle": "Roles you're currently being considered for",
+    "empty": "No applications yet",
+    "view_all": "View all",
+
+    "unknown_position": "Unknown Position",
+    "unknown_company": "Unknown Company",
+
+    "applied": "Applied {{date}}",
+    "closes": "Closes {{date}}",
+    "view_job": "View Job"
+  },
+
+  "stages": {
+    "applied": "Applied",
+    "screening": "Screening",
+    "shortlisted": "Shortlisted",
+    "interview": "Interview",
+    "hired": "Hired",
+    "rejected": "Rejected",
+    "cv_screening": "CV Screening",
+    "ai_screening": "AI Screening",
+    "assessment_test": "Assessment Test",
+    "coding_test": "Coding Test",
+    "video_interview": "Video Interview",
+    "technical_interview": "Technical Interview",
+    "hr_interview": "HR Interview",
+    "manager_interview": "Manager Interview",
+    "background_check": "Background Check",
+    "offer": "Offer",
+    "processing": "Processing"
+  },
+
+  "avatar_modal": {
+    "title": "Profile Picture",
+    "upload": "Upload / Change",
+    "uploading": "Uploading...",
+    "upload_only": "Upload",
+    "remove": "Remove",
+    "cancel": "Cancel"
+  },
+
+  "interview_list": {
+    "title": "Status Management",
+    "subtitle": "Track your interview stages and process results",
+    "empty_state": "No interview processes or status update records found yet.",
+    "no_records": "No records found in this section.",
+
+    "tabs": {
+      "all": "All Processes",
+      "active": "Active Interviews",
+      "completed": "Completed",
+      "rejected": "Rejected",
+      "offer": "Offer"
+    },
+
+    "buttons": {
+      "start_ai_interview": "Start AI Interview",
+      "start_stage_interview": "Start {{stage}}",
+      "view_cv": "View Submitted CV",
+      "show_feedback": "Show Feedback"
+    },
+
+    "fields": {
+      "unknown_position": "Unknown Position",
+      "unknown_company": "Unknown Company",
+      "applied": "Applied",
+      "id": "ID"
+    }
+  },
+
+  "apply_job": {
+    "title": "Apply for Job",
+    "empty_state": {
+      "no_applications": "You have zero applications",
+      "start_exploring": "Start exploring jobs and apply to kick off your journey"
+    },
+
+    "steps": {
+      "info": "Info",
+      "resume": "Resume",
+      "questions": "Questions"
+    },
+
+    "labels": {
+      "full_name": "Full Name",
+      "email": "Email",
+      "phone": "Phone",
+      "resume": "Resume"
+    },
+
+    "placeholders": {
+      "upload_resume": "Upload Resume (PDF)",
+      "drag_drop": "Drag & drop or click to upload"
+    },
+
+    "buttons": {
+      "back": " Back ",
+      "next": "Next",
+      "submit": "Submit Application",
+      "submitting": "Submitting..."
+    },
+
+    "errors": {
+      "required": "This field is required",
+      "invalid_email": "Please enter a valid email",
+      "invalid_phone": "Please enter a valid phone number",
+      "invalid_file": "Only PDF files are allowed",
+      "file_size": "Maximum file size is 5MB",
+      "already_applied": "You have already applied for this job",
+      "fix_errors": "Please fix errors before continuing",
+      "complete_required": "Please complete all required fields",
+      "something_wrong": "Something went wrong!"
+    },
+
+    "toast": {
+      "success": "Application submitted successfully!",
+      "error": "Error"
+    }
+  },
+
+  "auth_layout": {
+    "headline": "Where great hires happen.",
+    "subheading": "The platform that connects serious talent with teams who know what they're looking for.",
+
+    "features": {
+      "match": "Match with top candidates who fit your role",
+      "interviews": "Async interviews scored against your framework",
+      "feedback": "Every single applicant gets a timely comprehensive feedback",
+
+      "ai_matching": "AI-matched candidates in seconds",
+      "async_interviews": "Async interviews, instantly scored",
+      "bias_feedback": "Bias-checked, structured feedback",
+      "real_replies": "Every applicant gets a real reply"
+    }
+  },
+
+  "sign_up": {
+    "headline": "Create account",
+    "subheading": "Fill in your details to get started",
+
+    "labels": {
+      "full_name": "Full name",
+      "current_title": "Current title",
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "password": "Password",
+      "confirm_password": "Confirm password"
+    },
+
+    "placeholders": {
+      "full_name": "Your full name",
+      "current_title": "e.g. HR Manager, Frontend Developer",
+      "email": "you@gmail.com",
+      "phone": "+20 10 0000 0000",
+      "password": "Min. 8 characters",
+      "confirm_password": "Repeat your password"
+    },
+
+    "errors": {
+      "password_length": "Password must be at least 8 characters.",
+      "password_match": "Passwords do not match.",
+      "generic": "Something went wrong. Please try again."
+    },
+
+    "create_account": "Create account",
+    "creating": "Creating account…",
+    "already_have": "Already have an account?",
+    "sign_in": "Sign in"
+  },
+
+  "roles": {
+    "applicant": "Applicant",
+    "recruiter": "Recruiter"
+  },
+
+  "sign_in": {
+    "headline": "Welcome back",
+    "subheading": "Sign in to your workspace",
+
+    "labels": {
+      "email": "Email",
+      "password": "Password"
+    },
+
+    "placeholders": {
+      "email": "you@gmail.com",
+      "password": "••••••••••"
+    },
+
+    "forgot_password": "Forgot password?",
+    "sign_in": "Sign in",
+    "signing_in": "Signing in…",
+
+    "terms_text": "By signing in you agree to our",
+    "terms": "Terms",
+    "and": "and",
+    "privacy": "Privacy",
+
+    "no_account": "Don't have an account?",
+    "create_account": "Create one",
+
+    "errors": {
+      "generic": "Invalid email or password. Please try again."
+    }
+  },
+
+  "forgot_password": {
+    "headline": "Forgot password?",
+    "subheading": "Enter your email and we'll send you a reset link",
+
+    "labels": {
+      "email": "Email"
+    },
+
+    "placeholders": {
+      "email": "you@gmail.com"
+    },
+
+    "loading": "Loading...",
+    "send_link": "Send reset link",
+
+    "back_to_sign_in": "Back to sign in",
+
+    "errors": {
+      "generic": "Failed to send reset link. Please try again."
+    },
+
+    "success": {
+      "headline": "Check your inbox",
+      "subheading": "We sent you a password reset link",
+      "message": "We sent a reset link to",
+      "spam_hint": "Didn't get it? Check your spam folder."
+    }
+  },
+
+  "reset_password": {
+    "waiting": {
+      "headline": "Verifying your link…",
+      "subheading": "Please wait while we confirm your reset link",
+      "loading_text": "This only takes a moment."
+    },
+
+    "invalid": {
+      "headline": "Link expired",
+      "subheading": "This password reset link is invalid or has expired",
+      "message": "Reset links expire after a short time and can only be used once.",
+      "request_new": "Request a new link",
+      "back_to_sign_in": "Back to sign in"
+    },
+
+    "success": {
+      "headline": "Password updated!",
+      "subheading": "You can now sign in with your new password",
+      "message": "Your password has been changed successfully. Redirecting you to sign in…",
+      "go_to_sign_in": "Go to sign in"
+    },
+
+    "form": {
+      "headline": "Set a new password",
+      "subheading": "Choose a strong password for your account",
+
+      "labels": {
+        "new_password": "New Password",
+        "confirm_password": "Confirm Password"
+      },
+
+      "placeholders": {
+        "new_password": "Min 8 characters",
+        "confirm_password": "Repeat your new password"
+      },
+
+      "errors": {
+        "min_length": "Password must be at least 8 characters.",
+        "not_match": "Passwords don't match. Please try again.",
+        "generic": "Failed to update password. Please try again."
+      },
+
+      "buttons": {
+        "update": "Update Password",
+        "updating": "Updating…"
+      },
+
+      "back_to_sign_in": "Back to sign in"
+    }
+  },
+
+  "job_details": {
+    "loading": "Loading job details...",
+    "error": "Error:",
+    "not_found": "Job not found",
+
+    "apply_now": "Apply Now",
+    "applied": "Applied",
+
+    "about": "About this role",
+    "qualifications": "Qualifications",
+    "responsibilities": "Responsibilities",
+    "skills": "Skills & Tools",
+
+    "similar_jobs": "Similar Jobs"
+  },
+
+  "jobs_page": {
+    "board": "Job Board",
+    "title": "Find your dream job",
+    "subtitle": "Browse our latest job openings and apply to the best opportunities today.",
+    "loading": "Loading jobs...",
+    "error": "Error:",
+    "job_found": "job found",
+    "jobs_found": "jobs found",
+    "no_results": "No jobs found matching your filters.",
+    "clear_filters": "Clear all filters"
+  },
+
+  "job_filters": {
+    "title": "Filter",
+    "clear_all": "Clear all",
+
+    "date_posted": "Date Posted",
+    "anytime": "Anytime",
+    "last_24h": "Last 24 hours",
+    "last_week": "Last week",
+    "last_month": "Last month",
+
+    "salary": "Salary Range (EGP)",
+    "min": "Min",
+    "max": "Max",
+    "to": "to",
+
+    "job_type": "Job Type",
+    "full_time": "Full Time",
+    "part_time": "Part Time",
+
+    "work_location": "On-site / Remote",
+    "on_site": "On-site",
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+
+    "seniority": "Seniority Level",
+    "not_applicable": "N/A"
+  },
+
+  "job_search": {
+    "placeholder": "Search job title or keyword...",
+    "button": "Find Jobs"
+  },
+
+  "company_layout": {
+    "loading": "Loading...",
+    "error": "Error:"
+  },
+
+  "company_profile": {
+    "profile": {
+      "title": "Company Profile",
+      "subtitle": "Manage your workspace details and branding.",
+
+      "fields": {
+        "company_name": "Company Name",
+        "industry": "Industry",
+        "company_size": "Company Size",
+        "created_at": "Created At",
+        "employees": "{{count}} employees"
+      }
+    },
+
+    "framework": {
+      "title": "Competency Framework",
+      "subtitle": "Upload your grading framework for AI analysis.",
+      "upload": "Click to upload your framework file",
+      "file_types": "PDF or DOCX up to 25MB",
+      "active": "Active & Indexed"
+    },
+
+    "team": {
+      "title": "Team Members",
+      "subtitle": "Invite and manage your recruitment team permissions.",
+
+      "placeholders": {
+        "full_name": "Full Name",
+        "email": "Email Address"
+      },
+
+      "invite": "Invite",
+      "invite_success": "Member invited successfully!",
+
+      "unknown": "Unknown",
+      "team_member": "Team Member"
+    }
+  },
+
+  "jd_generator": {
+    "published": {
+      "title": "Job Published!",
+      "message": "has been published and is now visible to applicants.",
+      "generate_another": "Generate another JD"
+    },
+
+    "header": {
+      "title": "Job Description Generator",
+      "save_draft": "Save draft",
+      "publish": "Publish JD",
+      "publishing": "Publishing…",
+      "confirm": "Confirm & Publish"
+    },
+
+    "form": {
+      "title": "Role brief",
+      "subtitle": "Fill in the basics - AI handles the rest.",
+
+      "labels": {
+        "role_title": "Role title",
+        "seniority": "Seniority",
+        "job_type": "Job type",
+        "work_type": "Work type",
+        "experience": "Experience required",
+        "required_skills": "Required skills",
+        "salary_range": "Salary range (EGP)",
+        "key_notes": "Key notes"
+      },
+
+      "placeholders": {
+        "job_title": "Job title",
+        "select_seniority": "Select seniority",
+        "select_type": "Select type",
+        "select_work_type": "Select work type",
+        "experience": "e.g. 1-3 years",
+        "required_skills": "Required skills",
+        "salary_min": "Min",
+        "salary_max": "Max",
+        "additional_notes": "Additional hiring notes..."
+      },
+
+      "optional": "(optional)",
+
+      "buttons": {
+        "generate": "Generate JD",
+        "generating": "Generating…"
+      }
+    },
+
+    "validation": {
+      "title_required": "Job title is required",
+      "seniority_required": "Please select a seniority level",
+      "job_type_required": "Please select a job type",
+      "work_type_required": "Please select a work type",
+      "experience_required": "Please select experience required"
+    },
+
+    "preview": {
+      "empty_title": "Fill in the role brief",
+      "empty_subtitle": "and click Generate JD to see the preview",
+
+      "ai_generated": "AI Generated",
+
+      "salary_confidential": "Salary: Confidential",
+
+      "sections": {
+        "about_role": "About the role",
+        "responsibilities": "What you'll do",
+        "requirements": "What we're looking for",
+        "skills": "Skills & Tools"
+      }
+    },
+    "errors": {
+      "generate_failed": "Failed to generate JD"
+    }
+  },
+
+  "job_postings": {
+    "empty_state": "Select a job to view details",
+    "loading_stages": "Loading pipeline...",
+    "failed_stages": "Failed to load pipeline stages",
+    "failed_update": "Failed to update job details.",
+    "select_job": "Select a job",
+    "sidebar": {
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "edit": {
+      "edit_job": "Edit Job",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving..."
+    }
+  },
+
+  "no_company_view": {
+    "loading": "Loading companies...",
+    "sign_out": "Sign out",
+
+    "create": {
+      "title": "Create a New Company",
+      "company_name": "Company Name",
+      "industry": "Industry",
+      "company_size": "Company Size",
+      "location": "Location",
+
+      "placeholders": {
+        "name": "Acme Corp",
+        "industry": "e.g. Technology, Healthcare",
+        "size": "Number of employees",
+        "location": "City, Country"
+      },
+
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create Company",
+        "creating": "Creating..."
+      }
+    },
+
+    "join": {
+      "title": "Join or Create a Company",
+      "subtitle": "Select a company to get started with HireReadyAI or create your own",
+      "create_button": "Create a New Company",
+      "no_companies": "No companies available to join.",
+      "create_company": "Create a Company",
+      "join": "Join",
+      "joining": "Joining..."
+    }
+  },
+
+  "pending_approval": {
+    "title": "Pending Approval",
+    "subtitle": "Your request to join {{company}} is awaiting approval.",
+    "contact_hr": "Please contact your HR manager for access.",
+    "back_to_home": "Back to Home"
+  },
+
+  "job_content_cards": {
+    "job_summary": "Job summary",
+    "no_description": "No description provided.",
+
+    "responsibilities": "Responsibilities",
+    "requirements": "Requirements",
+    "skills": "Skills",
+
+    "none_specified": "None specified.",
+
+    "placeholders": {
+      "add_item": "Type and press Enter to add...",
+      "add_skill": "Add skill...",
+      "add_skill2": "Add skill"
+    }
+  },
+
+  "job_detail_header": {
+    "regenerate": " Regenerate with AI",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "saving": "Saving...",
+    "save": "Save",
+    "full_time": "Full-Time",
+    "any_seniority": "Any Seniority",
+    "any_location": "Any Location"
+  },
+
+  "job_info_grid": {
+    "seniority_level": "Seniority Level",
+    "location": "Location",
+    "work_type": "Work Type",
+    "type": "Type",
+    "salary": "Salary",
+    "published": "Published",
+    "ai_shortlist": "AI Shortlist",
+    "strong_fits": "strong fits",
+    "open_candidate_board": "Open candidate board",
+    "view_public_posting": "View public posting",
+    "copy_link": "Copy link",
+    "recently": "Recently"
+  },
+
+  "job_pipeline_preview": {
+    "title": "Hiring pipeline for this job",
+    "pipeline": "Pipeline",
+    "stages": "stages",
+    "owned_by_job": "Owned by this job posting",
+    "edit_pipeline": "Edit pipeline",
+    "no_stages": "No stages defined for this pipeline.",
+    "stage_label": "Stage",
+    "ai": "AI"
+  },
+
+  "job_sidebar": {
+    "open_roles": "Open Roles",
+    "click_to_view": "Click to view details",
+    "no_jobs": "No jobs found.",
+    "any_seniority": "Any Seniority",
+    "applicant": "applicant",
+    "applicant_plural": "applicants",
+    "published": "Published",
+    "closed": "Closed"
+  },
+
+  "interview_page": {
+    "labels": {
+      "interview": "Interview"
+    },
+
+    "loading": {
+      "first_question": "Preparing your first question…",
+      "evaluating": "Evaluating your answer and generating the next question…"
+    },
+
+    "errors": {
+      "no_active_stage": "No active interview stage found for this application.",
+      "load_failed": "Failed to load interview session.",
+      "generate_failed": "Failed to generate interview question.",
+      "title": "Something went wrong",
+      "go_back": "Go Back"
+    },
+
+    "question_types": {
+      "video": "Video",
+      "text": "Text",
+      "multiple_choice": "Multiple Choice",
+      "code": "Code"
+    },
+
+    "finished": {
+      "title": "Interview Complete",
+      "subtitle": "Your responses have been submitted and evaluated. The hiring team will review the results.",
+      "overall_score": "Overall Score",
+      "recommendation": "Recommendation",
+      "back_to_application": "Back to Application"
+    },
+
+    "progress": {
+      "remaining": "{{count}} questions remaining",
+      "final": "This is the final question"
+    },
+
+    "video_question": {
+      "camera_required_title": "Camera access required",
+      "camera_required_desc": "Please allow access to record your answer",
+      "camera_required_alert": "Camera and microphone access is required to record your answer.",
+      "enable_camera": "Enable Camera & Microphone",
+
+      "start_recording": "Start Recording (max 3 min)",
+      "stop_recording": "Stop Recording",
+
+      "re_record": "Re-record",
+      "submit_answer": "Submit Answer →",
+
+      "transcribing": "Transcribing your answer…",
+      "transcribing_sub": "This may take a few seconds",
+
+      "max_time": "max 3 min"
+    }
+  },
+
+  "code_question": {
+    "submit_answer": "Submit Answer"
+  },
+
+  "pipeline_builder": {
+    "back_to_pipelines": "Back to Pipelines",
+    "pipelines": "Pipelines",
+    "title": "Pipeline",
+
+    "desktop": {
+      "subtitle": "Drag stages to reorder or click to configure.",
+      "empty_desc": "Click a stage in the library to add it here."
+    },
+
+    "mobile": {
+      "subtitle": "Tap a stage to configure, or add from the library.",
+      "empty_desc": "Tap the Library button to add stages."
+    },
+
+    "empty": {
+      "title": "No stages yet"
+    },
+
+    "library": {
+      "label": "Library",
+      "title": "Stage Library",
+      "close": "Close library"
+    },
+
+    "settings": "Settings",
+    "close_settings": "Close settings",
+    "created": "Created",
+    "details": {
+      "title": "Stage Settings"
+    }
+  },
+
+  "stage_config_dialog": {
+    "title": "Configure Stage",
+    "subtitle": "Set up the stage details before adding it to the pipeline.",
+    "fields": {
+      "name": "Stage Name",
+      "description": "Stage Purpose",
+      "num_questions": "Number of Questions",
+      "pass_score": "Pass Score (%)"
+    },
+    "placeholders": {
+      "description": "Describe what this stage evaluates\u2026",
+      "num_questions": "e.g. 5",
+      "pass_score": "70"
+    },
+    "errors": {
+      "name_required": "Stage name is required",
+      "description_required": "Description is required for AI to generate criteria",
+      "num_questions_min": "Must have at least 1 question",
+      "pass_score_range": "Score must be between 0 and 100"
+    },
+    "generating_criteria": "Generating AI evaluation criteria\u2026",
+    "criteria_warning": "Criteria generation failed. You can regenerate later from the stage settings.",
+    "buttons": {
+      "confirm": "Add Stage",
+      "adding": "Adding\u2026",
+      "cancel": "Cancel"
+    }
+  },
+
+  "stage_details": {
+    "title": "Stage Settings",
+    "empty_description": "Select a stage from the canvas to configure it.",
+    "untitled_stage": "Untitled Stage",
+    "locked": "Locked",
+    "stage_library": "Stage Library",
+    "click_to_append": "Click to append",
+
+    "fields": {
+      "stage_name": "Stage Name",
+      "stage_type": "Stage Type",
+      "weight": "Weight",
+      "description": "Description"
+    },
+
+    "placeholders": {
+      "select_type": "Select type…",
+      "description": "Describe what happens in this stage…"
+    },
+
+    "advanced": {
+      "title": "Advanced (Coming Soon)",
+      "ai_evaluation": "AI Evaluation",
+      "manual_review": "Manual Review Required",
+      "auto_advance": "Auto Advance",
+      "auto_reject": "Auto Reject"
+    },
+
+    "evaluation_criteria": {
+      "title": "Evaluation Criteria",
+      "subtitle": "AI-generated competency framework for this stage.",
+      "empty": "No criteria defined. Click 'Regenerate' to generate from job context.",
+      "regenerate": "Regenerate with AI",
+      "regenerating": "Regenerating…",
+      "regenerate_confirm": "This will overwrite the current criteria. Continue?",
+      "add_competency": "Add Competency",
+      "weight_total": "Total Weight",
+      "weight_error": "Weights must sum to exactly 100% before saving.",
+      "weight_zero_warning": "Set weight > 0",
+      "required_label": "Required",
+      "min_questions_label": "Min Questions",
+      "concepts_label": "Concepts",
+      "add_concept_placeholder": "Add concept…",
+      "delete_competency": "Remove competency"
+    }
+  },
+
+  "candidate_pipeline": {
+    "title": "Candidate Pipeline",
+    "no_jobs": "No jobs",
+    "candidates_in_flight": "candidates in flight",
+    "search_placeholder": "Search candidates...",
+    "stage_score": "Stage score",
+    "unknown_candidate": "Unknown Candidate",
+
+    "filters": {
+      "title": "Filters",
+      "fit": "Fit:",
+      "all": "All"
+    },
+
+    "fit": {
+      "strong_fit": "Strong Fit",
+      "good_fit": "Good Fit",
+      "needs_review": "Needs Review",
+      "low_fit": "Low Fit",
+      "rejected": "Rejected"
+    },
+
+    "min_score": "Min Score",
+    "save": "Save",
+    "auto_advance": "Auto Advance",
+    "drop_here": "Drop here",
+    "auto_managed": "Auto-managed",
+    "locked_stage": "Locked stage — cannot be dropped into",
+
+    "empty": {
+      "title": "No candidates yet",
+      "subtitle": "Candidates appear here once applications start coming in."
+    },
+
+    "alerts": {
+      "advanced_success": "Advanced {{count}} candidate(s) successfully",
+      "no_match": "No candidates matched the criteria",
+      "auto_advance_failed": "Auto advance failed",
+      "shortlist_success": "Successfully advanced {{count}} candidate(s) to Shortlist!",
+      "no_candidates": "No candidates met the requirements to be auto-advanced.",
+      "failed": "Failed to auto-advance candidates."
+    }
+  },
+
+  "recruiter_dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome,",
+    "user": "User",
+    "subtitle": "Overview of your active job postings and applicants.",
+    "loading": "Loading dashboard...",
+    "error": "Failed to load dashboard data: "
+  },
+
+  "dashboard_charts": {
+    "pipeline_summary": {
+      "title": "Pipeline Summary",
+      "subtitle": "Across all active roles · last 7 days",
+      "live": "Live",
+      "stages": {
+        "applied": "Applied",
+        "screened": "Screened",
+        "testing": "Testing",
+        "interviewed": "Interviewed",
+        "shortlisted": "Shortlisted"
+      }
+    },
+    "top_jobs": {
+      "title": "Top Jobs by Applicants",
+      "subtitle": "Most active job postings"
+    }
+  },
+
+  "dashboard_jobs_table": {
+    "title": "Active Jobs Overview",
+    "no_jobs": "No jobs available",
+    "view_shortlist": "View Shortlist",
+    "columns": {
+      "job_title": "Job Title",
+      "company": "Company",
+      "applicants": "Applicants",
+      "tested": "Tested",
+      "interview": "Interview",
+      "waiting_action": "Waiting Action",
+      "shortlisted": "Shortlisted",
+      "actions": "Actions"
+    }
+  },
+
+  "dashboard_stats": {
+    "total_jobs": "Total Jobs",
+    "total_applicants": "Total Applicants",
+    "accepted": "Accepted",
+    "rejected": "Rejected"
+  },
+
+  "add_interview": {
+    "enter_question": "Enter each question on a new line.",
+    "title": "Send Interview Invitation",
+    "description": "Send an interview invitation to an applicant",
+    "buttons": {
+      "open": "Open Dialog",
+      "send": "Send interview",
+      "sending": "Sending..."
+    },
+    "labels": {
+      "application_id": "Application ID",
+      "job_id": "Job ID",
+      "rerecord_after": "Re-record available after"
+    },
+    "errors": {
+      "required_ids": "Application ID and Job ID are required",
+      "rerecord_positive": "Re-record minutes must be greater than 0"
+    }
+  },
+
+  "shortlists": {
+    "ai_match": "AI Match",
+    "title": "Shortlist",
+    "subtitle": "Top candidates surfaced by AI · awaiting hiring team decision",
+    "search": "Search candidates...",
+    "select_job": "Select a job posting",
+    "filters": "Filters",
+    "sort_label": "Sort",
+    "empty": "No candidates in this shortlist yet.",
+    "sort": {
+      "consensus": "Consensus",
+      "ai_score": "AI Score",
+      "name": "Name"
+    }
+  },
+
+  "shortlist": {
+    "yourVote": "Your Vote",
+    "noVoteYet": "You haven't voted yet.",
+    "votedMessage": "You voted {{vote}} — tap again to undo",
+
+    "teamVotes": "Team Votes",
+    "votesCast": "{{count}} / ? cast",
+    "noVotes": "No votes yet",
+
+    "vote": {
+      "up": "↑ Up",
+      "down": "↓ Down",
+      "neutral": "— Neutral"
+    },
+
+    "aiRationale": "AI Rationale",
+    "confidence": "Confidence {{value}}%",
+    "noAiRationale": "No AI rationale available for this candidate.",
+    "proceedNext": "— Proceed to next stage",
+
+    "teamNotes": "Team Notes",
+    "loadingNotes": "Loading notes...",
+    "noNotes": "No notes yet. Be the first to leave one.",
+    "teamMember": "Team member",
+    "notePlaceholder": "Leave a note for the hiring team...",
+    "visibleToTeam": "Visible to hiring team",
+    "cancel": "Cancel",
+    "postNote": "Post note",
+    "posting": "Posting...",
+
+    "rejectionReason": "Rejection reason (pre-filled from AI):",
+    "confirmReject": "Confirm reject",
+    "rejecting": "Rejecting...",
+    "moveRejected": "Move to rejected",
+    "rejected": "This candidate was rejected",
+
+    "timeAgo": {
+      "justNow": "Just now",
+      "hours": "{{count}}h ago",
+      "days": "{{count}}d ago"
+    },
+    "upVotes": "Up votes",
+    "neutral": "Neutral",
+    "downVotes": "Down votes",
+    "shortlisted": "shortlisted",
+    "awaitingVote": "awaiting first vote",
+    "aiSuggestion": "AI suggests advancing top {{count}} to onsite",
+
+    "noCandidates": "No candidates in shortlist.",
+    "rank": "RANK",
+    "candidate": "CANDIDATE",
+    "cv": "CV",
+    "tests": "TESTS",
+    "interview": "INTERVIEW",
+    "composite": "COMPOSITE",
+    "teamVote": "TEAM VOTE",
+    "noHeadline": "No headline",
+    "up": "Up",
+    "down": "Down",
+    "rankLabel": "Rank",
+
+    "compare": {
+      "emptyState": "Select candidates from the table above to compare them side-by-side.",
+      "title": "Side-by-side comparison",
+      "description": "Select 2-3 candidates to compare dimensions in detail. Drag to reorder."
+    }
+  },
+
+  "shortlistInsights": {
+    "upVotes": "Up votes",
+    "neutral": "Neutral",
+    "downVotes": "Down votes",
+    "shortlisted": "shortlisted",
+    "awaitingVote": "awaiting first vote",
+    "aiSuggestion": "AI suggests advancing top {{count}} to onsite",
+
+    "noCandidates": "No candidates in shortlist.",
+    "rank": "RANK",
+    "candidate": "CANDIDATE",
+    "cv": "CV",
+    "tests": "TESTS",
+    "interview": "INTERVIEW",
+    "composite": "COMPOSITE",
+    "teamVote": "TEAM VOTE",
+    "noHeadline": "No headline",
+    "up": "Up",
+    "down": "Down",
+    "rankLabel": "Rank"
+  },
+
+  "landing": {
+    "contact_us": {
+      "contactus": "Contact Us",
+      "get_in_touch": "Get in touch",
+      "title": "Contact information",
+      "description": "Reach the team directly through any of the channels below.",
+
+      "your_name": "Your Name",
+      "work_email": "Work Email",
+      "company": "Company",
+      "message": "Message",
+
+      "privacy_notice": "By submitting, you agree to our",
+      "privacy_policy": "Privacy Policy",
+
+      "sending": "Sending...",
+      "send_message": "Send Message",
+      "success_message": "Your message has been sent successfully!",
+
+      "email_label": "EMAIL",
+      "phone_label": "PHONE",
+      "office_label": "OFFICE",
+
+      "office_address": "Smart Village, Cairo, Egypt",
+
+      "support_hours": "Support Hours",
+      "support_hours_value": "Mon – Fri · 9:00 – 18:00 (GMT+2)"
+    },
+    "customers": {
+      "testimonials": "Testimonials",
+      "loved_by": "Loved by hiring teams"
+    },
+
+    "nav": {
+      "get_started": "Get Started"
+    },
+    "hero": {
+      "headline": "Hire Smarter. Apply Faster.",
+      "subheadline": "AI-powered platform connecting top talent with forward-thinking companies. Find your dream job or hire the perfect candidate  all in one place.",
+      "cta_applicant": "Find Your Dream Job",
+      "cta_recruiter": "Hire Top Talent"
+    },
+    "trusted_by": {
+      "heading": "Trusted by 2000+ Companies"
+    },
+    "features": {
+      "heading": "Everything You Need to Hire Better",
+      "1": {
+        "title": "AI Job Description Generator",
+        "description": "Generate tailored, high-quality job descriptions in seconds. Just enter a few keywords and let AI craft the perfect JD for any role.",
+        "details": [
+          "Generate complete JDs from job title or keywords",
+          "Customize tone, seniority, and required skills",
+          "Export in multiple formats or post directly"
+        ]
+      },
+      "2": {
+        "title": "Smart Job Posting & CV Evaluation",
+        "description": "Post jobs instantly and let AI automatically screen and score incoming CVs against your requirements.",
+        "details": [
+          "Auto-parse and extract key candidate data from CVs",
+          "AI match scoring against job requirements",
+          "Instant shortlist generation for top candidates"
+        ]
+      },
+      "3": {
+        "title": "AI Interviews & Assessments",
+        "description": "Conduct comprehensive assessments with video, text, code, and multiple-choice questions powered by AI.",
+        "details": [
+          "Video interview with AI analysis of responses",
+          "Live coding challenges with real-time evaluation",
+          "Auto-graded quizzes and situational questions"
+        ]
+      },
+      "4": {
+        "title": "Visual Candidates Pipeline",
+        "description": "Track every candidate through your hiring stages with a drag-and-drop pipeline that gives you full visibility.",
+        "details": [
+          "Custom pipeline stages for any workflow",
+          "Drag-and-drop candidate movement between stages",
+          "Real-time stage progress and status indicators"
+        ]
+      },
+      "5": {
+        "title": "Detailed Candidate Profiles",
+        "description": "Deep-dive into every candidate with AI-generated feedback showing strengths, weaknesses, gaps, and question-level analysis.",
+        "details": [
+          "Full AI evaluation report with scored dimensions",
+          "Question-by-question breakdown of responses",
+          "Strengths, weaknesses, and skill gap analysis"
+        ]
+      },
+      "6": {
+        "title": "Applicant Feedback Engine",
+        "description": "Help every applicant grow with personalized feedback after rejection or offer, turning every application into a learning experience.",
+        "details": [
+          "Personalized improvement tips based on performance",
+          "Skill gap analysis with actionable recommendations",
+          "Constructive feedback delivered professionally"
+        ]
+      }
+    }
+  },
+  "builtForJobs": {
+    "eyebrow": "Built For Job Seekers",
+    "title": "Built for Job Seekers & Employers",
+    "subtitle": "Every tool in HireReadyAI is designed around one goal: getting you from application to offer faster.",
+
+    "features": {
+      "0": {
+        "title": "AI-Powered Resume Review",
+        "description": "Get instant feedback on your resume, identify missing skills, and improve your chances before applying.",
+        "visualTitle": "Resume Analysis Complete",
+        "visualSubtitle": "Frontend Developer CV",
+
+        "positives": {
+          "0": "Strong React Skills",
+          "1": "Good Project Experience"
+        },
+
+        "negatives": {
+          "0": "Add More Keywords"
+        }
+      },
+
+      "1": {
+        "title": "ATS Match Scoring",
+        "description": "See how well your resume matches each job posting and discover what recruiters are looking for.",
+        "visualTitle": "Match Score",
+        "visualBadge": "92% Match",
+        "visualSubtitle": "Frontend Developer",
+
+        "skillsFoundLabel": "Skills Found",
+        "skillsFound": {
+          "0": "React",
+          "1": "JavaScript",
+          "2": "Git"
+        },
+
+        "missingLabel": "Missing",
+        "missing": {
+          "0": "TypeScript"
+        }
+      }
+    },
+
+    "heroFeature": {
+      "title": "AI Interview Assistant",
+      "description": "Practice interview questions generated specifically for the role you're applying for — get scored, get feedback, get confident.",
+      "mockTitle": "Mock Interview Ready",
+      "mockBadge": "Ready",
+      "roleLabel": "Role",
+      "roleValue": "Frontend Developer",
+      "questionsLabel": "Questions Generated",
+      "questionsValue": "12",
+      "timeLabel": "Estimated Time",
+      "timeValue": "15 min",
+      "tailoredNote": "Questions tailored to your resume & job description"
+    },
+
+    "screeningFeature": {
+      "title": "AI Screening Assistant",
+      "description": "Pass recruiter screening rounds with confidence. HireReadyAI coaches you on the exact criteria companies use to filter candidates at each stage.",
+      "scoreLabel": "Screening Score",
+      "scoreRole": "Senior Frontend Engineer",
+      "scoreValue": "94%"
+    }
+  },
+  "builtFj": {
+    "labels": {
+      "applicants": "For Applicants",
+      "employers": "For Employers"
+    },
+
+    "applicant": {
+      "resumeScore": {
+        "title": "AI Resume Match Score",
+        "description": "Get an AI-powered score showing how well your resume matches the job you applied for, along with insights to improve your chances.",
+        "cardTitle": "Resume Match Score",
+        "position": "Frontend Developer Position",
+        "insight1": "+ Strong React Experience",
+        "insight2": "+ Relevant Project Portfolio",
+        "insight3": "− Add More TypeScript Keywords"
+      },
+
+      "interviews": {
+        "title": "AI Interviews & Assessments",
+        "description": "Complete AI-generated interviews and skill tests tailored to the job you're applying for, then receive automatic scoring and feedback.",
+        "cardTitle": "Assessment Result",
+        "position": "Frontend Developer Interview",
+        "strengths": "Strengths",
+        "improve": "Improve",
+        "problemSolving": "Problem Solving",
+        "reactKnowledge": "React Knowledge",
+        "systemDesign": "System Design"
+      }
+    },
+
+    "recruiter": {
+      "jdGenerator": {
+        "title": "AI Job Description Generator",
+        "description": "Create professional and accurate job descriptions in seconds using AI, helping recruiters publish roles faster and more consistently.",
+        "generated": "Job Description Generated",
+        "ready": "Ready",
+        "positionLabel": "Position",
+        "position": "Senior Frontend Developer",
+        "requirements": "Requirements",
+        "responsibilities": "Responsibilities",
+        "footer": "AI-generated job description tailored to the role and industry standards"
+      },
+
+      "shortlist": {
+        "title": "Auto-Screen & Shortlist",
+        "description": "Automatically evaluate applicants and advance the most qualified candidates to the shortlist based on AI-driven screening.",
+        "cardTitle": "Candidates Shortlisted",
+        "position": "Frontend Developer Position"
+      }
+    }
+  },
+
+  "topFeaturedJobs": {
+    "eyebrow": "Featured Jobs",
+    "title": "Top Featured Jobs",
+    "subtitle": "Hand-picked roles from companies actively hiring on HireReadyAI, vetted for quality, clarity, and career growth.",
+    "browseAll": "Browse All Jobs",
+    "applyLabel": "Apply",
+    "applicantsLabel": "applicants",
+
+    "jobs": {
+      "0": {
+        "company": "Google",
+        "office": "Remote · Full Time",
+        "role": "Senior Product Designer",
+        "salary": "$90K–$110K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "1": {
+        "company": "Stripe",
+        "office": "New York Office",
+        "role": "Frontend Engineer",
+        "salary": "$110K–$140K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "2": {
+        "company": "Figma",
+        "office": "San Francisco Office",
+        "role": "Design Systems Lead",
+        "salary": "$100K–$130K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Part Time"
+        }
+      },
+
+      "3": {
+        "company": "Anthropic",
+        "office": "Remote · Contract",
+        "role": "AI Product Manager",
+        "salary": "$120K–$160K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "Remote",
+          "2": "Contract"
+        }
+      },
+
+      "4": {
+        "company": "Notion",
+        "office": "Remote · Part Time",
+        "role": "UX Researcher",
+        "salary": "$70K–$90K",
+
+        "tags": {
+          "0": "Part Time",
+          "1": "Remote"
+        }
+      },
+
+      "5": {
+        "company": "Linear",
+        "office": "Berlin Office",
+        "role": "Lead UI/UX Designer",
+        "salary": "$80K–$100K",
+
+        "tags": {
+          "0": "Full Time",
+          "1": "On-site"
+        }
+      }
+    },
+
+    "tags": {
+      "fullTime": "Full Time",
+      "remote": "Remote",
+      "partTime": "Part Time",
+      "onSite": "On-site",
+      "contract": "Contract"
+    }
+  },
+
+  "faq": {
+    "eyebrow": "FAQ",
+    "title": "Frequently Asked Questions",
+    "subtitle": "Have questions about how HireReadyAI works? Here are the ones we hear most.",
+
+    "phone": {
+      "welcomeBack": "Welcome back!",
+      "myApplications": "My Applications",
+
+      "navItems": {
+        "0": "Home",
+        "1": "Jobs",
+        "2": "Track",
+        "3": "Profile"
+      },
+
+      "pipeline": {
+        "0": {
+          "role": "Product Designer",
+          "company": "Google",
+          "stage": "Interview"
+        },
+        "1": {
+          "role": "UX Researcher",
+          "company": "Stripe",
+          "stage": "Screening"
+        },
+        "2": {
+          "role": "Design Lead",
+          "company": "Figma",
+          "stage": "Applied"
+        }
+      },
+
+      "floatingTitle": "Interview Request",
+      "floatingSubtitle": "Google · 2 min ago"
+    },
+
+    "items": {
+      "0": {
+        "q": "How can I find jobs on HireReadyAI?",
+        "a": "Use the Jobs page to search by title, skill, or company. You can filter by job type, location, and salary range. Your dashboard also surfaces recommended roles based on your profile , the more complete your profile, the better the suggestions."
+      },
+      "1": {
+        "q": "Is my resume and profile data kept private?",
+        "a": "Yes. Your profile is only shared with employers when you explicitly apply. We never sell your data or surface your profile to recruiters without your consent."
+      },
+      "2": {
+        "q": "How do I track my applications?",
+        "a": "The My Applications dashboard gives you a real-time pipeline view , from Applied through Screening, Interview, Assessment, and Final Stage. Each card updates automatically when a recruiter takes action."
+      },
+      "3": {
+        "q": "Can I take interviews directly on the platform?",
+        "a": "Yes. HireReadyAI lets you start live AI-powered interviews instantly. You don't need to prepare externally , just choose a role and begin. The AI asks role-specific questions, evaluates your responses in real time, and provides feedback on your answers."
+      },
+      "4": {
+        "q": "What types of roles and industries does HireReadyAI cover?",
+        "a": "We cover tech, design, product, marketing, finance, and operations roles across startups, scale-ups, and enterprise companies. New listings are added daily, and you can set alerts for any keyword or company."
+      },
+      "5": {
+        "q": "How do I upload or update my profile picture?",
+        "a": "Go to your Profile page, click on your avatar, and select a new image from your device. Supported formats are JPG and PNG. Your picture is visible to employers when they review your application."
+      }
+    }
+  },
+
+  "howItWorks": {
+    "eyebrow": "How it works",
+    "title": "How it works",
+    "applicantSubtitle": "Your journey to your dream job designed to be seamless and transparent.",
+    "recruiterSubtitle": "End-to-end talent acquisition platform powered by advanced AI.",
+    "tabs": {
+      "jobSeeker": "Job Seeker",
+      "employer": "Employer"
+    },
+    "applicantSteps": {
+      "step1": {
+        "title": "Browse Jobs",
+        "description": "Explore and search for open positions easily."
+      },
+      "step2": {
+        "title": "Apply & Submit",
+        "description": "Attach your resume and fill out the application form."
+      },
+      "step3": {
+        "title": "AI Interviews & Tests",
+        "description": "Complete AI-driven interviews and skill assessments."
+      },
+      "step4": {
+        "title": "Track Results",
+        "description": "Monitor your application status and performance feedback."
+      }
+    },
+    "recruiterSteps": {
+      "step1": {
+        "title": "Generate JD",
+        "description": "Create accurate job descriptions using AI."
+      },
+      "step2": {
+        "title": "Auto-Screen & Shortlist",
+        "description": "Auto advance candidate to shortlist automatically."
+      },
+      "step3": {
+        "title": "Team Voting",
+        "description": "Vote into recruitment team for offer & reject."
+      },
+      "step4": {
+        "title": "Final Decisions",
+        "description": "Evaluate and shortlist for top candidate."
+      }
+    }
+  },
+
+  "application_questions_modal": {
+    "title": "Application Questions",
+    "subtitle": "Add questions applicants will answer when applying",
+    "empty_state": "No questions yet. Click \"Add Question\" to get started.",
+    "question_placeholder": "Write your question...",
+    "add_question": "Add Question",
+    "skip": "Skip",
+    "question_count_one": "{{count}} question",
+    "question_count_other": "{{count}} questions"
+  },
+  "analytics_charts": {
+    "stage_status_breakdown": "Stage Status Breakdown",
+    "applications_over_time": "Applications Over Time",
+    "no_stage_data": "No stage data available",
+    "no_data": "No data available"
+  },
+  "app_selector": {
+    "unknown_job": "Unknown",
+    "rejected": "Rejected",
+    "hired": "Hired",
+    "offer": "Offer"
+  },
+  "applicationTimeline": {
+    "title": "Application Timeline",
+    "unknown": "Unknown",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "status": {
+      "passed": "Passed",
+      "completed": "Completed",
+      "failed": "Failed",
+      "in_progress": "In Progress"
+    }
+  },
+  "assessments": {
+    "title": "Assessments & Interviews",
+    "totalQuestions": "total questions",
+    "noDataTitle": "No Assessment Data",
+    "noDataDescription": "You have not completed any interviews or assessments for this application yet.",
+    "recommendation": "Recommendation",
+    "confidence": "Confidence",
+    "questions": "Questions",
+    "stageTypes": {
+      "hr_interview": "HR Interview",
+      "technical_interview": "Technical Interview",
+      "assessment": "Assessment",
+      "assessment_test": "Assessment Test",
+      "coding_test": "Coding Test",
+      "video_interview": "Video Interview",
+      "manager_interview": "Manager Interview",
+      "ai_screening": "AI Screening"
+    }
+  },
+  "candidate": {
+    "status": {
+      "rejected": "Rejected",
+      "hired": "Hired",
+      "offer": "Offer"
+    },
+    "appliedFor": "Applied for"
+  },
+  "cv": {
+    "title": "AI CV Review",
+    "noDataTitle": "No CV review data available",
+    "noDataDescription": "CV has not been reviewed yet.",
+    "dimensionScores": "Dimension Scores",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "gaps": "Gaps",
+    "recommendation": {
+      "proceed": "Proceed",
+      "review": "Review",
+      "reject": "Reject"
+    }
+  },
+  "questions": {
+    "types": {
+      "video": "Video Response",
+      "text": "Written Answer",
+      "code": "Code Challenge",
+      "multiple_choice": "Multiple Choice"
+    },
+    "answer": "Answer",
+    "noVideo": "No video recording available",
+    "transcript": "Transcript",
+    "noTextAnswer": "No answer provided.",
+    "noCode": "No code submitted.",
+    "options": "Options",
+    "noSelected": "No answer selected.",
+    "aiFeedback": "AI Feedback",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "noFeedback": "No AI feedback available for this answer."
+  },
+  "takeaways": {
+    "title": "Key Takeaways",
+    "strength": "Strength:",
+    "improve": "Area to improve:",
+    "gap": "Gap:"
+  },
+  "scoreRing": {
+    "overall": "Overall"
+  },
+  "similarJobs": {
+    "title": "Similar Opportunities"
+  },
+  "skills": {
+    "title": "Skills to Develop",
+    "subtitle": "Based on your feedback, consider strengthening these areas:"
+  },
+  "arraySection": {
+    "empty": "No {{section}} added yet",
+    "add": "Add {{section}}"
+  },
+  "dialogs": {
+    "education": {
+      "degreeLevel": "Degree Level",
+      "selectDegree": "Select degree level"
+    }
+  },
+  "add_language": " Add Language",
+  "proficiency": "Proficiency",
+  "rejected_applications": "Rejected Applications",
+  "show_feedback": "Show Feedback",
+  "feedback": {
+    "back_to_dashboard": "Back to Dashboard",
+    "title": "My Feedback",
+    "no_feedback_title": "No feedback available yet",
+    "no_feedback_description": "Feedback and evaluation results will appear here once your applications are reviewed by recruiters or completed through the hiring process.",
+    "explore_jobs": "Explore Jobs",
+    "select_application": "Select an application to view feedback",
+    "detailed_breakdown": "Detailed Breakdown",
+    "detailed_breakdown_hint": "(CV review, dimension scores, assessments)"
+  },
+  "profile_not_found": "Profile not found",
+  "common": {
+    "loading": "Loading...",
+    "loading_profile": "Loading profile..."
+  },
+  "payment_cancelled": "Payment Cancelled",
+  "cancelled_the_payment": "You cancelled the payment. No charges were made.",
+  "premium": {
+    "loading_title": "Confirming your payment...",
+    "loading_description": "Please wait a moment.",
+    "success_title": "Premium Activated!",
+    "success_description": "Redirecting you back...",
+    "error_title": "Something went wrong",
+    "error_description": "We couldn't confirm your payment. Please contact support.",
+    "back_to_dashboard": "Back to Dashboard"
+  },
+  "billing": {
+    "title": "Plan & Billing",
+    "premium_description": "Your company is on the Premium plan.",
+    "upgrade_description": "Upgrade to unlock premium stage types in your pipeline.",
+    "features": {
+      "assessment_tests": "Assessment tests",
+      "coding_tests": "Coding tests",
+      "video_interviews": "Video interviews",
+      "background_checks": "Background checks"
+    },
+    "premium_label": "Premium",
+    "upgrade_button": "Upgrade - $29",
+    "redirecting": "Redirecting..."
+  },
+  "googleRoleSelect": {
+    "headline": "One last step",
+    "subheading": "How will you be using HireReadyAI?",
+    "roles": {
+      "applicant": {
+        "label": "Applicant",
+        "desc": "Browse and apply for jobs"
+      },
+      "recruiter": {
+        "label": "Recruiter",
+        "desc": "Post jobs and manage candidates"
+      }
+    },
+    "error": {
+      "settingUp": "Setting up your account...",
+      "getStarted": "Get Started"
+    }
+  },
+  "subscription": {
+    "title": "Choose your plan",
+    "subtitle": "Start with a free plan and upgrade anytime",
+    "free": {
+      "name": "Free",
+      "price": "$0",
+      "period": "/forever",
+      "feature1": "Up to 10 active job postings",
+      "feature2": "Basic candidate management",
+      "feature3": "Team collaboration (up to 5 members)",
+      "feature4": "Email support",
+      "button": "Get Started Free"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "$29",
+      "period": "/one-time",
+      "badge": "One-time",
+      "feature1": "Unlimited job postings",
+      "feature2": "AI-powered candidate screening",
+      "feature3": "Advanced analytics & reports",
+      "feature4": "Priority support",
+      "feature5": "Custom branding",
+      "button": "Buy Premium"
+    }
+  },
+  "companySelection": {
+    "description": "Select a company to get started with HireReadyAI or create your own",
+    "createButton": "Create a New Company",
+    "noCompanies": "No companies available to join."
+  },
+  "landing_navbar": {
+    "nav": {
+      "get_started": "Get Started",
+      "features": "Features",
+      "how_it_works": "How It Works",
+      "testimonials": "Testimonials",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "contact": "Contact"
+    }
+  },
+  "candidate_sidebar": {
+    "show_profile": "Show Profile",
+    "view_profile": "View Profile",
+    "rejected": "Rejected",
+    "reject": "Reject",
+    "unreject": "Un-reject",
+    "ai_recommendation": "AI Recommendation",
+    "confidence": "Confidence",
+    "politely_reject": "Politely reject",
+    "advance_next_stage": "Advance to next stage",
+    "no_reasoning": "Evaluation completed, but no detailed reasoning was provided.",
+    "pipeline_progress": "Pipeline Progress",
+    "stage_results": "Stage Results",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "currently_evaluating": "Currently evaluating",
+    "live_session_scheduled": "Live session scheduled",
+    "no_feedback": "No detailed feedback available.",
+    "unknown_stage": "Unknown Stage",
+    "metrics": {
+      "resume": "Resume",
+      "ai_match": "AI Match",
+      "stage": "Stage"
+    },
+    "status": {
+      "rejected": "Rejected",
+      "passed": "Passed",
+      "in_progress": "In Progress",
+      "failed": "Failed",
+      "pending": "Pending"
+    }
+  },
+  "candidate_assessments": {
+    "title": "Assessments & Interviews",
+    "candidate": "Candidate",
+    "back_to_profile": "Back to Profile",
+    "total_questions": "total questions",
+    "unknown": "Unknown",
+
+    "answer": "Answer",
+    "transcript": "Transcript",
+    "options": "Options",
+
+    "no_video": "No video recording available",
+    "no_answer": "No answer provided.",
+    "no_code": "No code submitted.",
+    "no_selection": "No answer selected.",
+    "no_ai_feedback": "No AI feedback available for this answer.",
+
+    "ai_feedback": "AI Feedback",
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+
+    "ui_visual": "UI / Visual",
+    "problem_solving": "Problem Solving",
+
+    "no_assessment_data": "No Assessment Data",
+    "no_assessment_subtitle": "This candidate has not completed any interviews or assessments yet.",
+
+    "recommendation": "Recommendation",
+    "confidence": "Confidence",
+    "questions": "Questions",
+    "na": "N/A",
+
+    "question_types": {
+      "video": "Video Response",
+      "text": "Written Answer",
+      "code": "Code Challenge",
+      "multiple_choice": "Multiple Choice"
+    },
+
+    "recommendations": {
+      "proceed": "Proceed",
+      "review": "Review",
+      "reject": "Reject"
+    },
+
+    "status": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "in_progress": "In Progress",
+      "pending": "Pending"
+    }
+  },
+  "candidate_profile": {
+    "candidate_not_found": "Candidate not found",
+    "back_to_pipeline": "Back to Pipeline",
+    "cv": "CV",
+    "unknown_candidate": "Unknown Candidate",
+    "unknown": "Unknown",
+
+    "rejected": "Rejected",
+    "show_profile": "Show Profile",
+
+    "applied_for": "Applied for:",
+    "composite": "Composite",
+
+    "ai_cv_review": "AI CV Review",
+
+    "application_questions": "Application Questions & Answers",
+    "question": "Q",
+    "no_answer": "No answer provided",
+
+    "dimension_scores": "Dimension Scores",
+
+    "strengths": "Strengths",
+    "weaknesses": "Weaknesses",
+    "gaps": "Gaps",
+
+    "no_cv_review": "No CV review data available",
+    "cv_not_reviewed": "CV has not been reviewed yet.",
+
+    "stage_scores": "Stage Scores",
+    "no_stages": "No stages available.",
+
+    "assessments": "Assessments & Interviews",
+    "stages_with_results": "stage(s) with results",
+
+    "na": "N/A",
+
+    "recommendations": {
+      "proceed": "PROCEED",
+      "review": "REVIEW",
+      "reject": "REJECT"
+    },
+
+    "status": {
+      "passed": "Passed",
+      "failed": "Failed",
+      "in_progress": "In Progress",
+      "pending": "Pending"
+    }
+  },
+
+  "admin": {
+    "title": "Admin Dashboard",
+    "auth_title": "Admin Access",
+    "auth_subtitle": "Sign in with an admin account",
+    "sign_in": "Sign in as Admin",
+    "signing_in": "Signing in...",
+    "users": "Users",
+    "total_users": "Total Users",
+    "recruiters": "Recruiters",
+    "applicants": "Applicants",
+    "flagged": "Flagged for Review",
+    "create_admin": "Create Admin",
+    "violations": "Violations",
+    "no_violations": "No violations",
+    "actions": "Actions",
+    "warn": "Warn",
+    "freeze": "Freeze",
+    "ban": "Ban",
+    "active": "Set Active",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "reason": "Reason",
+    "duration": "Duration",
+    "days": "Days",
+    "hours": "Hours",
+    "email": "Email",
+    "full_name": "Full Name",
+    "password": "Password",
+    "creating": "Creating...",
+    "created_success": "Admin user created successfully!",
+
+    "suspended": {
+      "banned_title": "Account Suspended",
+      "banned_desc": "Your account has been suspended due to a violation of our terms.",
+      "frozen_title": "Account Frozen",
+      "frozen_desc": "Your account has been temporarily frozen.",
+      "time_remaining": "{{time}} remaining",
+      "reason_label": "Reason:",
+      "contact_admin": "Contact Admin",
+      "sign_out": "Sign Out",
+      "subject": "Subject",
+      "message": "Message",
+      "submit_report": "Submit Report",
+      "submitting": "Submitting...",
+      "submitted": "Report submitted. We'll review it shortly."
+    },
+
+    "technical_issues": {
+      "title": "Technical Issues",
+      "pending": "Pending",
+      "under_development": "Under Development",
+      "in_progress": "In Progress",
+      "resolved": "Resolved",
+      "show_resolved": "Show Resolved",
+      "hide_resolved": "Hide Resolved",
+      "issue_type": "Issue Type",
+      "ai_evaluation": "AI Evaluation",
+      "wrong_question": "Wrong Question",
+      "system_bug": "System Bug",
+      "ui_issue": "UI Issue",
+      "performance": "Performance",
+      "other": "Other",
+      "assign_to": "Assign To",
+      "update_status": "Update Status",
+      "subtitle": "Platform bugs, AI evaluation errors, and system issues",
+      "all": "All",
+      "loading": "Loading...",
+      "empty": "No issues found",
+      "edit_title": "Edit Issue",
+      "status_label": "Status",
+      "resolution_notes_placeholder": "Notes on how this was resolved...",
+      "cancel": "Cancel",
+      "save": "Save",
+      "saving": "Saving..."
+    },
+
+    "reports": {
+      "title": "Reports",
+      "pending": "Pending",
+      "investigating": "Investigating",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed",
+      "all_types": "All Types",
+      "company": "Company",
+      "user": "User",
+      "interview": "Interview",
+      "question": "Question",
+      "severity": "Severity",
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical",
+      "target": "Target",
+      "reporter": "Reporter",
+      "date": "Date",
+      "resolve": "Resolve",
+      "dismiss": "Dismiss",
+      "resolution_notes": "Resolution Notes",
+      "action_taken": "Action Taken",
+      "platform_issue": "Platform Issue (creates technical ticket)",
+      "subtitle": "Manage user and company reports",
+      "no_reports": "No reports found",
+      "all_severities": "All Severities",
+      "subject": "Subject",
+      "description": "Description",
+      "view_user_profile": "View User Profile",
+      "view_company_profile": "View Company Profile",
+      "score_assignment": "Score Assignment",
+      "loading": "Loading...",
+      "no_reason": "No reason provided",
+      "answer_label": "Answer",
+      "selected": "Selected",
+      "video_available": "Video recording available",
+      "question_unavailable": "Question data unavailable",
+      "interview_unavailable": "Interview data unavailable",
+      "evaluation": "Evaluation",
+      "score_user": "Score → User",
+      "score_company": "Score → Company",
+      "investigating": "Investigating",
+      "all_statuses": "All",
+      "type_label": "Type",
+      "details_title": "Report Details",
+      "pts": "pts",
+      "qtype_text": "Written",
+      "qtype_code": "Code",
+      "qtype_multiple_choice": "Multiple Choice",
+      "qtype_video": "Video",
+      "ai_feedback": "AI Feedback",
+      "recommendation": "Recommendation",
+      "overrides_original": "(overrides original)",
+      "keep_original": "Keep original ({{severity}})",
+      "severity_label": "Severity",
+      "auto_creates_issue": "Auto-creates a technical issue",
+      "none_option": "None",
+      "score_platform": "No score (platform issue)"
+    },
+
+    "companies": {
+      "title": "Companies",
+      "subtitle": "Manage companies and apply actions",
+      "total": "Total Companies",
+      "active": "Active",
+      "closing_warning": "Closing Warning",
+      "banned": "Banned",
+      "closing_label": "Closing",
+      "search_placeholder": "Search companies...",
+      "no_results": "No companies found",
+      "jobs_count": "{{active}}/{{total}} jobs",
+      "members_count": "{{count}} members",
+      "details_title": "Company Details",
+      "deadline": "by {{date}}",
+      "active_jobs": "Active Jobs",
+      "total_jobs": "Total Jobs",
+      "members": "Members",
+      "score": "Score",
+      "warn": "Warn",
+      "close": "Close",
+      "ban": "Ban",
+      "restore": "Set Active"
+    },
+
+    "company_action": {
+      "title": "Company Action — {{name}}",
+      "action_type": "Action Type",
+      "select_action": "Select action...",
+      "reason_placeholder": "Reason for this action...",
+      "closing_hint": "Sets closing_deadline = now + 7 days. Company members will see a warning banner.",
+      "ban_hint": "Immediately bans the company and closes all active job postings.",
+      "active_hint": "Reinstates the company to active status and clears warning/ban state.",
+      "cancel": "Cancel",
+      "apply": "Apply",
+      "applying": "Applying..."
+    },
+
+    "appeals": {
+      "title": "Appeals",
+      "subtitle": "Review and respond to ban appeals and company closure appeals",
+      "user_appeals": "User Appeals",
+      "company_appeals": "Company Appeals",
+      "no_pending": "No pending appeals",
+      "reason": "Reason: {{reason}}",
+      "appeal_text": "Appeal: {{message}}",
+      "deadline": "Deadline: {{date}}",
+      "no_reason": "No reason provided",
+      "no_messages": "No messages yet",
+      "message_placeholder": "Type a message...",
+      "approve": "Approve Appeal",
+      "reject": "Reject",
+      "you": "You",
+      "approved_note": "Appeal approved. Account reinstated.",
+      "rejected_note": "Appeal rejected.",
+      "pending_tab": "Pending",
+      "history_tab": "History"
+    },
+
+    "users_table": {
+      "search_placeholder": "Search users by name or email...",
+      "no_results": "No users found",
+      "details_title": "User Details",
+      "severity_score": "Severity Score",
+      "violations": "Violations",
+      "violations_count": "{{count}} violations",
+      "warn": "Warn",
+      "freeze": "Freeze",
+      "ban": "Ban",
+      "restore": "Set Active"
+    },
+
+    "create_admin": {
+      "title": "Create Admin",
+      "full_name_placeholder": "Admin Name",
+      "email_placeholder": "admin@company.com",
+      "password_placeholder": "Min 8 characters",
+      "failed": "Failed to create admin",
+      "created": "Created!"
+    },
+
+    "welcome": "Welcome, {{name}}",
+    "pending_appeals": "Pending Appeals",
+    "unknown_user": "Unknown User",
+    "reason_placeholder": "Reason for this action...",
+    "applying": "Applying...",
+    "warn_user": "Warn User",
+    "freeze_user": "Freeze User",
+    "ban_user": "Ban User",
+    "restore_user": "Restore User",
+    "sign_in_failed": "Sign in failed",
+    "admin_error": "Failed to apply action"
+  }
+}

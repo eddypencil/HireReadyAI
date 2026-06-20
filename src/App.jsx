@@ -1,80 +1,237 @@
-import { User } from "./models/user";
-import { useUser } from "./context/userContext";
-import { USER_ROLE } from "./utils/enums";
+// src/App.jsx
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useUser } from "@/features/auth/context/user.context";
+import { ProtectedRoute } from "@/features/auth/components/ProtectedRoute";
+import LandingPage from "@/features/landing/Pages/LandingPage";
+import SignInPage from "@/features/auth/pages/SignInPage";
+import SignUpPage from "@/features/auth/pages/SignUpPage";
+import ForgotPasswordPage from "@/features/auth/pages/ForgotPasswordPage";
+import ResetPasswordPage from "@/features/auth/pages/ResetPasswordPage";
+import AuthCallback from "@/features/auth/pages/AuthCallback";
+import GoogleRoleSelect from "@/features/auth/pages/GoogleRoleSelect";
+import { USER_ROLE } from "@/shared/constants/enums";
+import ApplicantPage from "@/features/applicant/pages/ApplicantPage";
+import ApplicantFeedbackPage from "@/features/applicant/pages/ApplicantFeedbackPage";
+import ApplicantProfilePage from "@/features/applicant/pages/ApplicantProfilePage";
+import JobsPage from "@/features/jobs/pages/JobsPage";
+import CompanyLayout from "./features/companies/pages/CompanyLayout";
+import MainLayout from "@/shared/ui/MainLayout";
+import Recruiterscreen from "./features/recruiter/pages/recruiter_screen";
+import InterviewPage from "./features/interview/pages/interviewPage";
+import JobDetailsPage from "@/features/jobs/pages/JobDetailsPage";
+import ApplyJobPage from "@/features/applications/pages/ApplyJobPage";
+import PipelineCandidatesPage from "./features/recruiter/pages/PipelineCandidatesPage";
+import PublicCompanyProfile from "./features/companies/pages/PublicCompanyProfile";
+import PremiumSuccessPage from "./features/premium/pages/PremiumSuccessPage";
+import PremiumCancelPage from "./features/premium/pages/PremiumCancelPage";
+import LoadingSpinner from "@/shared/ui/LoadingSpinner";
+import TermsPage from "./features/auth/pages/TermsPage";
+import PrivacyPage from "./features/auth/pages/PrivacyPage";
+import AdminAuthPage from "@/features/admin/pages/AdminAuthPage";
+import AdminDashboardPage from "@/features/admin/pages/AdminDashboardPage";
+import AdminReportsPage from "@/features/admin/pages/AdminReportsPage";
+import AdminTechnicalIssuesPage from "@/features/admin/pages/AdminTechnicalIssuesPage";
+import AdminCompaniesPage from "@/features/admin/pages/AdminCompaniesPage";
+import AdminAppealsPage from "@/features/admin/pages/AdminAppealsPage";
+import AccountSuspended from "@/shared/ui/AccountSuspended";
 
-function App() {
-  const { user, profile, loading, signUpUser, signInUser, signOutUser } = useUser();
-
-  const handleSignUp = async () => {
-    try {
-      const email = "mohamed@gmail.com";
-      const password = "12345678";
-      const userProfile = new User("Mohamed Mabrouk", USER_ROLE.recruiter, "01013767382", true);
-      
-      console.log("Signing up...");
-      await signUpUser(email, password, userProfile);
-      console.log("Sign up & profile creation successful!");
-    } catch (err) {
-      console.error("Sign up error:", err.message);
-    }
-  };
-
-  const handleSignIn = async () => {
-    try {
-      const email = "mohamed@gmail.com";
-      const password = "12345678";
-      
-      console.log("Signing in...");
-      await signInUser(email, password);
-      console.log("Sign in successful!");
-    } catch (err) {
-      console.error("Sign in error:", err.message);
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      console.log("Signing out...");
-      await signOutUser();
-      console.log("Sign out successful!");
-    } catch (err) {
-      console.error("Sign out error:", err.message);
-    }
-  };
+// eslint-disable-next-line no-unused-vars
+function RootRedirect() {
+  const { user, profile, loading } = useUser();
 
   if (loading) {
-    return <div style={{ padding: "20px", fontFamily: "sans-serif" }}>Loading user session...</div>;
+    return <LoadingSpinner />;
   }
 
+  if (!user) {
+    return <LandingPage />;
+  }
+
+  if (!profile) {
+    return <LandingPage />;
+  }
+
+  if (profile.account_status && profile.account_status !== "active") {
+    return <Navigate to="/suspended" replace />;
+  }
+
+  if (profile.role === USER_ROLE.admin) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  if (profile.role === USER_ROLE.applicant) {
+    return <Navigate to="/applicant" replace />;
+  }
+
+  return <Navigate to="/companies" replace />;
+}
+
+function App() {
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Supabase Auth & Context Test</h1>
-      
-      {user ? (
-        <div style={{ background: "#f0fdf4", padding: "15px", borderRadius: "8px", border: "1px solid #bbf7d0", marginBottom: "15px" }}>
-          <h3>Welcome, {profile?.full_name || user.email}!</h3>
-          <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {profile?.role}</p>
-          <p><strong>Phone:</strong> {profile?.phone}</p>
-          <p><strong>Active:</strong> {profile?.is_active ? "Yes" : "No"}</p>
-          <button onClick={handleSignOut} style={{ padding: "8px 16px", cursor: "pointer", background: "#ef4444", color: "white", border: "none", borderRadius: "4px" }}>
-            Sign Out
-          </button>
-        </div>
-      ) : (
-        <div style={{ background: "#fef2f2", padding: "15px", borderRadius: "8px", border: "1px solid #fecaca", marginBottom: "15px" }}>
-          <p>You are not logged in.</p>
-          <button onClick={handleSignUp} style={{ padding: "8px 16px", cursor: "pointer", marginRight: "10px", background: "#3b82f6", color: "white", border: "none", borderRadius: "4px" }}>
-            Sign Up
-          </button>
-          <button onClick={handleSignIn} style={{ padding: "8px 16px", cursor: "pointer", background: "#10b981", color: "white", border: "none", borderRadius: "4px" }}>
-            Sign In
-          </button>
-        </div>
-      )}
-    </div>
+    <Routes>
+      <Route path="/" element={<LandingPage />} />
+
+      <Route path="/auth/sign-in" element={<SignInPage />} />
+      <Route path="/auth/sign-up" element={<SignUpPage />} />
+      <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/auth/callback" element={<AuthCallback />} />
+      <Route path="/auth/select-role" element={<GoogleRoleSelect />} />
+
+      <Route
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route
+          path="/applicant"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <ApplicantPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interview/:applicationId"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <InterviewPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/applicant/profile"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <ApplicantProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/applicant/feedback"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.applicant]}>
+              <ApplicantFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route path="/jobs" element={<JobsPage />} />
+
+        <Route path="/jobs/:id" element={<JobDetailsPage />} />
+
+        <Route path="/jobs/:id/apply" element={<ApplyJobPage />} />
+
+        <Route
+          path="/companies/*"
+          element={
+            <ProtectedRoute
+              allowedRoles={[USER_ROLE.recruiter, USER_ROLE.hrManager]}
+            >
+              <CompanyLayout />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/reports"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/technical-issues"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminTechnicalIssuesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/companies"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminCompaniesPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/appeals"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <AdminAppealsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/users/:id"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.admin]}>
+              <ApplicantProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter"
+          element={
+            <ProtectedRoute allowedRoles={[USER_ROLE.recruiter]}>
+              <Recruiterscreen />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recruiter/candidatespipline"
+          element={
+            <ProtectedRoute>
+              <PipelineCandidatesPage />
+            </ProtectedRoute>
+          }
+        />
+      </Route>
+
+      <Route path="/company/:id" element={<PublicCompanyProfile />} />
+
+      <Route
+        path="/premium/success"
+        element={
+          <ProtectedRoute>
+            <PremiumSuccessPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route path="/premium/cancel" element={<PremiumCancelPage />} />
+
+      <Route path="/admin/auth" element={<AdminAuthPage />} />
+      <Route path="/suspended" element={<AccountSuspended />} />
+
+      <Route path="/auth/terms" element={<TermsPage />} />
+      <Route path="/auth/privacy" element={<PrivacyPage />} />
+
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
 export default App;
-
