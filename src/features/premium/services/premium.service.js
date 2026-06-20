@@ -2,7 +2,7 @@ import { supabase } from "@/shared/services/supabase";
 
 const EDGE_FUNCTIONS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
 
-export const PREMIUM_PRICE_ID = "price_1ThAl5J0xQ4cACne1asM9G5V";
+export const PREMIUM_PRICE_ID = import.meta.env.VITE_STRIPE_PRICE_ID || "price_1ThAl5J0xQ4cACne1asM9G5V";
 
 export async function createCheckoutSession(companyId) {
   const { data: { session } } = await supabase.auth.getSession();

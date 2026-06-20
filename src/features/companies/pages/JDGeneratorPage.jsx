@@ -24,8 +24,7 @@ import {
   Upload,
 } from "lucide-react";
 
-const SUPABASE_FUNCTION_URL =
-  "https://bztehkwxefeyknoogzkr.supabase.co/functions/v1/jd-generate";
+const SUPABASE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/jd-generate`;
 
 export default function JDGeneratorPage({ company, profile }) {
   const { createJob } = useJobs();
