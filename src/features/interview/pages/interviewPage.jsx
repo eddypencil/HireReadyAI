@@ -503,7 +503,7 @@ export default function InterviewPage() {
               {/* Score */}
 
               <button
-                onClick={() => navigate(`/applications/${applicationId}`)}
+                onClick={() => navigate("/applicant")}
                 className="w-full max-w-md bg-primary text-white rounded-xl px-4 py-3 text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/30"
               >
                 {t("interview_page.finished.back_to_application")}
