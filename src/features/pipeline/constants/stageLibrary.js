@@ -73,7 +73,6 @@ export const STAGE_LIBRARY = [
     subtitle: "Send & track offer letter",
     icon: "Award",
     isPremium: false,
-    comingSoon: true,
   },
 ];
 

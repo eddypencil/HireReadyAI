@@ -21,7 +21,7 @@ const AI_STAGE_TYPES = new Set([
 
 const COMING_SOON_TYPES = new Set(
   ["cv_screening", "ai_screening", "video_interview",
-    "manager_interview", "background_check", "offer"],
+    "manager_interview", "background_check"],
 );
 
 function useMediaQuery(query) {
