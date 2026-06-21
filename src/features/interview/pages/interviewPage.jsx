@@ -11,7 +11,8 @@ import {
   generateNextQuestion,
 } from "../services/interview.service";
 import { useTranslation } from "react-i18next";
-import ReportButton from "@/features/admin/components/ReportButton";
+import { useUser } from "@/features/auth/context/user.context";
+import { submitReport } from "@/features/admin/services/admin.service";
 import {
   Loader2,
   ChevronLeft,
@@ -25,6 +26,7 @@ import {
   List,
   FileText,
   Flag,
+  Send,
 } from "lucide-react";
 import useInterviewSecurity from "../hooks/useInterviewSecurity";
 import SecurityViolationModal from "../components/SecurityViolationModal";
@@ -93,6 +95,7 @@ export default function InterviewPage() {
   const { applicationId } = useParams();
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { user } = useUser();
   const [phase, setPhase] = useState(PHASE.INIT);
   const [applicationStage, setApplicationStage] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -104,6 +107,13 @@ export default function InterviewPage() {
   const [elapsed, setElapsed] = useState(0);
   const [maxTime, setMaxTime] = useState(null);
   const [timeExceeded, setTimeExceeded] = useState(false);
+  const [showReportMenu, setShowReportMenu] = useState(false);
+  const [reportTarget, setReportTarget] = useState(null);
+  const [reportSubject, setReportSubject] = useState("");
+  const [reportDescription, setReportDescription] = useState("");
+  const [reportSubmitting, setReportSubmitting] = useState(false);
+  const [reportSubmitted, setReportSubmitted] = useState(false);
+  const [reportError, setReportError] = useState(null);
   const generatingRef = useRef(false);
 
   // ── Interview Security ───────────────────────────────────────────────────
@@ -345,43 +355,13 @@ export default function InterviewPage() {
             <span className="rounded-full border px-3 py-0.5 text-[11px] font-medium bg-primary/10 text-primary border-primary/20 whitespace-nowrap">
               {stageLabel}
             </span>
-            <div className="relative group">
-              <button className="size-8 rounded-lg border border-border flex items-center justify-center hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-colors text-muted-foreground cursor-pointer">
+            <div className="relative">
+              <button
+                onClick={() => setShowReportMenu(true)}
+                className="size-8 rounded-lg border border-border flex items-center justify-center hover:bg-destructive/10 hover:text-destructive hover:border-destructive/20 transition-colors text-muted-foreground cursor-pointer"
+              >
                 <Flag className="size-4" />
               </button>
-              <div className="absolute right-0 top-full mt-1 w-48 bg-card border border-border rounded-xl shadow-2xl z-50 hidden group-hover:block">
-                <div className="py-1">
-                  {applicationStage && (
-                    <div className="px-1">
-                      <ReportButton
-                        reportType="interview"
-                        targetId={applicationStage.id}
-                        targetDetails={{ stage_name: stage?.name }}
-                        variant="text"
-                        label="Report this Interview"
-                        className="w-full text-left"
-                      />
-                    </div>
-                  )}
-                  {currentQuestion && (
-                    <div className="px-1">
-                      <ReportButton
-                        reportType="question"
-                        targetId={currentQuestion.id}
-                        targetDetails={{ question_text: currentQuestion.text }}
-                        variant="text"
-                        label="Report this Question"
-                        className="w-full text-left"
-                      />
-                    </div>
-                  )}
-                  {!applicationStage && !currentQuestion && (
-                    <p className="px-3 py-2 text-[11px] text-muted-foreground">
-                      No active content to report
-                    </p>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -569,6 +549,184 @@ export default function InterviewPage() {
         violationCount={violationCount}
         maxViolations={3}
       />
+
+      {/* Report modal */}
+      {showReportMenu && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
+          <div className="bg-card rounded-2xl border border-border shadow-2xl w-full max-w-sm mx-4">
+
+            {!reportTarget ? (
+              <>
+                <div className="flex items-center justify-between p-4 border-b border-border">
+                  <h3 className="text-sm font-bold text-foreground">Report</h3>
+                  <button
+                    onClick={() => setShowReportMenu(false)}
+                    className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <div className="p-3 space-y-2">
+                  {applicationStage && (
+                    <button
+                      onClick={() => {
+                        setReportTarget("interview");
+                        setReportSubject("");
+                        setReportDescription("");
+                        setReportError(null);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer text-left"
+                    >
+                      <Flag className="w-4 h-4 shrink-0" />
+                      Report this Interview
+                    </button>
+                  )}
+                  {currentQuestion && (
+                    <button
+                      onClick={() => {
+                        setReportTarget("question");
+                        setReportSubject("");
+                        setReportDescription("");
+                        setReportError(null);
+                      }}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer text-left"
+                    >
+                      <Flag className="w-4 h-4 shrink-0" />
+                      Report this Question
+                    </button>
+                  )}
+                  {!applicationStage && !currentQuestion && (
+                    <p className="px-3 py-6 text-sm text-muted-foreground text-center">
+                      No active content to report
+                    </p>
+                  )}
+                  <button
+                    onClick={() => setShowReportMenu(false)}
+                    className="w-full h-10 rounded-xl text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center justify-between p-4 border-b border-border">
+                  <div className="flex items-center gap-2">
+                    <Flag className="w-4 h-4 text-destructive" />
+                    <h3 className="text-sm font-bold text-foreground">
+                      Report this {reportTarget === "interview" ? "Interview" : "Question"}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setReportTarget(null)}
+                    className="p-1 rounded-lg hover:bg-muted text-muted-foreground cursor-pointer"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!user) return;
+                    setReportSubmitting(true);
+                    setReportError(null);
+                    try {
+                      await submitReport({
+                        reporterId: user.id,
+                        reportType: reportTarget,
+                        targetId: reportTarget === "interview" ? applicationStage?.id : currentQuestion?.id,
+                        targetDetails: reportTarget === "interview"
+                          ? { stage_name: stage?.name }
+                          : { question_text: currentQuestion?.text },
+                        subject: reportSubject,
+                        description: reportDescription,
+                        severity: "medium",
+                      });
+                      setReportSubmitted(true);
+                      setReportSubject("");
+                      setReportDescription("");
+                      setTimeout(() => {
+                        setReportSubmitted(false);
+                        setReportTarget(null);
+                        setShowReportMenu(false);
+                      }, 1500);
+                    } catch (err) {
+                      setReportError(err.message || "Failed to submit report");
+                    } finally {
+                      setReportSubmitting(false);
+                    }
+                  }}
+                  className="p-4 space-y-4"
+                >
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">Subject</label>
+                    <input
+                      type="text"
+                      value={reportSubject}
+                      onChange={(e) => setReportSubject(e.target.value)}
+                      placeholder="Brief title of the issue..."
+                      required
+                      className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                    />
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-semibold text-foreground">Description</label>
+                    <textarea
+                      value={reportDescription}
+                      onChange={(e) => setReportDescription(e.target.value)}
+                      placeholder="Describe the issue in detail..."
+                      required
+                      rows={4}
+                      className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40 resize-none"
+                    />
+                  </div>
+
+                  {reportError && (
+                    <div className="px-3 py-2 rounded-lg text-xs text-destructive bg-destructive/10 border border-destructive/20">
+                      {reportError}
+                    </div>
+                  )}
+
+                  {reportSubmitted && (
+                    <div className="px-3 py-2 rounded-lg text-xs text-green-600 bg-green-100 border border-green-200 dark:text-green-400 dark:bg-green-900/20 dark:border-green-800/30">
+                      Report submitted successfully.
+                    </div>
+                  )}
+
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setReportTarget(null)}
+                      className="flex-1 h-10 rounded-xl text-xs font-semibold bg-muted text-muted-foreground hover:bg-muted/80 transition-colors cursor-pointer"
+                    >
+                      Back
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={reportSubmitting || reportSubmitted}
+                      className="flex-1 h-10 rounded-xl text-xs font-semibold text-white bg-destructive hover:bg-destructive/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2 cursor-pointer"
+                    >
+                      {reportSubmitting ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <Send className="w-3.5 h-3.5" />
+                      )}
+                      {reportSubmitting ? "Submitting..." : reportSubmitted ? "Submitted!" : "Submit Report"}
+                    </button>
+                  </div>
+                </form>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -49,6 +49,12 @@ export default function VideoQuestion({
     };
   }, []);
 
+  useEffect(() => {
+    if (videoRef.current && streamRef.current && status !== "reviewing") {
+      videoRef.current.srcObject = streamRef.current;
+    }
+  }, [status, videoUrl]);
+
   const startRecording = () => {
     chunksRef.current = [];
     setVideoUrl(null);
@@ -128,31 +134,6 @@ export default function VideoQuestion({
 
   const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 
-  if (!permissionGranted) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-6 py-10">
-        <div className="size-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
-          <Camera className="size-7 text-accent" />
-        </div>
-        <div className="text-center space-y-1.5">
-          <p className="text-sm font-medium text-foreground">
-            Camera access required
-          </p>
-          <p className="text-xs text-muted-foreground max-w-xs">
-            Allow camera and microphone access to record your video answer
-          </p>
-        </div>
-        <button
-          onClick={requestCamera}
-          className="flex items-center gap-2 bg-accent text-accent-foreground rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
-        >
-          <Video className="size-4" />
-          Enable Camera & Microphone
-        </button>
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-5">
       {/* Video preview / review */}
@@ -206,6 +187,30 @@ export default function VideoQuestion({
             <p className="text-xs text-muted-foreground">
               Initializing camera…
             </p>
+          </div>
+        )}
+
+        {/* Permission overlay (camera access not granted) */}
+        {!permissionGranted && (
+          <div className="absolute inset-0 bg-[#0a0f1a] flex flex-col items-center justify-center gap-6">
+            <div className="size-16 rounded-2xl bg-accent/10 flex items-center justify-center border border-accent/20">
+              <Camera className="size-7 text-accent" />
+            </div>
+            <div className="text-center space-y-1.5">
+              <p className="text-sm font-medium text-foreground">
+                Camera access required
+              </p>
+              <p className="text-xs text-muted-foreground max-w-xs">
+                Allow camera and microphone access to record your video answer
+              </p>
+            </div>
+            <button
+              onClick={requestCamera}
+              className="flex items-center gap-2 bg-accent text-accent-foreground rounded-lg px-5 py-2.5 text-sm font-medium hover:opacity-90 transition-opacity"
+            >
+              <Video className="size-4" />
+              Enable Camera & Microphone
+            </button>
           </div>
         )}
       </div>
