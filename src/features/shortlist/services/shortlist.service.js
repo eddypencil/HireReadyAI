@@ -132,7 +132,7 @@ export const unrejectApplication = async (applicationId) => {
 export const advanceToOffer = async (applicationId, offerStageId) => {
   const { error } = await supabase
     .from("applications")
-    .update({ current_stage_id: offerStageId })
+    .update({ current_stage_id: offerStageId, current_stage: "hired" })
     .eq("id", applicationId);
   if (error) throw error;
 };
