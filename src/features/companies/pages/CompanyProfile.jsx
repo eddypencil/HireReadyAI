@@ -650,8 +650,6 @@ export default function CompanyProfile({
                 <ul className="text-xs text-muted-foreground/60 space-y-0.5 mt-2">
                   <li>• Assessment tests</li>
                   <li>• Coding tests</li>
-                  <li>• Video interviews</li>
-                  <li>• Background checks</li>
                 </ul>
               )}
             </div>
