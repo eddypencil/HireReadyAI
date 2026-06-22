@@ -177,6 +177,7 @@
       "invalid_file": "Only PDF files are allowed",
       "file_size": "Maximum file size is 5MB",
       "already_applied": "You have already applied for this job",
+      "job_closed": "This job is no longer accepting applications",
       "fix_errors": "Please fix errors before continuing",
       "complete_required": "Please complete all required fields",
       "something_wrong": "Something went wrong!"
@@ -361,6 +362,8 @@
 
     "apply_now": "Apply Now",
     "applied": "Applied",
+    "closed": "Closed",
+    "closed_message": "This job posting is no longer accepting applications",
 
     "about": "About this role",
     "qualifications": "Qualifications",

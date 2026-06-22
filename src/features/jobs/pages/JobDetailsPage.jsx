@@ -92,6 +92,7 @@ export default function JobDetailsPage() {
     );
 
   const company = job.companies;
+  const isClosed = job.closed_at && Date.parse(job.closed_at) < Date.now();
 
   return (
     <div className="min-h-screen bg-surface-muted py-8 px-4">
@@ -105,22 +106,31 @@ export default function JobDetailsPage() {
 
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  disabled={hasApplied}
+                  disabled={hasApplied || isClosed}
                   onClick={() => {
-                    if (hasApplied) return;
+                    if (hasApplied || isClosed) return;
                     navigate("apply");
                   }}
-                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all duration-150 ${hasApplied
+                  className={`px-4 py-2 rounded-lg text-xs font-bold transition-all duration-150 ${hasApplied || isClosed
                       ? "bg-muted text-muted-foreground cursor-not-allowed border border-border"
                       : "bg-primary text-white hover:bg-primary-hover shadow-[0_2px_8px_rgba(15,41,74,0.15)]"
                     }`}
                 >
-                  {hasApplied
-                    ? t("job_details.applied")
-                    : t("job_details.apply_now")}
+                  {isClosed
+                    ? t("job_details.closed")
+                    : hasApplied
+                      ? t("job_details.applied")
+                      : t("job_details.apply_now")}
                 </button>
               </div>
             </div>
+
+            {isClosed && (
+              <div className="mt-3 px-3 py-2 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-xs font-semibold flex items-center gap-2">
+                <span className="size-1.5 rounded-full bg-destructive shrink-0" />
+                {t("job_details.closed_message")}
+              </div>
+            )}
 
             <div className="flex items-center gap-2 mt-2 flex-wrap">
               <Link to={`/company/${company?.id}`} className="flex items-center gap-2 hover:opacity-80 transition-opacity">

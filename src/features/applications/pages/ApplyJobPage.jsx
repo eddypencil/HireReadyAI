@@ -1,14 +1,16 @@
 // src/features/applications/pages/ApplyJobPage.jsx
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useUser } from "@/features/auth/context/user.context";
 import { fetchQuestionsByJobId } from "../services/application.service";
 import { createApplication } from "../services/application.service";
 import { triggerCvReview } from "../services/cv-review.service";
+import { fetchJobById } from "@/features/jobs/services/jobs.service";
 import * as pdfjsLib from "pdfjs-dist";
 import pdfWorker from "pdfjs-dist/build/pdf.worker.min.js?url";
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
 import { supabase } from "@/shared/services/supabase";
+import { Briefcase } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import FormHeader from "../components/apply/FormHeader";
@@ -23,6 +25,8 @@ export default function ApplyJobPage() {
   const { profile } = useUser();
   const { t } = useTranslation();
   const [step, setStep] = useState(0);
+  const [job, setJob] = useState(null);
+  const [jobLoading, setJobLoading] = useState(true);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -82,6 +86,23 @@ export default function ApplyJobPage() {
     setErrors(stepErrors);
     return Object.keys(stepErrors).length === 0;
   };
+
+  useEffect(() => {
+    if (!jobId) return;
+
+    const loadJob = async () => {
+      try {
+        const data = await fetchJobById(jobId);
+        setJob(data);
+      } catch (err) {
+        console.error("Error loading job:", err);
+      } finally {
+        setJobLoading(false);
+      }
+    };
+
+    loadJob();
+  }, [jobId]);
 
   useEffect(() => {
     if (!jobId) return;
@@ -163,6 +184,11 @@ export default function ApplyJobPage() {
 
   const handleSubmit = async () => {
     try {
+      if (isClosed) {
+        navigate(`/jobs/${jobId}`);
+        return;
+      }
+
       if (!validateForm()) {
         return;
       }
@@ -235,6 +261,49 @@ export default function ApplyJobPage() {
       setLoading(false);
     }
   };
+
+  const isClosed = job?.closed_at && Date.parse(job.closed_at) < Date.now();
+
+  if (jobLoading) {
+    return (
+      <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
+        <p className="text-sm text-muted-foreground">{t("common.loading")}</p>
+      </div>
+    );
+  }
+
+  if (!job) {
+    return (
+      <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
+        <div className="text-center">
+          <p className="text-sm text-muted-foreground">{t("job_details.not_found")}</p>
+          <Link to="/jobs" className="mt-3 inline-block text-xs text-primary font-semibold hover:underline">
+            {t("jobs_page.board")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (isClosed) {
+    return (
+      <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">
+        <div className="bg-card rounded-xl border border-border p-8 max-w-md w-full text-center">
+          <div className="size-12 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-4">
+            <Briefcase size={24} className="text-destructive" />
+          </div>
+          <h2 className="text-base font-bold text-foreground mb-2">{t("job_details.closed")}</h2>
+          <p className="text-xs text-muted-foreground mb-5">{t("apply_job.errors.job_closed")}</p>
+          <Link
+            to="/jobs"
+            className="inline-block px-4 py-2 rounded-lg bg-primary text-white text-xs font-bold hover:bg-primary-hover transition-colors"
+          >
+            {t("jobs_page.title")}
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-surface-muted flex items-center justify-center px-4 py-8">

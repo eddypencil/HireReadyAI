@@ -6,10 +6,12 @@ export default function JobCard({ job }) {
   const navigate = useNavigate();
   const company = job.companies;
 
+  const isClosed = job.closed_at && Date.parse(job.closed_at) < Date.now();
+
   return (
     <div
       onClick={() => navigate(`/jobs/${job.id}`)}
-      className="bg-card rounded-xl border border-border/70 border-l-[3px] border-l-transparent border-t-[3px] border-t-transparent p-4 hover:shadow-[0_0_18px_-4px_color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:border-l-primary hover:border-t-primary hover:border-primary/20 hover:bg-surface-hover hover:ring-1 hover:ring-primary/15 transition-all duration-200 cursor-pointer group"
+      className={`bg-card rounded-xl border border-border/70 border-l-[3px] border-l-transparent border-t-[3px] border-t-transparent p-4 hover:shadow-[0_0_18px_-4px_color-mix(in_srgb,var(--color-primary)_35%,transparent)] hover:border-l-primary hover:border-t-primary hover:border-primary/20 hover:bg-surface-hover hover:ring-1 hover:ring-primary/15 transition-all duration-200 cursor-pointer group ${isClosed ? "opacity-60" : ""}`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3 flex-1 min-w-0">
@@ -102,6 +104,11 @@ export default function JobCard({ job }) {
         </div>
 
         <div className="flex flex-col items-end gap-2 shrink-0 justify-start">
+          {isClosed && (
+            <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold rounded-md bg-destructive/10 text-destructive border border-destructive/20 uppercase tracking-wider">
+              Closed
+            </span>
+          )}
           <span className="text-[11px] text-muted-foreground flex items-center gap-1 mt-1">
             <Clock size={10} className="text-muted-foreground/50" />
             {new Date(job.created_at).toLocaleDateString("en-US", {
