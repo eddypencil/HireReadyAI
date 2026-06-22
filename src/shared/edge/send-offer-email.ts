@@ -130,7 +130,7 @@ serve(async (req) => {
       if (offerStage) {
         const { error: updateErr } = await supabase
           .from("applications")
-          .update({ current_stage_id: offerStage.id })
+          .update({ current_stage_id: offerStage.id, current_stage: "hired" })
           .eq("id", applicationId);
 
         if (updateErr) throw new Error(`Failed to update application: ${updateErr.message}`);
